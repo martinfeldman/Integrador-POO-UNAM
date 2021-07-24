@@ -1,0 +1,29 @@
+{
+    "java.project.referencedLibraries": [
+        
+        // javafx
+        "/home/mnf/Facultad/3erAnio/1erCuatr/POO I/practica/implementar/javafx/javafx-sdk-11.0.2/lib/javafx.base.jar", 
+        "/home/mnf/Facultad/3erAnio/1erCuatr/POO I/practica/implementar/javafx/javafx-sdk-11.0.2/lib/javafx.controls.jar",
+        "/home/mnf/Facultad/3erAnio/1erCuatr/POO I/practica/implementar/javafx/javafx-sdk-11.0.2/lib/javafx.fxml.jar",
+        "/home/mnf/Facultad/3erAnio/1erCuatr/POO I/practica/implementar/javafx/javafx-sdk-11.0.2/lib/javafx.graphics.jar",
+        "/home/mnf/Facultad/3erAnio/1erCuatr/POO I/practica/implementar/javafx/javafx-sdk-11.0.2/lib/javafx.media.jar",
+        "/home/mnf/Facultad/3erAnio/1erCuatr/POO I/practica/implementar/javafx/javafx-sdk-11.0.2/lib/javafx.swing.jar",
+        "/home/mnf/Facultad/3erAnio/1erCuatr/POO I/practica/implementar/javafx/javafx-sdk-11.0.2/lib/javafx.web.jar",
+        "/home/mnf/Facultad/3erAnio/1erCuatr/POO I/practica/implementar/javafx/javafx-sdk-11.0.2/lib/javafx-swt.jar",
+
+        // jpa & postgres
+        "/home/mnf/Facultad/3erAnio/1erCuatr/POO I/practica/implementar/jpa/lib/eclipselink-jpa-modelgen.jar",
+        "/home/mnf/Facultad/3erAnio/1erCuatr/POO I/practica/implementar/jpa/lib/jakarta.annotation-api-2.0.0.jar",
+        "/home/mnf/Facultad/3erAnio/1erCuatr/POO I/practica/implementar/jpa/lib/jakarta.persistence-api-3.0.0.jar",
+        "/home/mnf/Facultad/3erAnio/1erCuatr/POO I/practica/implementar/jpa/lib/org.eclipse.persistence.asm-3.0.1.jar",
+        "/home/mnf/Facultad/3erAnio/1erCuatr/POO I/practica/implementar/jpa/lib/org.eclipse.persistence.core-3.0.1.jar",
+        "/home/mnf/Facultad/3erAnio/1erCuatr/POO I/practica/implementar/jpa/lib/org.eclipse.persistence.jpa-3.0.1.jar",
+        "/home/mnf/Facultad/3erAnio/1erCuatr/POO I/practica/implementar/jpa/lib/org.eclipse.persistence.jpa.jpql-3.0.1.jar",
+        "/home/mnf/Facultad/3erAnio/1erCuatr/POO I/practica/implementar/jpa/lib/org.eclipse.persistence.jpa.modelgen.processor-3.0.1.jar",
+        "/home/mnf/Facultad/3erAnio/1erCuatr/POO I/practica/implementar/jpa/lib/postgresql-42.2.20.jar",        
+
+        "../lib/**/*.jar",
+    ],
+    "java.configuration.updateBuildConfiguration": "interactive",
+    //"java.configuration.updateBuildConfiguration": "automatic"
+}

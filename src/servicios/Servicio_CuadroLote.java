@@ -14,7 +14,7 @@ public class Servicio_CuadroLote {
         this.repositorio = p;
     }
 
-    // Cuadro 
+    // CUADRO 
     // Listar y Buscar
 
     public List<Empleado> listarCuadros() {
@@ -83,7 +83,7 @@ public class Servicio_CuadroLote {
 
 
 
-    // Lote 
+    // LOTE
     // Listar y Buscar
 
     public List<Empleado> listarLotes() {

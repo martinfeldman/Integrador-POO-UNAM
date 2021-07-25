@@ -30,6 +30,7 @@ public class Servicio_cosechas {
         return this.repositorio.buscar(Empleado.class, idEmpleado);
     }
 
+    
     // ABM Cosecha 
 
     public void agregarCosecha(String nombres, String apellidos, Departamento departamento) {

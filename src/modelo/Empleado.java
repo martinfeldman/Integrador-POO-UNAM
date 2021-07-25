@@ -8,11 +8,13 @@ import jakarta.persistence.*;
 public class Empleado {
     private String nombres;
     private String apellidos;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    protected String idEmpleado;
-    @ManyToMany
-    private List<Productor> productores = new ArrayList<>();
+    protected String id_Empleado;
+
+    @OneToMany
+    private List<Cosecha> cosechas = new ArrayList<>();
 
  
     public Empleado(){}
@@ -23,8 +25,8 @@ public class Empleado {
     
     @Override
     public String toString() {
-        return "Empleado con idEmpleado = " + idEmpleado + ", nombre=" + nombres + ", productores="
-                + productores + "]";
+        return "Empleado con id_Empleado " + id_Empleado + "\nNombres: " + nombres 
+        + "\nApellido: " + apellidos  + "\n ";
     }
 
 
@@ -39,7 +41,7 @@ public class Empleado {
         return nombres;
     }
 
-    public void setNombre(String nombres) {
+    public void setNombres(String nombres) {
         this.nombres = nombres;
     }
 
@@ -50,17 +52,10 @@ public class Empleado {
     public void setApellidos(String apellidos) {
         this.apellidos = apellidos;
     }
-    
-    public List<Productor> getProductores() {
-        return productores;
+      
+    public String getId_Empleado() {
+        return id_Empleado;
     }
-
-    public void agregarProductor(Productor productor) {
-        this.productores.add(productor);
-    }
-
-
-    
     
 
 }

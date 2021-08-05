@@ -4,30 +4,32 @@ import jakarta.persistence.*;
 
 @Entity
 public class Cuadro {
-    //Atributos de la Clase-Entidad
+    
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    protected int idCuadro;
-    private int idLote;
-    @ManyToOne
-    private Productor productor;
+    private int id_Cuadro;
     private double superficie;
+    private boolean isAlta;
 
-    protected Cuadro(){}
+   // @ManyToOne
+    private Productor productor;
 
-    public Cuadro(Productor productor, double superficie, int idLote){
-        this.productor = productor;
-        this.superficie = superficie;
-        this.idLote = idLote;   
-    }
+    @ManyToOne
+    private Lote lote;
 
-    public Cuadro(Productor productor){
-        this.productor = productor;
+    
+
+    public Cuadro(){}
+
+    public Cuadro(Lote lote, double superficie){
+        this.lote = lote;
+        this.productor = lote.getProductor();
+        this.superficie = superficie; 
     }
     
     @Override
     public String toString() {
-        return "Cuadro [idCuadro=" + idCuadro + ", idLote=" + idLote + ", productor=" + productor + ", superficie="
+        return "Cuadro [id_Cuadro=" + id_Cuadro +  ", productor=" + productor + ", superficie="
                 + superficie + "]";
     }
 
@@ -36,13 +38,19 @@ public class Cuadro {
     
 
     // getters & setters 
+  
     
-    public int getIdLote() {
-        return idLote;
+    public int getId_Cuadro() {
+        return id_Cuadro;
     }
 
-    public void setIdLote(int idLote) {
-        this.idLote = idLote;
+    public boolean isAlta() {
+        return isAlta;
+    }
+
+
+    public void setAlta(boolean isAlta) {
+        this.isAlta = isAlta;
     }
 
     public Productor getProductor() {
@@ -53,6 +61,14 @@ public class Cuadro {
         this.productor = productor;
     }
 
+    public Lote getLote() {
+        return lote;
+    }
+
+    public void setLote(Lote lote) {
+        this.lote = lote;
+    }
+
     public double getSuperficie() {
         return superficie;
     }
@@ -60,6 +76,9 @@ public class Cuadro {
     public void setSuperficie(double superficie) {
         this.superficie = superficie;
     }
+
+  
+    
 
    
     

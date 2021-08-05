@@ -6,21 +6,25 @@ import jakarta.persistence.*;
 
 @Entity
 public class Empleado {
-    private String nombres;
-    private String apellidos;
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    protected String id_Empleado;
+    private int id_Empleado;
 
     @OneToMany
     private List<Cosecha> cosechas = new ArrayList<>();
 
- 
+    private String nombres;
+    private String apellidos;
+    private String dni; 
+    private boolean isAlta;
+   
+
     public Empleado(){}
 
-    public Empleado(String nombres){
+    public Empleado(String nombres, String apellidos, String dni){
         this.nombres = nombres;
+        this.apellidos = apellidos;
+        this.dni = dni;
     }
     
     @Override
@@ -33,11 +37,26 @@ public class Empleado {
 
 
 
+    // adders
+
+    // agregar 
 
 
-    // getters & adders & setters
+    // getters &  setters
 
-    public String getNombre() {
+    public int getId_Empleado() {
+        return id_Empleado;
+    }
+
+    public boolean isAlta() {
+        return isAlta;
+    }
+
+    public void setAlta(boolean isAlta) {
+        this.isAlta = isAlta;
+    }
+
+    public String getNombres() {
         return nombres;
     }
 
@@ -53,9 +72,17 @@ public class Empleado {
         this.apellidos = apellidos;
     }
       
-    public String getId_Empleado() {
-        return id_Empleado;
+    public String getDni() {
+        return dni;
     }
-    
+
+    public void setDni(String dni) {
+        this.dni = dni;
+    }
+
+    public List<Cosecha> getCosechas() {
+        return cosechas;
+    }
+
 
 }

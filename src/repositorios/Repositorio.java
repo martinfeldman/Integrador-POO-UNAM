@@ -4,6 +4,7 @@ import java.util.List;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
@@ -61,9 +62,21 @@ public class Repositorio {
         this.em.merge(o);
     }
 
+
+    
+    // se implementa borrado logico para todas las clases  
     public void eliminar(Object o){
         this.em.remove(o);
+        
+        /*var claseObjeto = o.getClass().toString() ;
+        
+        switch (claseObjeto) {
+            case "Productor":  ; // realizar borrado logico
+                break; 
+        } */
     }
+
+
 
     public void refrescar(Object o) {
         this.em.refresh(o);
@@ -84,7 +97,21 @@ public class Repositorio {
         Root<T> origen = consulta.from(clase);
         consulta.select(origen);
         return em.createQuery(consulta).getResultList();      
-    } 
+    }
+
+
+
+     public <T extends Object> List<Object[]> buscarTodos_v2 (Class<T> clase) {
+        CriteriaBuilder cb = this.em.getCriteriaBuilder();
+      //  CriteriaQuery<T> consulta = cb.createQuery(clase);
+        TypedQuery<Object[]> consulta = em.createQuery("select * FROM productores " + clase , Object[].class);
+        //Root<T> origen = consulta.from(clase);
+        //consulta.select(origen);
+        List<Object[]> resultados = consulta.getResultList(); 
+        return resultados;     
+    }   
+
+
 
     // el parametro de orden a pasar se obtiene del metamodelo generado por EclipseLink
     public <T extends Object, P extends Object> List<T> buscarTodosOrdenadosPor (Class<T> clase, SingularAttribute<T, P> orden) {
@@ -96,6 +123,7 @@ public class Repositorio {
     // ordenado de forma ascendente (cb.asc() ) 
     // el atributo de origen definido en orden
         consulta.orderBy(cb.asc(origen.get(orden)));
+        //consulta.orderBy(cb.desc(origen.get(orden)));
         return em.createQuery(consulta).getResultList();
     }
 

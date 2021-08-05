@@ -1,6 +1,8 @@
 package modelo;
 
-import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -8,43 +10,65 @@ public class Lote {
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    protected int idLote;
-    private Date fechaInicio;
-    private Date fechaFin;
+    private int id_Lote;
+    private boolean isAlta;
+
+    @ManyToOne
+    private Productor productor;
+
+    @OneToMany
+    private List<Cuadro> cuadros = new ArrayList<>();
 
     public Lote(){}
 
-    public Lote(Date fInicio, Date fFin){
-        this.fechaInicio = fInicio;
-        this.fechaFin = fFin;
+    public Lote(Productor productor){
+        this.productor = productor;
+        productor.agregarLote(this);     
     }
     
     @Override
     public String toString() {
-        return "Lote [fechaFin=" + fechaFin + ", fechaInicio=" + fechaInicio + ", idLote=" + idLote + "]";
+        return "Lote [id_Lote=" + id_Lote + "productor=" + productor + "cuadros=" + cuadros + "]";
     }
 
 
 
 
+    // adders
+
+    public void agregarCuadro(Cuadro cuadro){
+        this.cuadros.add(cuadro);
+    }
+    
 
     // getters & setters
-    
-    public Date getFechaInicio() {
-        return fechaInicio;
+
+    public int getId_Lote() {
+        return id_Lote;
     }
 
-    public void setFechaInicio(Date fechaInicio) {
-        this.fechaInicio = fechaInicio;
+    public boolean isAlta() {
+        return isAlta;
     }
 
-    public Date getFechaFin() {
-        return fechaFin;
+    public void setAlta(boolean isAlta) {
+        this.isAlta = isAlta;
     }
 
-    public void setFechaFin(Date fechaFin) {
-        this.fechaFin = fechaFin;
+    public Productor getProductor() {
+        return productor;
     }
-    
-        
+
+    public void setProductor(Productor productor) {
+        this.productor = productor;
+    }
+
+    public List<Cuadro> getCuadros() {
+        return cuadros;
+    }
+
+    public void setCuadros(List<Cuadro> cuadros) {
+        this.cuadros = cuadros;
+    }
+
 }

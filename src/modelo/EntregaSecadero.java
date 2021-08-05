@@ -4,26 +4,51 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
-public class EntregaCosechaSecadero {
+public class EntregaSecadero {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private String id_Entrega;
-    private String id_Cosecha;
+    private int id_Entrega;
     private Double pesoSecadero;
     private Double pesoCampo;
     private Date fechaEntrega;
+    private boolean isAlta;
     
-    public EntregaCosechaSecadero(){}
+    // las cosechas que llegaron en esta entrega
+    @OneToMany
+    private List<Cosecha> cosechas = new ArrayList<>();
 
-    public EntregaCosechaSecadero(Double pSecadero, Double pCampo, Date fEntrega){
+
+    public EntregaSecadero() {}
+
+    public EntregaSecadero(List<Cosecha> cosechas, Double pSecadero, Date fEntrega){
+        this.cosechas = cosechas; 
+        this.pesoCampo = this.obtenerPesoCampo(cosechas);
         this.pesoSecadero = pSecadero;
-        this.pesoCampo = pCampo;
         this.fechaEntrega = fEntrega;
     }
-    
+   
+    // Este metodo debe sumar las cantidades totales de los Arrays KgsEntregados 
+    // de cada cosecha que ingresa como parte de la Entrega - ( en cosechas[] )
+    public Double obtenerPesoCampo(List<Cosecha> cosechas) {
+        double pesoCampo = 0;
+        
+        for(Cosecha obj_cos : cosechas){
+            //System.out.println(obj_cos);
+            pesoCampo = obj_cos.getTotalKgs();
+        }  
+
+        return pesoCampo;
+        
+    }
+
     @Override
     public String toString() {
         return "EntregaCosechaSecadero [fechaEntrega=" + fechaEntrega + ", idEntrega=" + id_Entrega + ", pesoCampo="
@@ -36,18 +61,19 @@ public class EntregaCosechaSecadero {
 
     // getters & setters 
 
-    public String getId_Entrega() {
-        return id_Entrega;
+        
+    public boolean isAlta() {
+        return isAlta;
     }
 
-    public void setId_Entrega(String idEntrega) {
-        this.id_Entrega = idEntrega;
+    public void setAlta(boolean isAlta) {
+        this.isAlta = isAlta;
     }
 
     public Double getPesoCampo() {
         return pesoCampo;
     }
-    
+
     public void setPesoCampo(Double pesoCampo) {
         this.pesoCampo = pesoCampo;
     }

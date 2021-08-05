@@ -8,10 +8,12 @@ import jakarta.persistence.*;
 public class Productor {
     private String nombres;
     private String apellidos;
+    private String dni;
+    private boolean isAlta;
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    protected String id_Productor;
+    private int id_Productor;
 
     // lotes que posee el productor
     @OneToMany
@@ -23,16 +25,10 @@ public class Productor {
 
     public Productor(){}
 
-    public Productor(String nombres, String apellidos){
+    public Productor(String nombres, String apellidos, String dni){
         this.nombres = nombres;                  
         this.apellidos = apellidos; 
-    }
-
-    public Productor(String nombres, String apellidos, List<Lote> lotes, List<Cuadro> cuadros){
-        this.nombres = nombres;                  
-        this.apellidos = apellidos; 
-        this.lotes = lotes ;
-        this.cuadros = cuadros; 
+        this.dni = dni ;
     }
 
     @Override
@@ -44,13 +40,28 @@ public class Productor {
 
 
 
+    // adders
 
-    // getters & adders & setters
+    public void agregarLote(Lote lote){
+        this.lotes.add(lote); 
+    }
+
+
+
+    // getters &  setters
        
-    public String getId_productor() {
+    public int getId_productor() {
         return id_Productor;
     }
     
+    public boolean isAlta() {
+        return isAlta;
+    }
+
+    public void setAlta(boolean isAlta) {
+        this.isAlta = isAlta;
+    }
+
     public String getNombres() {
         return nombres;
     }
@@ -67,5 +78,33 @@ public class Productor {
         this.apellidos = apellidos;
     }
 
+    public String getDni() {
+        return dni;
+    }
 
+    public void setDni(String dni) {
+        this.dni = dni;
+    }
+
+    public List<Lote> getLotes() {
+        return lotes;
+    }
+
+    public List<Cuadro> getCuadros() {
+        return cuadros;
+    }
+
+
+    /* 
+
+    public void setCuadros(List<Cuadro> cuadros) {
+        this.cuadros = cuadros;
+    } 
+    
+     public void setLotes(List<Lote> lotes) {
+        this.lotes = lotes;
+    }   
+    
+    */
+    
 }

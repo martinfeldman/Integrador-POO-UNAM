@@ -9,32 +9,43 @@ import java.util.List;
 public class Cosecha {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    protected int id_Cosecha;
-    private int id_Lote;
-    private ArrayList<Double> kgEntregados = new ArrayList<>();
-  
+    private int id_Cosecha;
+    private Date fecha;
+    private boolean isAlta; 
+      
+    // empleado que produjo la cosecha
+    @ManyToOne
+    private Empleado empleado;
 
+    // los cuadros cosechados y los kilos según el cuadro. Se utiliza correspondencia entre arrays.
+    // Es decir kgsEntregados[0] = kgsEntregados por cuadro[0],
+    //          kgsEntregados[1] = kgsEntregados por cuadro[1], etc.
     @OneToMany
     private List<Cuadro> cuadros = new ArrayList<>();
-    private Date fecha;
-    @OneToOne
-    private Cuadrilla cuadrilla;
+    private ArrayList<Double> kgEntregados = new ArrayList<>();
+
     
-    protected Cosecha() {}
+    public Cosecha() {}
     
-    public Cosecha(int idLote, Date fecha, Cuadrilla cuadrilla) {
-        this.id_Lote = idLote;
+    public Cosecha(Empleado empleado, Date fecha, List<Cuadro> cuadros, ArrayList<Double> kgEntregados ) {
+        this.empleado = empleado;
         this.fecha = fecha;
-        this.cuadrilla = cuadrilla;
+        this.cuadros = cuadros;
+        this.kgEntregados = kgEntregados;
     }
     
     @Override
     public String toString() {
-        return "Cosecha [cuadrilla=" + cuadrilla + ", cuadros=" + cuadros + ", fecha=" + fecha + ", idCosecha="
-                + id_Cosecha + ", idLote=" + id_Lote + ", kgEntregados=" + kgEntregados + "]";
+        return "Cosecha [realizada por empleado: " + empleado.getNombres() + ", cuadros=" + cuadros + ", fecha=" + fecha + ", idCosecha="
+                + id_Cosecha +  ", kgEntregados=" + kgEntregados + "]";
     }
 
 
+
+
+
+    // adders 
+    
     public void agregarCuadro(Cuadro cuadro) {
         this.cuadros.add(cuadro);
     }
@@ -49,24 +60,31 @@ public class Cosecha {
 
     // getters & setters 
 
-    public int getIdLote() {
-        return id_Lote;
-    }
-
-    public void setIdLote(int idLote) {
-        this.id_Lote = idLote;
-    }
-
     public int getId_Cosecha() {
         return id_Cosecha;
     }
 
-    public void setIdCosecha(int idCosecha) {
-        this.id_Cosecha = idCosecha;
+    public boolean isAlta() {
+        return isAlta;
+    }
+
+    public void setAlta(boolean isAlta) {
+        this.isAlta = isAlta;
+    }
+
+    public Double getTotalKgs() {
+        double pesoTotal = 0;
+
+        for(Double index : this.kgEntregados){
+            //System.out.println(index);
+            pesoTotal += index;        
+        }
+
+        return pesoTotal;
     }
 
     public ArrayList<Double> getKgEntregados() {
-        return kgEntregados;
+        return this.kgEntregados; 
     }
 
     public void setKgEntregados(ArrayList<Double> kgEntregados) {
@@ -89,13 +107,6 @@ public class Cosecha {
         this.fecha = fecha;
     }
 
-    public Cuadrilla getCuadrilla() {
-        return cuadrilla;
-    }
-
-    public void setCuadrilla(Cuadrilla cuadrilla) {
-        this.cuadrilla = cuadrilla;
-    }
 }
    
 

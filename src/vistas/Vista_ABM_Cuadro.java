@@ -54,25 +54,26 @@ public class Vista_ABM_Cuadro implements Vista {
 
     // definicion elementos de pantalla 
 
-       VBox contenedor = new VBox();
-       HBox contenedorBotones = new HBox();
-       VBox contenedorCarga = new VBox();
+        VBox contenedor = new VBox();
+        HBox contenedorBotones = new HBox();
+        VBox contenedorCarga = new VBox();
      
         etiquetaId = new Label("");
         entradaSuperficie = new TextField();
-        var productoresBox = new ComboBox<>();
-        var tabla = new TableView<>(); 
+        productoresBox = new ComboBox<>();
+        tabla = new TableView<>(); 
 
-        var columnaId = new TableColumn<>("Id");
-        var columnaNombres = new TableColumn<>("Nombres");
-        var columnaApellidos = new TableColumn<>("Apellidos");
-        var columnaDepartamento = new TableColumn<>("Departamento");
+        columnaId = new TableColumn<>("Id");
+        columnaLote = new TableColumn<>("Lote");
+        columnaProductor = new TableColumn<>("Productor");
+        columnaSuperficie = new TableColumn<>("Superficie");
        
 
     // propiedades de elementos
 
         tabla.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         entradaSuperficie.setPromptText("Ingrese Superficie");
+
         contenedorBotones.setSpacing(10);
         contenedorCarga.setSpacing(10);
         contenedorBotones.setPadding(new Insets(10, 10, 10, 10));
@@ -83,6 +84,7 @@ public class Vista_ABM_Cuadro implements Vista {
         columnaLote.setMinWidth(300);
         columnaProductor.setMinWidth(300);
         columnaSuperficie.setMinWidth(300);
+
         columnaId.setCellValueFactory(new PropertyValueFactory<>("idEmpleado"));
         columnaLote.setCellValueFactory(new PropertyValueFactory<>("nombres"));
         columnaProductor.setCellValueFactory(new PropertyValueFactory<>("apellidos"));
@@ -101,9 +103,9 @@ public class Vista_ABM_Cuadro implements Vista {
 
         //- asociamos las columnas a la tabla
         tabla.getColumns().add(columnaId);
-        //tabla.getColumns().add(columnaLote);
-        //tabla.getColumns().add(columnaProductor);
-        //tabla.getColumns().add(columnaSuperficie);
+        tabla.getColumns().add(columnaLote);
+        tabla.getColumns().add(columnaProductor);
+        tabla.getColumns().add(columnaSuperficie);
         tabla.getSelectionModel().selectedItemProperty().addListener(e -> cargarDatos());
 
         //- agregamos contenido a los contenedores

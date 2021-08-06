@@ -37,7 +37,7 @@ public class Servicio_Productores {
             throw new IllegalArgumentException("Faltan datos");
         }
         this.repositorio.iniciarTransaccion();
-        Productor productor = new Productor(nombres.toUpperCase().trim(), apellidos.toUpperCase().trim(), dni);
+        Productor productor = new Productor(nombres.toUpperCase().trim(), apellidos.toUpperCase().trim(), dni.trim());
         this.repositorio.insertar(productor);
         this.repositorio.confirmarTransaccion();
     }
@@ -106,6 +106,7 @@ public class Servicio_Productores {
             productor.setAlta(false);
 
             this.repositorio.confirmarTransaccion();
+            
             return true;
     
             // this.repositorio.eliminar(productor);     

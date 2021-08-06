@@ -45,8 +45,8 @@ public class Vista_ABM_Productor implements Vista {
     @Override
     public Parent obtenerVista() {
         
-        //  creamos elementos  de pantalla 
-        //- labels & textfields
+       // definicion elementos de pantalla
+     
         etiquetaId = new Label("");
         etiquetaInteractiva = new Label("Puede seleccionar filas de la tabla para editarlas");
 
@@ -54,76 +54,56 @@ public class Vista_ABM_Productor implements Vista {
         entradaApellidos = new TextField();
         entradaDni = new TextField();
         
+        botonAgregar = new Button("Agregar/Modificar Selección");
+        botonEliminar = new Button("Eliminar");
+        botonLimpiar = new Button("Limpiar");
+    
+        VBox contenedor = new VBox();
+        HBox contenedorBotones = new HBox();
+        VBox contenedorCarga = new VBox();
+
+        columnaId = new TableColumn<>("Id");
+        columnaDni = new TableColumn<>("DNI");
+        columnaNombres = new TableColumn<>("Nombres");
+        columnaApellidos = new TableColumn<>("Apellidos");
+
+        tabla = new TableView<>();
+
+
+
+        // propiedades de elementos
+
+        tabla.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+
         entradaNombres.setPromptText("Nombres del productor");
         entradaApellidos.setPromptText("Apellidos del productor");
         entradaDni.setPromptText("DNI del productor");
-    
 
-
-        // tres botones principales y asociamos eventos
-        botonAgregar = new Button("Agregar/Modificar Selección");
-        botonAgregar.setOnAction(e -> clicAgregarProductor());
-
-        botonEliminar = new Button("Eliminar");
-        botonEliminar.setOnAction(e -> clicEliminarProductor());
-
-        botonLimpiar = new Button("Limpiar");
-        botonLimpiar.setOnAction(e -> limpiar());
-
-
-
-        //  contenedor para los botones 
-        HBox contenedorBotones = new HBox();
         contenedorBotones.setPadding(new Insets(10, 10, 10, 10));
-        contenedorBotones.setSpacing(10);
-
-
-        // agregamos  botones al contenedorBotones
-        contenedorBotones.getChildren().addAll(botonAgregar, botonEliminar, botonLimpiar);
-
-
-
-        // contenedor inferior para la carga (inputs y botones y mensajes)
-        VBox contenedorCarga = new VBox();
         contenedorCarga.setPadding(new Insets(10, 10, 10, 10));
+        contenedorBotones.setSpacing(10);
         contenedorCarga.setSpacing(10);
-        contenedorCarga.getChildren().addAll(contenedorBotones, etiquetaInteractiva , etiquetaId, entradaNombres, entradaApellidos, entradaDni);
 
-
-        // TABLA 
-        tabla = new TableView<>();
-
-        // TABLA: definimos las columnas y sus propiedades
-        columnaId = new TableColumn<>("Id");
+        // COLUMNAS - propiedades
         columnaId.setMinWidth(100);
-        columnaId.setCellValueFactory(new PropertyValueFactory<>("id_Productor"));
-
-        columnaDni = new TableColumn<>("DNI");
         columnaDni.setMinWidth(100);
-        columnaDni.setCellValueFactory(new PropertyValueFactory<>("dni"));
-
-        columnaNombres = new TableColumn<>("Nombres");
         columnaNombres.setMinWidth(300);
-        columnaNombres.setCellValueFactory(new PropertyValueFactory<>("nombres"));
-
-        columnaApellidos = new TableColumn<>("Apellidos");
         columnaApellidos.setMinWidth(300);
+        
+        columnaId.setCellValueFactory(new PropertyValueFactory<>("id_Productor"));
+        columnaDni.setCellValueFactory(new PropertyValueFactory<>("dni"));
+        columnaNombres.setCellValueFactory(new PropertyValueFactory<>("nombres"));
         columnaApellidos.setCellValueFactory(new PropertyValueFactory<>("apellidos"));
 
-        // como mostrar los lotes y cuadros de un productor? 
-        // Podria crear otra tabla debajo que lea el productorSeleccionado 
-        // en la tabla de arriba y haga la busqueda. 
 
+        // acciones sobre elementos 
 
-      
-        // opcional (como es la seleccion: unica, multiple, etc)
-        tabla.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-
-
+        botonAgregar.setOnAction(e -> clicAgregarProductor());
+        botonEliminar.setOnAction(e -> clicEliminarProductor());
+        botonLimpiar.setOnAction(e -> limpiar());
 
         // pedimos los datos de Productores a la BD y mostramos en tabla 
         tabla.getItems().addAll(this.servicio.listarProductores());
-
 
         // agregamos las columnas a la tabla
         tabla.getColumns().add(columnaId);
@@ -132,17 +112,20 @@ public class Vista_ABM_Productor implements Vista {
         tabla.getColumns().add(columnaApellidos);
         tabla.getSelectionModel().selectedItemProperty().addListener(e -> cargarDatos());
        
-       
-        // Contenedor pincipal:  para la tabla y contenedor de carga
-        VBox contenedor = new VBox();
         // agregamos al contenedor la tabla
+        contenedorBotones.getChildren().addAll(botonAgregar, botonEliminar, botonLimpiar);    
+        contenedorCarga.getChildren().addAll(contenedorBotones, etiquetaInteractiva , etiquetaId, entradaNombres, entradaApellidos, entradaDni);
         contenedor.getChildren().addAll(tabla, contenedorCarga);
-
+        
         return contenedor;
 
     }
 
 
+
+        // como mostrar los lotes y cuadros de un productor? 
+        // Podria crear otra tabla debajo que lea el productorSeleccionado 
+        // en la tabla de arriba y haga la busqueda. 
 
 
  
@@ -155,6 +138,7 @@ public class Vista_ABM_Productor implements Vista {
             if (productorSeleccionado == null) {
                 // Si no hay elemento seleccionado en la tabla
                 servicio.agregarProductor(entradaNombres.getText(), entradaApellidos.getText(), entradaDni.getText());
+                tabla.getItems().addAll(this.servicio.listarProductores());
             } else {
                 // SINO modificar el productor
                 servicio.editarProductor(Integer.parseInt(etiquetaId.getText()), entradaNombres.getText(), entradaApellidos.getText(), entradaDni.getText());

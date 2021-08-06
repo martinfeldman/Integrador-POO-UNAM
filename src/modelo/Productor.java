@@ -6,22 +6,31 @@ import jakarta.persistence.*;
 
 @Entity
 public class Productor {
-    private String nombres;
-    private String apellidos;
-    private String dni;
-    private boolean isAlta;
-    
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.TABLE)
     private int id_Productor;
 
+    @Column(name = "nombres_productor", nullable = false, length = 50)
+    private String nombres;
+
+    @Column(name = "apellidos_productor", nullable = false, length = 50)
+    private String apellidos;
+
+    @Column(name = "dni_productor", nullable = false, length = 50)
+    private String dni;
+
+    @Column(name = "alta_productor", nullable = false)
+    private boolean alta;
+    
+   
     // lotes que posee el productor
-    @OneToMany
+    @OneToMany (mappedBy = "productor")
     private List<Lote> lotes = new ArrayList<>();
 
     // cuadros que posee el productor
-    @OneToMany
+    @OneToMany (mappedBy = "productor")
     private List<Cuadro> cuadros = new ArrayList<>();
+
 
     public Productor(){}
 
@@ -55,11 +64,11 @@ public class Productor {
     }
     
     public boolean isAlta() {
-        return isAlta;
+        return alta;
     }
 
-    public void setAlta(boolean isAlta) {
-        this.isAlta = isAlta;
+    public void setAlta(boolean alta) {
+        this.alta = alta;
     }
 
     public String getNombres() {

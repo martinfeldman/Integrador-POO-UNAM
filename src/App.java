@@ -50,7 +50,7 @@ public class App extends Application {
 
         // definicion de servicios
         // var servicio_productores = new Servicio_Productores(new Repositorio(emf));
-         var servicio_lotes = new Servicio_Lotes(new Repositorio(emf));
+        servicio_lotes = new Servicio_Lotes(new Repositorio(emf));
         // var servicio_cuadros = new Servicio_Cuadros(new Repositorio(emf));
         // var servicio_empleado = new Servicio_Empleados(new Repositorio(emf));
         // var servicio_seguimiento = new Servicio_seguimientoEmpleado(new Repositorio(emf));

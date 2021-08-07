@@ -44,7 +44,7 @@ public class Servicio_Cuadros{
     // ABM CUADRO 
 
     // para agregar cuadro hace falta productor y lote 
-    public void agregarCuadro(Productor productor, Lote lote, double Superficie) {
+    public void agregarCuadro(Productor productor, Lote lote, double superficie) {
         // falta si superficie esta vacio
         if (productor == null || lote == null) {
             throw new IllegalArgumentException("Faltan datos");
@@ -52,7 +52,7 @@ public class Servicio_Cuadros{
         this.repositorio.iniciarTransaccion();
 
         // Faltan agregar los parametros
-        Cuadro cuadro = new Cuadro();
+        Cuadro cuadro = new Cuadro(productor, lote, superficie);
         this.repositorio.insertar(cuadro);
         this.repositorio.confirmarTransaccion();
     }

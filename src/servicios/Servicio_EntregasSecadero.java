@@ -1,10 +1,10 @@
 package servicios;
 import repositorios.*;
 import modelo.Cosecha;
-import modelo.Empleado;
 import modelo.EntregaSecadero;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,7 +51,7 @@ public class Servicio_EntregasSecadero {
     }
 
     // cambiar valor devuelto (por ejemplo: True ok, False problemas)
-    public void editarEntregaSecadero(int idEntregaSecadero, double PesoSecadero, Date fechaEntrega) {
+    public void editarEntregaSecadero(int idEntregaSecadero, double PesoSecadero, LocalDate fechaEntrega) {
         
         // falta completar el if con los demas atributos
         if (fechaEntrega == null) {
@@ -78,9 +78,9 @@ public class Servicio_EntregasSecadero {
         }
     }
 
-    public int eliminarEntregaSecadero(Long idEmpleado) {
+    public int eliminarEntregaSecadero(int idEntregaSecadero) {
         this.repositorio.iniciarTransaccion();
-        Empleado empleado = this.repositorio.buscar(Empleado.class, idEmpleado);
+        EntregaSecadero entregaSecadero = this.repositorio.buscar(EntregaSecadero.class, idEntregaSecadero);
         // como se soluciona??
        /* if (empleado != null && empleado.getProyectos().isEmpty() ) {
             this.repositorio.eliminar(empleado);

@@ -4,6 +4,7 @@ import modelo.Cosecha;
 import modelo.Empleado;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +35,7 @@ public class Servicio_Cosechas {
     
     // ABM Cosecha 
 
-    public void agregarCosecha(Empleado empleado, Date fecha) {
+    public void agregarCosecha(Empleado empleado, LocalDate fecha) {
         if (empleado == null) {
             throw new IllegalArgumentException("Faltan datos");
         }
@@ -77,9 +78,9 @@ public class Servicio_Cosechas {
 
   
 
-    public boolean eliminarCosecha(Long idEmpleado) {
+    public boolean eliminarCosecha(int id_Cosecha) {
         this.repositorio.iniciarTransaccion();
-        Empleado empleado = this.repositorio.buscar(Empleado.class, idEmpleado);
+        Cosecha cosecha = this.repositorio.buscar(Cosecha.class, id_Cosecha);
         // como se soluciona??
        /* if (empleado != null && empleado.getProyectos().isEmpty() ) {
             this.repositorio.eliminar(empleado);

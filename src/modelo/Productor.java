@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 @Entity
 public class Productor {
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id_Productor;
 
     @Column(name = "nombres_productor", nullable = false, length = 50)
@@ -16,7 +16,7 @@ public class Productor {
     @Column(name = "apellidos_productor", nullable = false, length = 50)
     private String apellidos;
 
-    @Column(name = "dni_productor", nullable = false, length = 50)
+    @Column(name = "dni_productor", nullable = false, length = 15)
     private String dni;
 
     @Column(name = "alta_productor", nullable = false)

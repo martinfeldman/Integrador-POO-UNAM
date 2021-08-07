@@ -21,9 +21,9 @@ public class Cuadro {
 
     public Cuadro(){}
 
-    public Cuadro(Lote lote, double superficie){
-        this.lote = lote;
+    public Cuadro(Productor productor, Lote lote, double superficie){
         this.productor = lote.getProductor();
+        this.lote = lote;
         this.superficie = superficie; 
     }
     

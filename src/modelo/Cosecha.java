@@ -2,6 +2,7 @@ package modelo;
 
 import jakarta.persistence.*;
 import java.util.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +11,7 @@ public class Cosecha {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id_Cosecha;
-    private Date fecha;
+    private LocalDate fecha;
     private boolean isAlta; 
       
     // empleado que produjo la cosecha
@@ -22,22 +23,22 @@ public class Cosecha {
     //          kgsEntregados[1] = kgsEntregados por cuadro[1], etc.
     @OneToMany
     private List<Cuadro> cuadros = new ArrayList<>();
-    private ArrayList<Double> kgEntregados = new ArrayList<>();
+    private ArrayList<Double> kgsCosechados = new ArrayList<>();
 
     
     public Cosecha() {}
     
-    public Cosecha(Empleado empleado, Date fecha, List<Cuadro> cuadros, ArrayList<Double> kgEntregados ) {
+    public Cosecha(Empleado empleado, LocalDate fecha, List<Cuadro> cuadros, ArrayList<Double> kgEntregados ) {
         this.empleado = empleado;
         this.fecha = fecha;
         this.cuadros = cuadros;
-        this.kgEntregados = kgEntregados;
+        this.kgsCosechados = kgEntregados;
     }
     
     @Override
     public String toString() {
         return "Cosecha [realizada por empleado: " + empleado.getNombres() + ", cuadros=" + cuadros + ", fecha=" + fecha + ", idCosecha="
-                + id_Cosecha +  ", kgEntregados=" + kgEntregados + "]";
+                + id_Cosecha +  ", kgEntregados=" + kgsCosechados + "]";
     }
 
 
@@ -51,7 +52,7 @@ public class Cosecha {
     }
 
     public void agregarKgEntregados(Double kgEntregados) {
-        this.kgEntregados.add(kgEntregados);
+        this.kgsCosechados.add(kgEntregados);
     }
 
 
@@ -75,7 +76,7 @@ public class Cosecha {
     public Double getTotalKgs() {
         double pesoTotal = 0;
 
-        for(Double index : this.kgEntregados){
+        for(Double index : this.kgsCosechados){
             //System.out.println(index);
             pesoTotal += index;        
         }
@@ -83,12 +84,12 @@ public class Cosecha {
         return pesoTotal;
     }
 
-    public ArrayList<Double> getKgEntregados() {
-        return this.kgEntregados; 
+    public ArrayList<Double> getkgsCosechados() {
+        return this.kgsCosechados; 
     }
 
     public void setKgEntregados(ArrayList<Double> kgEntregados) {
-        this.kgEntregados = kgEntregados;
+        this.kgsCosechados = kgEntregados;
     }
 
     public List<Cuadro> getCuadros() {
@@ -99,11 +100,11 @@ public class Cosecha {
         this.cuadros = cuadros;
     }
 
-    public Date getFecha() {
+    public LocalDate getFecha() {
         return fecha;
     }
 
-    public void setFecha(Date fecha) {
+    public void setFecha(LocalDate fecha) {
         this.fecha = fecha;
     }
 

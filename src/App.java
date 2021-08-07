@@ -14,6 +14,10 @@ import javafx.stage.Stage;
 import javafx.scene.control.Separator;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
+import java.awt.*;
 
 
 public class App extends Application {
@@ -21,20 +25,30 @@ public class App extends Application {
     // definicion cambiante
     Group cambiante = new Group();
 
-    // definicion de vistas
+    // definimos persistencia (Esto queda muy dependiente de JPA).
+    // si se quiere hacer menos dependiente hay que cambiar el formato del repositorio
+    // hacer una interfaz y ahi crear los distintos tipos de repositorios
     EntityManagerFactory emf = Persistence.createEntityManagerFactory("EmpresaVerdePU");
 
+    //definicion Servicios y Vistas
     Servicio_Productores servicio_productores = new Servicio_Productores(new Repositorio(emf));
     Vista_ABM_Productor vistaProductores = new Vista_ABM_Productor(servicio_productores) ;
     
     Servicio_Lotes servicio_lotes = new Servicio_Lotes(new Repositorio(emf));
-    Vista_ABM_Lote vistaLotes = new Vista_ABM_Lote(servicio_lotes);
+    Vista_ABM_Lote vistaLotes = new Vista_ABM_Lote(servicio_lotes, servicio_productores);
 
-   // Vista_ABM_Lote vistaLotes;
-    Vista_ABM_Cuadro vistaCuadros;
-    Vista_ABM_Empleado vistaEmpleados;
-    Vista_ABM_Cosecha vistaCosechas;
-    Vista_ABM_EntregaSecadero vistaEntregasSecadero;
+    Servicio_Cuadros servicio_cuadros = new Servicio_Cuadros(new Repositorio(emf));
+    Vista_ABM_Cuadro vistaCuadros = new Vista_ABM_Cuadro(servicio_cuadros, servicio_productores, servicio_lotes);
+
+    Servicio_Empleados servicio_empleados = new Servicio_Empleados(new Repositorio(emf));
+    Servicio_seguimientoEmpleado servicio_seguimientoEmpleado = new Servicio_seguimientoEmpleado(new Repositorio(emf));
+    Vista_ABM_Empleado vistaEmpleados = new Vista_ABM_Empleado(servicio_empleados, servicio_seguimientoEmpleado, servicio_productores, servicio_lotes, servicio_cuadros);
+
+    Servicio_Cosechas servicio_cosechas = new Servicio_Cosechas(new Repositorio(emf));
+    Vista_ABM_Cosecha vistaCosechas = new Vista_ABM_Cosecha(servicio_cosechas, servicio_empleados, servicio_cuadros);
+
+    Servicio_EntregasSecadero servicio_entregasSecadero = new Servicio_EntregasSecadero(new Repositorio(emf));
+    Vista_ABM_EntregaSecadero vistaEntregasSecadero = new Vista_ABM_EntregaSecadero(servicio_entregasSecadero, servicio_cosechas);
     
 
     public static void main(String[] args) {
@@ -43,29 +57,6 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        // defino persistencia (Esto queda muy dependiente de JPA)
-        // si quiero hacer menos dependiente hay que cambiar el formato del repositorio
-        // hacer una interfaz y ahi crear los distintos tipos de repositorios
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("EmpresaVerdePU");
-
-        // definicion de servicios
-        // var servicio_productores = new Servicio_Productores(new Repositorio(emf));
-        servicio_lotes = new Servicio_Lotes(new Repositorio(emf));
-        // var servicio_cuadros = new Servicio_Cuadros(new Repositorio(emf));
-        // var servicio_empleado = new Servicio_Empleados(new Repositorio(emf));
-        // var servicio_seguimiento = new Servicio_seguimientoEmpleado(new Repositorio(emf));
-        // var servicio_cosechas = new Servicio_Cosechas(new Repositorio(emf));
-        // var servicio_entregasSecadero = new Servicio_EntregasSecadero(new Repositorio(emf));
-
-        // asignacion de vistas, las cuales necesitan un servicio
-        // var vistaProductores = new Vista_ABM_Productor(servicio_productores);
-        // var vistaLotes = new Vista_ABM_Lote(servicio_lotes);
-        // var vistaCuadros = new Vista_ABM_Cuadro(servicio_cuadros);
-        // var vistaEmpleados = new Vista_ABM_Empleado(servicio_empleado, servicio_seguimiento);
-        // var vistaCosechas = new Vista_ABM_Cosecha(servicio_cosechas);
-        // var vistaEntregasSecadero = new Vista_ABM_EntregaSecadero(servicio_entregasSecadero);
-
-
 
         // definicion elementos de pantalla
 
@@ -78,7 +69,7 @@ public class App extends Application {
         Button botonCuadros = new Button("Cuadros");
         Button botonEmpleados = new Button("Empleados");
         Button botonCosechas = new Button("Cosechas");
-        Button botonEntregasSecadero = new Button("EntregasSecadero");
+        Button botonEntregasSecadero = new Button("Entregas al Secadero");
 
         Separator separador1 = new Separator(Orientation.HORIZONTAL);
         Separator separador2 = new Separator(Orientation.HORIZONTAL);
@@ -93,10 +84,15 @@ public class App extends Application {
         
         stage.setTitle("Empresa - Productores");
         stage.setResizable(false);
+        /*escena.setFill(new LinearGradient(
+            0, 0, 1, 1, true,                      //sizing
+            CycleMethod.NO_CYCLE,                  //cycling
+            new Stop(0, Color.getColor("#81c483")),     //colors
+            new Stop(1, Color.web("#fcc200"))))   */
 
         contenedorBotones.setPadding(new Insets(10, 10, 10, 10));
         contenedorBotones.setSpacing(10);
-        //contenedorBotones.setAlignment(Pos.CENTER);
+        
 
 
 

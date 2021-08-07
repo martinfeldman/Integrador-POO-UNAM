@@ -98,8 +98,8 @@ public class Vista_ABM_Productor implements Vista {
 
         // acciones sobre elementos 
 
-        botonAgregar.setOnAction(e -> clicAgregarProductor());
-        botonEliminar.setOnAction(e -> clicEliminarProductor());
+        botonAgregar.setOnAction(e -> clicAgregarCuadro());
+        botonEliminar.setOnAction(e -> clicEliminarCuadro());
         botonLimpiar.setOnAction(e -> limpiar());
 
         // pedimos los datos de Productores a la BD y mostramos en tabla 
@@ -131,14 +131,15 @@ public class Vista_ABM_Productor implements Vista {
  
 
 
-    private void clicAgregarProductor(){
+    private void clicAgregarCuadro(){
      // asumo selección simple
         productorSeleccionado = tabla.getSelectionModel().getSelectedItem();
         try {
             if (productorSeleccionado == null) {
                 // Si no hay elemento seleccionado en la tabla
                 servicio.agregarProductor(entradaNombres.getText(), entradaApellidos.getText(), entradaDni.getText());
-                tabla.getItems().addAll(this.servicio.listarProductores());
+               
+               
             } else {
                 // SINO modificar el productor
                 servicio.editarProductor(Integer.parseInt(etiquetaId.getText()), entradaNombres.getText(), entradaApellidos.getText(), entradaDni.getText());
@@ -149,11 +150,13 @@ public class Vista_ABM_Productor implements Vista {
         }
     }
 
-    // A partir de la seleccion de un objeto sobre la tabla, Se cargan sus datos en los elementos de la pantalla
+
+
+    // A partir de la seleccion de un objeto sobre la tabla, se cargan sus datos en los elementos de la pantalla
     private void cargarDatos() {
         productorSeleccionado = tabla.getSelectionModel().getSelectedItem();
         if (productorSeleccionado != null) {
-            etiquetaInteractiva = new Label("Está seleccionado el Prodcutor con id: ");
+            etiquetaInteractiva.setText("Está seleccionado el Prodcutor con id: ");
             etiquetaId.setText(String.valueOf(productorSeleccionado.getId_productor()));
             entradaNombres.setText(productorSeleccionado.getNombres());
             entradaApellidos.setText(productorSeleccionado.getApellidos());
@@ -165,7 +168,7 @@ public class Vista_ABM_Productor implements Vista {
     }
 
 
-    private void clicEliminarProductor(){
+    private void clicEliminarCuadro(){
         productorSeleccionado = tabla.getSelectionModel().getSelectedItem();
         if (productorSeleccionado != null) {
             servicio.eliminarProductor(productorSeleccionado.getId_productor());
@@ -176,15 +179,12 @@ public class Vista_ABM_Productor implements Vista {
 
     // limpiar vista 
     private void limpiar() {
-        var tabla = new TableView<>();
-
-        // quitamos la selección en la tabla
-        tabla.getSelectionModel().clearSelection();
-
         etiquetaId.setText("");
+        etiquetaInteractiva.setText("Puede seleccionar filas de la tabla para editarlas");
         entradaNombres.clear();
         entradaApellidos.clear();
         entradaDni.clear();
+
         tabla.getItems().clear();
         tabla.getItems().addAll(this.servicio.listarProductores());
     } 

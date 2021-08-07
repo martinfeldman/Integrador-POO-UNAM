@@ -23,7 +23,7 @@ public class Vista_ABM_Lote implements Vista {
     
     // el servicio con el que se va a comunicar la vista
     private final Servicio_Lotes servicio;
-    Servicio_Productores servicio_productor;
+    Servicio_Productores servicio_Productores;
     private Lote loteSeleccionado;
 
     // objetos de la pantalla
@@ -37,8 +37,9 @@ public class Vista_ABM_Lote implements Vista {
 
     
 
-    public Vista_ABM_Lote(Servicio_Lotes servicio) {
+    public Vista_ABM_Lote(Servicio_Lotes servicio, Servicio_Productores servicio_Productores) {
         this.servicio = servicio;
+        this.servicio_Productores = servicio_Productores;
     }
 
     @Override
@@ -59,7 +60,6 @@ public class Vista_ABM_Lote implements Vista {
         HBox contenedorBotones = new HBox();
         VBox contenedorCarga = new VBox();
 
-        // COLUMNAS y sus propiedades
         columnaId = new TableColumn<>("Id");
         columnaProductor = new TableColumn<>("Productor");
 
@@ -89,7 +89,7 @@ public class Vista_ABM_Lote implements Vista {
         botonEliminar.setOnAction(e -> clicEliminarEmpleado());
         botonLimpiar.setOnAction(e -> limpiar());
 
-        productoresBox.getItems().addAll(servicio_productor.listarProductores());       
+        productoresBox.getItems().addAll(servicio_Productores.listarProductores());       
 
         // pedimos los datos de Empleados a la BD y mostramos en tabla
         tabla.getItems().addAll(this.servicio.listarLotes());
@@ -158,13 +158,8 @@ public class Vista_ABM_Lote implements Vista {
 
      // limpiar vista 
      private void limpiar() {
-        var tabla = new TableView<>();
-
-        // quitamos la selección en la tabla
-        tabla.getSelectionModel().clearSelection();
-
         etiquetaId.setText("");
- 
+        etiquetaInteractiva.setText("Puede seleccionar filas de la tabla para editarlas");
         tabla.getItems().clear();
         tabla.getItems().addAll(this.servicio.listarLotes());
     } 

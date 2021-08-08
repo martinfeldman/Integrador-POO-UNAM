@@ -60,9 +60,9 @@ public class App extends Application {
 
         // definicion elementos de pantalla
 
-        VBox contenedorBotones = new VBox();
-        HBox contenedorPrincipal = new HBox();
-        Scene escena = new Scene(contenedorPrincipal, 1200, 600);
+        HBox contenedorBotones = new HBox();
+        VBox contenedorPrincipal = new VBox();
+        Scene escena = new Scene(contenedorPrincipal, 1000, 2000);
 
         Button botonProductores = new Button("Productores");
         Button botonLotes = new Button("Lotes");
@@ -70,13 +70,15 @@ public class App extends Application {
         Button botonEmpleados = new Button("Empleados");
         Button botonCosechas = new Button("Cosechas");
         Button botonEntregasSecadero = new Button("Entregas al Secadero");
+        Button botonSalir = new Button ("Salir");
 
-        Separator separador1 = new Separator(Orientation.HORIZONTAL);
-        Separator separador2 = new Separator(Orientation.HORIZONTAL);
-        Separator separador3 = new Separator(Orientation.HORIZONTAL);
-        Separator separador4 = new Separator(Orientation.HORIZONTAL);
-        Separator separador5 = new Separator(Orientation.HORIZONTAL);
-        Separator separadorX = new Separator(Orientation.VERTICAL);        
+        Separator separador1 = new Separator(Orientation.VERTICAL);
+        Separator separador2 = new Separator(Orientation.VERTICAL);
+        Separator separador3 = new Separator(Orientation.VERTICAL);
+        Separator separador4 = new Separator(Orientation.VERTICAL);
+        Separator separador5 = new Separator(Orientation.VERTICAL);
+        Separator separador6 = new Separator(Orientation.VERTICAL);
+        Separator separadorX = new Separator(Orientation.HORIZONTAL);        
 
 
         
@@ -90,10 +92,12 @@ public class App extends Application {
             new Stop(0, Color.getColor("#81c483")),     //colors
             new Stop(1, Color.web("#fcc200"))))   */
 
-        contenedorBotones.setPadding(new Insets(10, 10, 10, 10));
+        contenedorPrincipal.setSpacing(10);    
         contenedorBotones.setSpacing(10);
+        contenedorPrincipal.setPadding(new Insets(5, 20, 5, 20));
+        contenedorBotones.setPadding(new Insets(10, 10, 10, 10));
         
-
+        separador6.setPadding(new Insets(0, 550, 0, 0));
 
 
         // acciones sobre elementos 
@@ -103,10 +107,11 @@ public class App extends Application {
         botonEmpleados.setOnAction(e -> clicMostrarVistaEmpleados(stage));
         botonCosechas.setOnAction(e -> clicMostrarVistaCosechas(stage));
         botonEntregasSecadero.setOnAction(e -> clicMostrarVistaEntregaSecadero(stage));
+        botonSalir.setOnAction(e -> System.exit(0));
 
         //- agregamos contenido a los contenedores
         contenedorBotones.getChildren().addAll(botonProductores, separador1, botonLotes, separador2,
-         botonCuadros, separador3, botonEmpleados, separador4, botonCosechas, separador5, botonEntregasSecadero);
+         botonCuadros, separador3, botonEmpleados, separador4, botonCosechas, separador5, botonEntregasSecadero, separador6, botonSalir);
 
         // que muestro inicialmente : Creo que se puede dar vuelta el orden de las siguientes dos sentencias 
         cambiante.getChildren().add(vistaProductores.obtenerVista());
@@ -124,6 +129,8 @@ public class App extends Application {
         stage.sizeToScene();
         stage.centerOnScreen(); */
 
+
+    
 
     private void clicMostrarVistaProductores(Stage stage) {
         System.out.print(stage);

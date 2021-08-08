@@ -109,6 +109,7 @@ public class Vista_ABM_Empleado implements Vista {
         // propiedades de elementos
 
         tabla.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        tabla.setPrefHeight(300);
 
         entradaNombres.setPromptText("Nombres del empleado");       
         entradaApellidos.setPromptText("Apellidos del empleado");
@@ -122,7 +123,7 @@ public class Vista_ABM_Empleado implements Vista {
         // COLUMNAS - propiedades
       
         columnaId.setMinWidth(100);
-        columnaDni.setMinWidth(100);
+        columnaDni.setMinWidth(200);
         columnaNombres.setMinWidth(300);
         columnaApellidos.setMinWidth(300);
 

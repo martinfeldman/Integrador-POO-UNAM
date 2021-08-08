@@ -63,7 +63,7 @@ public class Vista_ABM_Cuadro implements Vista {
         etiquetaComboBox_lotes = new Label ("Seleccione el lote al que pertenece el cuadro");
         etiqueta_productor = new Label("");
 
-        entradaSuperficie = new TextField();
+        entradaSuperficie = new TextField("");
         lotesBox = new ComboBox<>();
         tabla = new TableView<>(); 
 
@@ -80,8 +80,10 @@ public class Vista_ABM_Cuadro implements Vista {
     // propiedades de elementos
 
         tabla.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        entradaSuperficie.setPromptText("Ingrese Superficie");
+        tabla.setPrefHeight(300);
 
+        entradaSuperficie.setPromptText("Ingrese Superficie:   ");
+        
         contenedorBotones.setSpacing(10);
         contenedorCarga.setSpacing(10);
         contenedorBotones.setPadding(new Insets(10, 10, 10, 10));

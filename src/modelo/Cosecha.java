@@ -1,7 +1,6 @@
 package modelo;
 
 import jakarta.persistence.*;
-import java.util.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +62,16 @@ public class Cosecha {
 
     public int getId_Cosecha() {
         return id_Cosecha;
+    }
+
+    
+
+    public Empleado getEmpleado() {
+        return empleado;
+    }
+
+    public void setEmpleado(Empleado empleado) {
+        this.empleado = empleado;
     }
 
     public boolean isAlta() {

@@ -74,6 +74,7 @@ public class Vista_ABM_Productor implements Vista {
         // propiedades de elementos
 
         tabla.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        tabla.setPrefHeight(300);
 
         entradaNombres.setPromptText("Nombres del productor");
         entradaApellidos.setPromptText("Apellidos del productor");
@@ -86,7 +87,7 @@ public class Vista_ABM_Productor implements Vista {
 
         // COLUMNAS - propiedades
         columnaId.setMinWidth(100);
-        columnaDni.setMinWidth(100);
+        columnaDni.setMinWidth(200);
         columnaNombres.setMinWidth(300);
         columnaApellidos.setMinWidth(300);
         

@@ -1,9 +1,9 @@
 package servicios;
 import repositorios.*;
 import modelo.Cosecha;
+import modelo.Cuadro;
 import modelo.Empleado;
 
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,14 +35,14 @@ public class Servicio_Cosechas {
     
     // ABM Cosecha 
 
-    public void agregarCosecha(Empleado empleado, LocalDate fecha) {
+    public void agregarCosecha(Empleado empleado, LocalDate fecha, ArrayList<Cuadro> cuadro, ArrayList<Double> kgsCosechados) {
         if (empleado == null) {
             throw new IllegalArgumentException("Faltan datos");
         }
         this.repositorio.iniciarTransaccion();
 
          // Faltan agregar los parametros
-        Cosecha cosecha = new Cosecha();
+        Cosecha cosecha = new Cosecha(empleado, fecha, cuadro, kgsCosechados);
         this.repositorio.insertar(cosecha);
         this.repositorio.confirmarTransaccion();
     }

@@ -11,7 +11,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import modelo.Empleado;
 import modelo.Lote;
 import modelo.Productor;
 import servicios.Servicio_Lotes;
@@ -69,15 +68,17 @@ public class Vista_ABM_Lote implements Vista {
         // propiedades de elementos
 
         tabla.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        tabla.setPrefHeight(300);
 
+        contenedorCarga.setSpacing(10);
+        contenedorBotones.setSpacing(10);
         contenedorBotones.setPadding(new Insets(10, 10, 10, 10));
         contenedorCarga.setPadding(new Insets(10, 10, 10, 10));
-        contenedorBotones.setSpacing(10);
-        contenedorCarga.setSpacing(10);
 
         // COLUMNAS - propiedades
         columnaId.setMinWidth(100);
-        columnaProductor.setMinWidth(100);
+        columnaProductor.setMinWidth(300);
+
         columnaId.setCellValueFactory(new PropertyValueFactory<>("id_Lote"));
         columnaProductor.setCellValueFactory(new PropertyValueFactory<>("productor"));
 

@@ -87,6 +87,7 @@ public class Vista_ABM_EntregaSecadero implements Vista {
     // propiedades de elementos
 
         tabla.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        tabla.setPrefHeight(300);
         etiquetaFecha.setText("Ingrese Fecha");
 
         contenedorBotones.setSpacing(10);

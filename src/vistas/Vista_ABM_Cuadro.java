@@ -1,23 +1,25 @@
 package vistas;
-import modelo.Cuadro;
-import modelo.Lote;
-import modelo.Productor;
-import servicios.Servicio_Cuadros;
-import servicios.Servicio_Lotes;
-import servicios.Servicio_Productores;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.Separator;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import modelo.Cuadro;
+import modelo.Lote;
+import modelo.Productor;
+import servicios.Servicio_Cuadros;
+import servicios.Servicio_Lotes;
+import servicios.Servicio_Productores;
 
 
 
@@ -30,17 +32,19 @@ public class Vista_ABM_Cuadro implements Vista {
     private Cuadro cuadroSeleccionado;
 
     // objetos de la pantalla
+
+    Button botonAgregar, botonEliminar, botonLimpiar;
+    ComboBox<Lote> lotesBox;
+    Label etiquetaInteractiva, etiqueta_productor, etiquetaComboBox_lotes;
     TableView<Cuadro> tabla;
     TableColumn<Cuadro, Integer> columnaId;
     TableColumn<Cuadro, Lote> columnaLote;
     TableColumn<Cuadro, Productor> columnaProductor;
     TableColumn<Cuadro, Double> columnaSuperficie;
-    Button botonAgregar, botonEliminar, botonLimpiar;
-    ComboBox<Lote> lotesBox;
-    Label etiquetaId, etiquetaInteractiva, etiqueta_productor, etiquetaComboBox_lotes;
     TextField entradaSuperficie;
+    Separator separador1, separador2, separador3 ; 
     
-    
+        
     public Vista_ABM_Cuadro(Servicio_Cuadros servicio, Servicio_Productores servicio_Productores, Servicio_Lotes servicio_Lotes) {
         this.servicio = servicio;
         this.servicio_Productores =  servicio_Productores;
@@ -54,53 +58,65 @@ public class Vista_ABM_Cuadro implements Vista {
 
     // definicion elementos de pantalla 
 
-        VBox contenedor = new VBox();
-        HBox contenedorBotones = new HBox();
-        VBox contenedorCarga = new VBox();
-     
-        etiquetaId = new Label("");
-        etiquetaInteractiva = new Label("Puede seleccionar filas de la tabla para editarlas");
-        etiquetaComboBox_lotes = new Label ("Seleccione el lote al que pertenece el cuadro");
-        etiqueta_productor = new Label("");
-
-        entradaSuperficie = new TextField("");
-        lotesBox = new ComboBox<>();
-        tabla = new TableView<>(); 
 
         botonAgregar = new Button("Agregar/Modificar Selección");
         botonEliminar = new Button("Eliminar");
         botonLimpiar = new Button("Limpiar");
 
-        columnaId = new TableColumn<>("Id");
+        columnaId = new TableColumn<>("Id de Cuadro");
         columnaLote = new TableColumn<>("Lote");
         columnaProductor = new TableColumn<>("Productor");
         columnaSuperficie = new TableColumn<>("Superficie");
-       
+
+        entradaSuperficie = new TextField("");
+
+        etiquetaInteractiva = new Label("Puede seleccionar filas de la tabla para editarlas");
+        etiquetaComboBox_lotes = new Label ("Seleccione el lote al que pertenece el cuadro   ");
+        etiqueta_productor = new Label("");
+
+        VBox contenedor = new VBox();
+        HBox contenedorBotones = new HBox();
+        VBox contenedorCarga = new VBox();
+        HBox contenedorBox = new HBox();
+        HBox contenedorHorizontal1 = new HBox();
+        HBox contenedorHorizontal2 = new HBox();
+
+        lotesBox = new ComboBox<>();
+
+        separador1 = new Separator(Orientation.VERTICAL);
+        separador2 = new Separator(Orientation.HORIZONTAL); 
+     
+        tabla = new TableView<>(); 
+
+     
 
     // propiedades de elementos
 
-        tabla.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        tabla.setPrefHeight(300);
+        entradaSuperficie.setPromptText("Ingrese Superficie");
+        entradaSuperficie.setMaxWidth(300);
 
-        entradaSuperficie.setPromptText("Ingrese Superficie:   ");
-        
-        contenedorBotones.setSpacing(10);
-        contenedorCarga.setSpacing(10);
-        contenedorBotones.setPadding(new Insets(10, 10, 10, 10));
-        contenedorCarga.setPadding(new Insets(10, 10, 10, 10));
-        
         //- propiedades de COLUMNAS
         columnaId.setMinWidth(100);
         columnaLote.setMinWidth(300);
         columnaProductor.setMinWidth(300);
         columnaSuperficie.setMinWidth(300);
 
-        columnaId.setCellValueFactory(new PropertyValueFactory<>("id_Cuadro"));
+        columnaId.setCellValueFactory(new PropertyValueFactory<>("idCuadro"));
         columnaProductor.setCellValueFactory(new PropertyValueFactory<>("productor"));
         columnaLote.setCellValueFactory(new PropertyValueFactory<>("lote"));
         columnaSuperficie.setCellValueFactory(new PropertyValueFactory<>("superficie"));
 
-   
+        contenedorBotones.setSpacing(10);
+        contenedorCarga.setSpacing(10);
+        contenedorBotones.setPadding(new Insets(10, 10, 10, 10));
+        contenedorCarga.setPadding(new Insets(10, 10, 10, 10));
+        
+        tabla.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+
+        separador1.setPadding(new Insets(0,40,0,40));
+        separador2.setPadding(new Insets(40,0,40,0));
+
+
 
     // acciones sobre elementos 
     
@@ -109,8 +125,10 @@ public class Vista_ABM_Cuadro implements Vista {
         botonLimpiar.setOnAction(e -> limpiar());
         lotesBox.setOnAction(e -> cambiarEtiquetaProductor());
 
-        lotesBox.getItems().addAll(servicio_Lotes.listarLotes());
+        //- cargamos datos a la tabla y los comboBoxs, a partir de consultas a la BD 
         tabla.getItems().addAll(this.servicio.listarCuadros());
+
+        lotesBox.getItems().addAll(servicio_Lotes.listarLotes());
 
 
         //- asociamos las columnas a la tabla
@@ -122,8 +140,11 @@ public class Vista_ABM_Cuadro implements Vista {
 
         //- agregamos contenido a los contenedores
         contenedorBotones.getChildren().addAll(botonAgregar, botonEliminar, botonLimpiar);
-        contenedorCarga.getChildren().addAll(contenedorBotones, etiquetaInteractiva ,etiquetaId, etiquetaComboBox_lotes, lotesBox, etiqueta_productor, entradaSuperficie);
-        contenedor.getChildren().addAll(tabla, contenedorCarga);
+        contenedorCarga.getChildren().addAll(etiquetaInteractiva);
+        contenedorBox.getChildren().addAll(etiquetaComboBox_lotes, lotesBox, separador1, etiqueta_productor);
+       // contenedorHorizontal1.getChildren().addAll(
+        //contenedorHorizontal2.getChildren().addAll(
+        contenedor.getChildren().addAll(tabla, contenedorCarga, contenedorBox, separador2, entradaSuperficie, contenedorBotones);
 
         return contenedor;
 
@@ -131,63 +152,80 @@ public class Vista_ABM_Cuadro implements Vista {
 
 
 
-
-
-
-
-
-
     private void clicAgregarCuadro() {
-        // asumo selección simple
+
         cuadroSeleccionado = tabla.getSelectionModel().getSelectedItem();
+
         try {
+
+            //- Si no hay elemento seleccionado en la tabla, se tiene un nuevo objeto por agregar
             if (cuadroSeleccionado == null) {
-                // Si no hay elemento seleccionado en la tabla
-                // Faltan completar los parametros
-                servicio.agregarCuadro(lotesBox.getValue().getProductor(), lotesBox.getValue(), Double.parseDouble(entradaSuperficie.getText()) );
+                servicio.agregarCuadro(lotesBox.getValue(), Double.parseDouble(entradaSuperficie.getText()));
+
+
+            //- SINO, modificamos el cuadroSeleccionado a partir de su id
             } else {
-                // SINO modificar el cuadro
-                //servicio.editarEmpleado(Long.parseLong(etiquetaIdEmpleado.getText()), entradaNombres.getText(), entradaApellidos.getText(), departamentos.getSelectionModel().getSelectedItem());
+                servicio.modificarCuadro(cuadroSeleccionado.getIdCuadro(), lotesBox.getValue(), Double.parseDouble(entradaSuperficie.getText()));
             }
+
             limpiar();
+
         } catch (IllegalArgumentException e) {
             mostrarAlerta(AlertType.ERROR, "Error", "Error al guardar", e.getMessage());
+   
         }
     }
 
 
     private void cargarDatos() {
+
         cuadroSeleccionado = tabla.getSelectionModel().getSelectedItem();
+
         if (cuadroSeleccionado != null) {
-            etiquetaId.setText(String.valueOf(cuadroSeleccionado.getId_Cuadro()));
-            //entradaNombres.setText(cuadroSeleccionado.getNombres());
-           // entradaApellidos.setText(cuadroSeleccionado.getApellidos());
-           // departamentos.getSelectionModel().select(cuadroSeleccionado.getDepartamento());
+
+            entradaSuperficie.setText(String.valueOf(cuadroSeleccionado.getSuperficie()));
+            etiquetaInteractiva.setText("Está seleccionado el Cuadro con id: " + cuadroSeleccionado.getIdCuadro());
+            lotesBox.setValue(cuadroSeleccionado.getLote());
         }
     }
 
 
  
     private void clicEliminarCuadro() {
+
         cuadroSeleccionado = tabla.getSelectionModel().getSelectedItem();
+
         if (cuadroSeleccionado != null) {
-            servicio.eliminarCuadro(cuadroSeleccionado.getId_Cuadro());
+            servicio.eliminarCuadro(cuadroSeleccionado.getIdCuadro());
             limpiar();
         }
     }
 
     
+
     private void limpiar() {
-        etiquetaId.setText("");
+
+    // limpiar elementos de la vista
         etiquetaInteractiva.setText("Puede seleccionar filas de la tabla para editarlas");
+        etiqueta_productor.setText("");
         entradaSuperficie.clear();
+        
+        lotesBox.getSelectionModel().clearSelection();
  
         tabla.getItems().clear();
         tabla.getItems().addAll(this.servicio.listarCuadros());
     } 
 
 
+
     private void cambiarEtiquetaProductor() {
-        etiqueta_productor.setText("Este lote pertenece al productor \n" + lotesBox.getValue().getProductor().toString());
+
+        if (lotesBox.getValue() != null){
+
+            etiqueta_productor.setText("Este lote pertenece al productor \n" + lotesBox.getValue().getProductor().toString());
+            
+        } else {
+
+        }
     }
 }

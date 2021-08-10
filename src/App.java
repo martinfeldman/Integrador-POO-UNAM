@@ -1,23 +1,19 @@
-import repositorios.Repositorio;
-import servicios.*;
-import vistas.*;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
-import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.stage.Stage;
 import javafx.scene.control.Separator;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.CycleMethod;
-import javafx.scene.paint.LinearGradient;
-import javafx.scene.paint.Stop;
-import java.awt.*;
+import javafx.stage.Stage;
+import repositorios.Repositorio;
+import servicios.*;
+import vistas.*;
+
 
 
 public class App extends Application {
@@ -60,25 +56,30 @@ public class App extends Application {
 
         // definicion elementos de pantalla
 
+        Button botonProductores, botonLotes, botonCuadros, botonEmpleados, botonCosechas,
+         botonEntregasSecadero, botonSalir ; 
+         
+        Separator separador1, separador2, separador3, separador4, separador5, separador6, separadorX;
+        
         HBox contenedorBotones = new HBox();
         VBox contenedorPrincipal = new VBox();
         Scene escena = new Scene(contenedorPrincipal, 1000, 2000);
 
-        Button botonProductores = new Button("Productores");
-        Button botonLotes = new Button("Lotes");
-        Button botonCuadros = new Button("Cuadros");
-        Button botonEmpleados = new Button("Empleados");
-        Button botonCosechas = new Button("Cosechas");
-        Button botonEntregasSecadero = new Button("Entregas al Secadero");
-        Button botonSalir = new Button ("Salir");
+        botonProductores = new Button("Productores");
+        botonLotes = new Button("Lotes");
+        botonCuadros = new Button("Cuadros");
+        botonEmpleados = new Button("Empleados");
+        botonCosechas = new Button("Cosechas");
+        botonEntregasSecadero = new Button("Entregas al Secadero");
+        botonSalir = new Button ("Salir");
 
-        Separator separador1 = new Separator(Orientation.VERTICAL);
-        Separator separador2 = new Separator(Orientation.VERTICAL);
-        Separator separador3 = new Separator(Orientation.VERTICAL);
-        Separator separador4 = new Separator(Orientation.VERTICAL);
-        Separator separador5 = new Separator(Orientation.VERTICAL);
-        Separator separador6 = new Separator(Orientation.VERTICAL);
-        Separator separadorX = new Separator(Orientation.HORIZONTAL);        
+        separador1 = new Separator(Orientation.VERTICAL);
+        separador2 = new Separator(Orientation.VERTICAL);
+        separador3 = new Separator(Orientation.VERTICAL);
+        separador4 = new Separator(Orientation.VERTICAL);
+        separador5 = new Separator(Orientation.VERTICAL);
+        separador6 = new Separator(Orientation.VERTICAL);
+        separadorX = new Separator(Orientation.HORIZONTAL);        
 
 
         
@@ -86,12 +87,7 @@ public class App extends Application {
         
         stage.setTitle("Empresa - Productores");
         stage.setResizable(false);
-        /*escena.setFill(new LinearGradient(
-            0, 0, 1, 1, true,                      //sizing
-            CycleMethod.NO_CYCLE,                  //cycling
-            new Stop(0, Color.getColor("#81c483")),     //colors
-            new Stop(1, Color.web("#fcc200"))))   */
-
+   
         contenedorPrincipal.setSpacing(10);    
         contenedorBotones.setSpacing(10);
         contenedorPrincipal.setPadding(new Insets(5, 20, 5, 20));
@@ -111,7 +107,8 @@ public class App extends Application {
 
         //- agregamos contenido a los contenedores
         contenedorBotones.getChildren().addAll(botonProductores, separador1, botonLotes, separador2,
-         botonCuadros, separador3, botonEmpleados, separador4, botonCosechas, separador5, botonEntregasSecadero, separador6, botonSalir);
+         botonCuadros, separador3, botonEmpleados, separador4, botonCosechas, separador5,
+          botonEntregasSecadero, separador6, botonSalir);
 
         // que muestro inicialmente : Creo que se puede dar vuelta el orden de las siguientes dos sentencias 
         cambiante.getChildren().add(vistaProductores.obtenerVista());
@@ -133,7 +130,6 @@ public class App extends Application {
     
 
     private void clicMostrarVistaProductores(Stage stage) {
-        System.out.print(stage);
         cambiante.getChildren().clear();
         cambiante.getChildren().add(vistaProductores.obtenerVista());
         stage.setTitle("Empresa - Productores");

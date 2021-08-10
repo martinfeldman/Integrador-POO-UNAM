@@ -35,44 +35,83 @@ public class Servicio_Cosechas {
     
     // ABM Cosecha 
 
-    public void agregarCosecha(Empleado empleado, LocalDate fecha, ArrayList<Cuadro> cuadro, ArrayList<Double> kgsCosechados) {
-        if (empleado == null) {
+    public void agregarCosecha(Empleado empleado, LocalDate fecha, Cuadro cuadroCosechado, Double kgsCosechados) {
+
+        //- Exepcion si alguno de los datos(obligatrios) que toma de la Vista esta vacio o es NULL
+        if (empleado == null || fecha == null || cuadroCosechado == null || kgsCosechados.toString().trim().length() == 0) {
             throw new IllegalArgumentException("Faltan datos");
         }
-        this.repositorio.iniciarTransaccion();
 
-         // Faltan agregar los parametros
-        Cosecha cosecha = new Cosecha(empleado, fecha, cuadro, kgsCosechados);
+        Cosecha cosecha = new Cosecha(empleado, fecha, cuadroCosechado, kgsCosechados);
+        
+        this.repositorio.iniciarTransaccion();
         this.repositorio.insertar(cosecha);
         this.repositorio.confirmarTransaccion();
     }
 
 
 
-   
+    public boolean modificarCosecha(int idCosecha, Empleado empleadoNuevo, LocalDate fecha, Cuadro cuadroCosechadoNuevo,
+     Double kgsCosechados ) {
 
-    // cambiar valor devuelto (por ejemplo: True ok, False problemas)
-    public void editarCosecha(int idCosecha, Empleado empleado) {
-        if (empleado == null) {
+        //- Exepcion si alguno de los datos(obligatrios) que toma de la Vista esta vacio o es NULL
+        if (empleadoNuevo == null || fecha == null || cuadroCosechadoNuevo == null || kgsCosechados.toString().trim().length() == 0  ) {
             throw new IllegalArgumentException("Faltan datos");
         }
-        this.repositorio.iniciarTransaccion();
-        Cosecha cosecha = this.repositorio.buscar(Cosecha.class, idCosecha);
-        if (cosecha != null) {
-            // cosecha.setApellidos(apellidos);
-            // cosecha.setNombres(nombres);
 
-            // implementar comparable o comparator
-            // o si el id es unico pueden compararar por id
-         /*   if (! empleado.getDepartamento().equals(departamento)) {
-                empleado.getDepartamento().getEmpleados().remove(empleado);
-                empleado.setDepartamento(departamento);
-                departamento.getEmpleados().add(empleado);
-            }   */
+        //- buscar la cosecha en la base de datos a partir de su ID 
+        Cosecha cosecha = this.repositorio.buscar(Cosecha.class, idCosecha);
+        
+
+        //- si regresa un objeto cosecha, se hacen TODAS las modificaciones debidas,
+        //- incluyendo las dependencias en otras clases y se inicia una transaccion
+        if (cosecha != null) {
+
+        //- dependencias de la modificacion
+
+            var empleadoParaQuitar = cosecha.getEmpleado();
+            this.repositorio.iniciarTransaccion();    
+            
+            //- Solo se cambia el empleado de la Cosecha si es diferente del que ya posee    
+            if (! empleadoParaQuitar.equals(empleadoNuevo)) {
+        
+                empleadoParaQuitar.quitarCosecha(cosecha);;
+                empleadoNuevo.agregarCosecha(cosecha); 
+        
+        //- modificaciones al objeto    
+                cosecha.setEmpleado(empleadoNuevo);
+
+        //- persistencias
+                this.repositorio.modificar(empleadoParaQuitar);        
+                this.repositorio.modificar(empleadoNuevo);        
+           
+            } else {
+                System.out.print("empleadoParaQuitar es igual a empleadoNuevo. Se omite esta modificación.");
+            }
+
+        //- Solo se cambia el cuadro de la Cosecha si es diferente del que ya posee      
+            var cuadroParaQuitar = cosecha.getCuadro();
+
+            if (! cuadroParaQuitar.equals(cuadroCosechadoNuevo)) {
+
+                cosecha.setCuadro(cuadroCosechadoNuevo);
+            
+            } else {
+                System.out.print("cuadroParaQuitar es igual a cuadroNuevo. Se omite esta modificación.");
+            }
+
+
+            cosecha.setFecha(fecha);
+            cosecha.setKgCosechados(kgsCosechados);
+
             this.repositorio.modificar(cosecha);
             this.repositorio.confirmarTransaccion();
+            return true; 
+
+        //- sino se informa y se retorna modificarObjeto = falso
         } else {
-            this.repositorio.descartarTransaccion();
+            System.out.print("repositorio.buscar(idCosecha) = NULL");
+            return false; 
         }
     }
 
@@ -83,7 +122,7 @@ public class Servicio_Cosechas {
         Cosecha cosecha = this.repositorio.buscar(Cosecha.class, id_Cosecha);
         // como se soluciona??
        /* if (empleado != null && empleado.getProyectos().isEmpty() ) {
-            this.repositorio.eliminar(empleado);
+            this.repositorio.eliminar(cosecha);
             this.repositorio.confirmarTransaccion();
             return 0;
         } else {  */

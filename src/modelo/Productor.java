@@ -8,7 +8,7 @@ import jakarta.persistence.*;
 public class Productor {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id_Productor;
+    private int idProductor;
 
     @Column(name = "nombres_productor", nullable = false, length = 50)
     private String nombres;
@@ -27,9 +27,6 @@ public class Productor {
     @OneToMany (mappedBy = "productor")
     private List<Lote> lotes = new ArrayList<>();
 
-    // cuadros que posee el productor
-    @OneToMany (mappedBy = "productor")
-    private List<Cuadro> cuadros = new ArrayList<>();
 
 
     public Productor(){}
@@ -42,34 +39,30 @@ public class Productor {
 
     @Override
     public String toString() {
-        return "Productor con id_Productor " + id_Productor + "\nNombres: " + nombres 
-        + "\nApellido: " + apellidos  + "\n ";
+        return nombres + " " + apellidos + ", (" + dni + ")\n";
     }
 
 
 
 
-    // adders
+    // add & remove
 
     public void agregarLote(Lote lote){
         this.lotes.add(lote); 
+    }
+
+    public void quitarLote(Lote lote){
+        this.lotes.remove(lote);
     }
 
 
 
     // getters &  setters
        
-    public int getId_productor() {
-        return id_Productor;
+    public int getIdProductor() {
+        return idProductor;
     }
     
-    public boolean isAlta() {
-        return alta;
-    }
-
-    public void setAlta(boolean alta) {
-        this.alta = alta;
-    }
 
     public String getNombres() {
         return nombres;
@@ -79,6 +72,7 @@ public class Productor {
         this.nombres = nombres;
     }
 
+
     public String getApellidos() {
         return apellidos;
     }
@@ -86,6 +80,7 @@ public class Productor {
     public void setApellidos(String apellidos) {
         this.apellidos = apellidos;
     }
+
 
     public String getDni() {
         return dni;
@@ -95,25 +90,18 @@ public class Productor {
         this.dni = dni;
     }
 
+
     public List<Lote> getLotes() {
         return lotes;
     }
 
-    public List<Cuadro> getCuadros() {
-        return cuadros;
+
+    public boolean isAlta() {
+        return alta;
     }
 
-
-    /* 
-
-    public void setCuadros(List<Cuadro> cuadros) {
-        this.cuadros = cuadros;
-    } 
-    
-     public void setLotes(List<Lote> lotes) {
-        this.lotes = lotes;
-    }   
-    
-    */
+    public void setAlta(boolean alta) {
+        this.alta = alta;
+    }
     
 }

@@ -10,7 +10,7 @@ public class Lote {
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id_Lote;
+    private int idLote;
     private boolean isAlta;
 
     @ManyToOne
@@ -28,23 +28,30 @@ public class Lote {
     
     @Override
     public String toString() {
-        return "Lote [id_Lote=" + id_Lote + "productor=" + productor + "cuadros=" + cuadros + "]";
+
+        // como deberia ser el toString de Cuadros : {cuadro1, cuadro2, etc  }
+        return "Lote " + idLote;
     }
 
 
 
 
-    // adders
+    // add  & remove
 
     public void agregarCuadro(Cuadro cuadro){
         this.cuadros.add(cuadro);
     }
     
+    public void quitarCuadro(Cuadro cuadro){
+        this.cuadros.remove(cuadro);
+    }
 
+
+    
     // getters & setters
 
-    public int getId_Lote() {
-        return id_Lote;
+    public int getIdLote() {
+        return idLote;
     }
 
     public boolean isAlta() {

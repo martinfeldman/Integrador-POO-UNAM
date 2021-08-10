@@ -1,13 +1,5 @@
 package vistas;
-import modelo.Cosecha;
-import modelo.Cuadro;
-import modelo.Empleado;
-import servicios.Servicio_Cosechas;
-import servicios.Servicio_Cuadros;
-import servicios.Servicio_Empleados;
-
 import java.time.LocalDate;
-import java.util.ArrayList;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -17,16 +9,20 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
-
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import modelo.Cosecha;
+import modelo.Cuadro;
+import modelo.Empleado;
+import servicios.Servicio_Cosechas;
+import servicios.Servicio_Cuadros;
+import servicios.Servicio_Empleados;
 
 
 public class Vista_ABM_Cosecha implements Vista {
@@ -37,16 +33,17 @@ public class Vista_ABM_Cosecha implements Vista {
     Servicio_Cuadros servicio_Cuadros;
     private Cosecha cosechaSeleccionada;
        
+
     // objetos de la pantalla
     TableView<Cosecha> tabla;
     TableColumn<Cosecha, Integer> columnaId;
     TableColumn<Cosecha, Empleado> columnaEmpleado;
     TableColumn<Cosecha, LocalDate> columnaFecha;
-    TableColumn<Cosecha, ArrayList<Cuadro>> columnaCuadros;
-    TableColumn<Cosecha, ArrayList<Double>> columnaKgsCosechados;
-    Button botonAgregar, botonEliminar, botonSeleccionarCuadroAnterior, botonLimpiar;
-    TextField entradaNombres, entradaApellidos, entradaDni;
-    Label etiquetaId, etiquetaInteractiva;
+    TableColumn<Cosecha, Cuadro> columnaCuadros;
+    TableColumn<Cosecha, Double> columnaKgsCosechados;
+    Button botonAgregar, botonEliminar, botonLimpiar;
+    Label etiquetaInteractiva;
+    Separator separador1, separador2, separador3;
 
     // objetos para tomar los datos
     ComboBox<Empleado> empleadoBox;
@@ -54,7 +51,7 @@ public class Vista_ABM_Cosecha implements Vista {
     DatePicker datepicker;
     Label etiquetaEmpleado, etiquetaComboBox_empleado, etiquetaFecha, etiquetaCuadro, etiquetaKgsCosechados;
     TextField entradaKgsCosechados; 
-    int ultimoCuadroSeleccionado ;
+
 
     public Vista_ABM_Cosecha(Servicio_Cosechas servicio, Servicio_Empleados servicio_Empleados, Servicio_Cuadros servicio_Cuadros){
         this.servicio = servicio;
@@ -68,56 +65,61 @@ public class Vista_ABM_Cosecha implements Vista {
 
     // definicion elementos de pantalla 
 
+        botonAgregar = new Button("Agregar/Modificar Selección");
+        botonEliminar = new Button("Eliminar");
+        botonLimpiar = new Button("Limpiar");
+
+        columnaId = new TableColumn<>("Id Cosecha");
+        columnaEmpleado = new TableColumn<>("Empleado");
+        columnaFecha = new TableColumn<>("Fecha");
+        columnaCuadros = new TableColumn<>("Cuadro Cosechado");
+        columnaKgsCosechados = new TableColumn<>("Kgs Cosechados");
+
         VBox contenedor = new VBox();
         HBox contenedorBotones = new HBox();
         VBox contenedorCarga = new VBox();
         HBox contenedorHorizontal1 = new HBox();
         HBox contenedorHorizontal2 = new HBox();
-     
-        Separator separador1 = new Separator(Orientation.VERTICAL);
-        Separator separador2 = new Separator(Orientation.VERTICAL);
-        Separator separador3 = new Separator(Orientation.HORIZONTAL);
+
+        cuadroBox = new ComboBox<>();
+
+        datepicker = new DatePicker();
+
+        empleadoBox = new ComboBox<>();
         
-        etiquetaId = new Label("");
+        entradaKgsCosechados = new TextField();
+        
         etiquetaInteractiva = new Label("Puede seleccionar filas de la tabla para editarlas");
         etiquetaComboBox_empleado = new Label ("Seleccione el empleado que ha realizado la cosecha   ");
         etiquetaEmpleado = new Label ("");
         etiquetaFecha = new Label ("Ingrese Fecha   ");
         etiquetaCuadro = new Label ("Cuadro:   ");
         etiquetaKgsCosechados = new Label("Kilos Cosechados:   ");
+      
+        separador1 = new Separator(Orientation.VERTICAL);
+        separador2 = new Separator(Orientation.VERTICAL);
+        separador3 = new Separator(Orientation.HORIZONTAL);
+        
 
-        datepicker = new DatePicker();
-
-        entradaKgsCosechados = new TextField();
-
-        empleadoBox = new ComboBox<>();
-        cuadroBox = new ComboBox<>();
-        tabla = new TableView<>(); 
-
-        botonAgregar = new Button("Agregar/Modificar Selección");
-        botonEliminar = new Button("Eliminar");
-        botonLimpiar = new Button("Limpiar");
-        botonSeleccionarCuadroAnterior = new Button ("Seleccionar Cuadro anterior de cosechaSeleccionada");
-
-        columnaId = new TableColumn<>("Id");
-        columnaEmpleado = new TableColumn<>("Empleado");
-        columnaFecha = new TableColumn<>("Fecha");
-        columnaCuadros = new TableColumn<>("Cuadros Cosechados");
-        columnaKgsCosechados = new TableColumn<>("Kgs Cosechados");
+        tabla = new TableView<>();    
+       
        
 
     // propiedades de elementos
 
-        tabla.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        tabla.setPrefHeight(300);
+        //- propiedades de COLUMNAS
+        columnaId.setMinWidth(100);
+        columnaFecha.setMinWidth(150);
+        columnaEmpleado.setMinWidth(300);
+        columnaCuadros.setMinWidth(200);
+        columnaKgsCosechados.setMinWidth(200);
 
-        separador1.setPrefHeight(100);
-        separador2.setPrefHeight(100);
-        separador3.setPrefWidth(100);
-        separador1.setPadding(new Insets(10, 10, 10, 10));
-        separador2.setPadding(new Insets(10, 10, 10, 197));
+        columnaId.setCellValueFactory(new PropertyValueFactory<>("idCosecha"));
+        columnaFecha.setCellValueFactory(new PropertyValueFactory<>("fecha"));
+        columnaEmpleado.setCellValueFactory(new PropertyValueFactory<>("empleado"));
+        columnaCuadros.setCellValueFactory(new PropertyValueFactory<>("cuadro"));
+        columnaKgsCosechados.setCellValueFactory(new PropertyValueFactory<>("kgsCosechados"));
 
-        
         contenedorBotones.setSpacing(10);
         contenedorCarga.setSpacing(10);
         contenedorBotones.setPadding(new Insets(10, 10, 10, 10));
@@ -125,28 +127,25 @@ public class Vista_ABM_Cosecha implements Vista {
         contenedorHorizontal1.setPadding(new Insets(10, 10, 10, 10));
         contenedorHorizontal2.setPadding(new Insets(10, 10, 10, 10));
 
-        //- propiedades de COLUMNAS
-        columnaId.setMinWidth(100);
-        columnaFecha.setMinWidth(150);
-        columnaEmpleado.setMinWidth(300);
-        columnaCuadros.setMinWidth(300);
-        columnaKgsCosechados.setMinWidth(300);
+        separador1.setPrefHeight(100);
+        separador2.setPrefHeight(100);
+        separador3.setPrefWidth(100);
+        separador1.setPadding(new Insets(10, 10, 10, 10));
+        separador2.setPadding(new Insets(10, 10, 10, 140));
 
-        columnaId.setCellValueFactory(new PropertyValueFactory<>("id_Cuadro"));
-        columnaFecha.setCellValueFactory(new PropertyValueFactory<>("fecha"));
-        columnaEmpleado.setCellValueFactory(new PropertyValueFactory<>("empleado"));
-        columnaCuadros.setCellValueFactory(new PropertyValueFactory<>("cuadros"));
-        columnaKgsCosechados.setCellValueFactory(new PropertyValueFactory<>("kgsCosechados"));
+        tabla.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        tabla.setPrefHeight(300);
+        tabla.setPrefWidth(950);
 
-   
+ 
 
     // acciones sobre elementos 
     
         botonAgregar.setOnAction(e -> clicAgregarCosecha());
         botonEliminar.setOnAction(e -> clicEliminarCosecha());
-        botonSeleccionarCuadroAnterior.setOnAction(e -> clicSeleccionarCuadroAnterior());
         botonLimpiar.setOnAction(e -> limpiar());
         empleadoBox.setOnAction(e -> cambiarEtiquetaEmpleado());
+        tabla.getSelectionModel().selectedItemProperty().addListener(e -> cargarDatos());
 
         empleadoBox.getItems().addAll(servicio_Empleados.listarEmpleados());
         cuadroBox.getItems().addAll(servicio_Cuadros.listarCuadros());
@@ -158,17 +157,18 @@ public class Vista_ABM_Cosecha implements Vista {
         tabla.getColumns().add(columnaEmpleado);
         tabla.getColumns().add(columnaCuadros);
         tabla.getColumns().add(columnaKgsCosechados);
-        tabla.getSelectionModel().selectedItemProperty().addListener(e -> cargarDatos());
+    
 
         //- agregamos contenido a los contenedores
-        contenedorBotones.getChildren().addAll(botonAgregar, botonSeleccionarCuadroAnterior, botonEliminar, botonLimpiar);
-        contenedorCarga.getChildren().addAll( contenedorBotones, etiquetaInteractiva , etiquetaId);
+        contenedorBotones.getChildren().addAll(botonAgregar, botonEliminar, botonLimpiar);
+        contenedorCarga.getChildren().addAll(etiquetaInteractiva);
          
-        contenedorHorizontal1.getChildren().addAll(etiquetaFecha, datepicker, separador1 , etiquetaComboBox_empleado, empleadoBox);
-        
+        contenedorHorizontal1.getChildren().addAll(etiquetaFecha, datepicker, separador1 , etiquetaComboBox_empleado, empleadoBox); 
         contenedorHorizontal2.getChildren().addAll(etiquetaCuadro, cuadroBox, separador2,
          etiquetaKgsCosechados, entradaKgsCosechados);
-        contenedor.getChildren().addAll(tabla, contenedorCarga, contenedorHorizontal1, separador3, contenedorHorizontal2 );
+
+        contenedor.getChildren().addAll(tabla, contenedorCarga, contenedorHorizontal1, separador3,
+         contenedorHorizontal2, contenedorBotones);
 
         return contenedor;
 
@@ -177,42 +177,47 @@ public class Vista_ABM_Cosecha implements Vista {
 
 
     private void clicAgregarCosecha() {
-        // asumo selección simple
-        cosechaSeleccionada = tabla.getSelectionModel().getSelectedItem();
-        try {
-            if (cosechaSeleccionada == null) {
-                // Si no hay elemento seleccionado en la tabla, 
-                // se tiene un nuevo objeto por agregar
-                
-                var cuadros = new ArrayList<Cuadro>(); 
-                var kgsCosechados = new ArrayList<Double>(); 
 
-                cuadros.add(cuadroBox.getValue());
-                kgsCosechados.add(Double.parseDouble(entradaKgsCosechados.getText()));
+        //- A partir del objetoSeleccionado en la tabla
+        cosechaSeleccionada = tabla.getSelectionModel().getSelectedItem();
+
+        try {
+
+            if (cosechaSeleccionada == null) {
+        //- Si no hay elemento seleccionado en la tabla,se tiene un nuevo objeto por agregar
 
                 servicio.agregarCosecha(empleadoBox.getValue(), datepicker.getValue(),
-                cuadros, kgsCosechados);
+                cuadroBox.getValue(), Double.parseDouble(entradaKgsCosechados.getText()));
 
+        //- SINO, modificamos la cosechaSeleccionada a partir de su id
             } else {
-                // SINO modificar el cuadro
-                //servicio.editarEmpleado(Long.parseLong(etiquetaIdEmpleado.getText()), entradaNombres.getText(), entradaApellidos.getText(), departamentos.getSelectionModel().getSelectedItem());
+
+                servicio.modificarCosecha(cosechaSeleccionada.getIdCosecha(), empleadoBox.getValue(),
+                 datepicker.getValue(), cuadroBox.getValue(), 
+                  Double.parseDouble(entradaKgsCosechados.getText())) ;
             }
+
             limpiar();
+
         } catch (IllegalArgumentException e) {
             mostrarAlerta(AlertType.ERROR, "Error", "Error al guardar", e.getMessage());
         }
     }
 
 
+
     private void cargarDatos() {
+        
+    // A partir de la seleccion de un objeto sobre la tabla, se cargan sus datos en los elementos de la pantalla
         cosechaSeleccionada = tabla.getSelectionModel().getSelectedItem();
+
         if (cosechaSeleccionada != null) {
-            ultimoCuadroSeleccionado = cosechaSeleccionada.getCuadros().size()-1;
-            etiquetaId.setText(String.valueOf(cosechaSeleccionada.getId_Cosecha()));
+          
+            cuadroBox.setValue(cosechaSeleccionada.getCuadro());
             datepicker.setValue(cosechaSeleccionada.getFecha());
             empleadoBox.setValue(cosechaSeleccionada.getEmpleado());
-            cuadroBox.setValue(cosechaSeleccionada.getCuadros().get(cosechaSeleccionada.getCuadros().size()-1));
-            entradaKgsCosechados.setText(cosechaSeleccionada.getkgsCosechados().get(cosechaSeleccionada.getkgsCosechados().size()-1).toString());
+            entradaKgsCosechados.setText(cosechaSeleccionada.getKgsCosechados().toString());
+
         } else {
             // algo? 
         }
@@ -221,43 +226,23 @@ public class Vista_ABM_Cosecha implements Vista {
 
  
     private void clicEliminarCosecha() {
+
         cosechaSeleccionada = tabla.getSelectionModel().getSelectedItem();
+
         if (cosechaSeleccionada != null) {
-            servicio.eliminarCosecha(cosechaSeleccionada.getId_Cosecha());
+            servicio.eliminarCosecha(cosechaSeleccionada.getIdCosecha());
             limpiar();
         }
     }
 
 
 
-    private void clicSeleccionarCuadroAnterior(){
-        if (cosechaSeleccionada != null) {
-
-            cuadroBox.setValue(cosechaSeleccionada.getCuadros().get(ultimoCuadroSeleccionado -1));
-            entradaKgsCosechados.setText(cosechaSeleccionada.getkgsCosechados().get(ultimoCuadroSeleccionado -1).toString());
-            ultimoCuadroSeleccionado -= 1; 
-        } else {
-            // algo? 
-        }
-    }
-
-
-
-
-    /* private void clicEditarArray() {
-        cosechaSeleccionada = tabla.getSelectionModel().getSelectedItem();
-        if (cosechaSeleccionada != null) { 
-            cuadroBox.setValue(cosechaSeleccionada.getCuadros().get(cosechaSeleccionada.getCuadros().size()-1));
-            entradaKgsCosechados.setText(cosechaSeleccionada.getkgsCosechados().get(cosechaSeleccionada.getkgsCosechados().size()-1).toString());
-        } else {
-            // algo? 
-        }
-    } */
-
     private void limpiar() {
-        etiquetaId.setText("");
-        etiquetaInteractiva.setText("Puede seleccionar filas de la tabla para editarlas");
-        cuadroBox.getSelectionModel().clearSelection();;
+        
+        //- limpiar elementos de la vista 
+        etiquetaInteractiva.setText("Puede seleccionar filas de la tabla para editarlas" + cosechaSeleccionada.getIdCosecha());
+        empleadoBox.getSelectionModel().clearSelection();
+        cuadroBox.getSelectionModel().clearSelection();
         entradaKgsCosechados.clear();
  
         tabla.getItems().clear();
@@ -265,8 +250,11 @@ public class Vista_ABM_Cosecha implements Vista {
     } 
 
 
+
     private void cambiarEtiquetaEmpleado() {
-        etiquetaEmpleado.setText("Esta cosecha fue realizada por el empleado \n" + empleadoBox.getValue().getId_Empleado());
+        if (empleadoBox.getValue() != null){
+            etiquetaEmpleado.setText("Esta cosecha fue realizada por el empleado \n" + empleadoBox.getValue().getIdEmpleado());
+        }
     }
 
 }

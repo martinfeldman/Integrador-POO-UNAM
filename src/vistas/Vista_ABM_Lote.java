@@ -26,109 +26,115 @@ public class Vista_ABM_Lote implements Vista {
     private Lote loteSeleccionado;
 
     // objetos de la pantalla
-    TableView<Lote> tabla;
-    TableColumn<Lote, Integer> columnaId;
-    TableColumn<Lote, Productor> columnaProductor;
  
     Button botonAgregar, botonEliminar, botonLimpiar;
     ComboBox<Productor> productoresBox;
-    Label etiquetaId, etiquetaInteractiva;
+    Label etiquetaInteractiva;
+    TableView<Lote> tabla;
+    TableColumn<Lote, Integer> columnaId;
+    TableColumn<Lote, Productor> columnaProductor;
 
-    
 
     public Vista_ABM_Lote(Servicio_Lotes servicio, Servicio_Productores servicio_Productores) {
         this.servicio = servicio;
         this.servicio_Productores = servicio_Productores;
     }
 
+
+
     @Override
     public Parent obtenerVista() {
 
-        // definicion elementos de pantalla
-      
-        etiquetaId = new Label("");
-        etiquetaInteractiva = new Label("Puede seleccionar filas de la tabla para editarlas");
-        
-        productoresBox = new ComboBox<>();
 
+    // definicion elementos de pantalla
+      
         botonAgregar = new Button("Agregar");
         botonEliminar = new Button("Eliminar");
         botonLimpiar = new Button("Limpiar");
+
+        columnaId = new TableColumn<>("Id de Lote");
+        columnaProductor = new TableColumn<>("Productor");
 
         VBox contenedor = new VBox();
         HBox contenedorBotones = new HBox();
         VBox contenedorCarga = new VBox();
 
-        columnaId = new TableColumn<>("Id");
-        columnaProductor = new TableColumn<>("Productor");
+        etiquetaInteractiva = new Label("Puede seleccionar filas de la tabla para editarlas");
+        
+        productoresBox = new ComboBox<>();
 
         tabla = new TableView<>();
         
 
-        // propiedades de elementos
 
-        tabla.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        tabla.setPrefHeight(300);
+    // propiedades de elementos
+
+        productoresBox.setPromptText("Ingrese productor");
+        productoresBox.setMinWidth(200);
+
+        // COLUMNAS - propiedades
+        columnaId.setMinWidth(100);
+        columnaProductor.setMinWidth(300);
+
+        columnaId.setCellValueFactory(new PropertyValueFactory<>("idLote"));
+        columnaProductor.setCellValueFactory(new PropertyValueFactory<>("productor"));
 
         contenedorCarga.setSpacing(10);
         contenedorBotones.setSpacing(10);
         contenedorBotones.setPadding(new Insets(10, 10, 10, 10));
         contenedorCarga.setPadding(new Insets(10, 10, 10, 10));
 
-        // COLUMNAS - propiedades
-        columnaId.setMinWidth(100);
-        columnaProductor.setMinWidth(300);
+        tabla.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        tabla.setPrefHeight(300);
 
-        columnaId.setCellValueFactory(new PropertyValueFactory<>("id_Lote"));
-        columnaProductor.setCellValueFactory(new PropertyValueFactory<>("productor"));
 
-        
 
-        // acciones sobre elementos 
+    // acciones sobre elementos 
 
-        botonAgregar.setOnAction(e -> clicAgregarEmpleado());
-        botonEliminar.setOnAction(e -> clicEliminarEmpleado());
+        botonAgregar.setOnAction(e -> clicAgregarLote());
+        botonEliminar.setOnAction(e -> clicEliminarLote());
         botonLimpiar.setOnAction(e -> limpiar());
+        tabla.getSelectionModel().selectedItemProperty().addListener(e -> cargarDatos());
+
+        //- cargamos datos a la tabla y los comboBoxs, a partir de consultas a la BD 
+        tabla.getItems().addAll(this.servicio.listarLotes());
 
         productoresBox.getItems().addAll(servicio_Productores.listarProductores());       
 
-        // pedimos los datos de Empleados a la BD y mostramos en tabla
-        tabla.getItems().addAll(this.servicio.listarLotes());
 
-        // agregamos las columnas a la tabla     -- COMPLETO?
+        //- agregamos las columnas a la tabla
         tabla.getColumns().add(columnaId);
         tabla.getColumns().add(columnaProductor);
-        // COMPLETAR ACA
-        tabla.getSelectionModel().selectedItemProperty().addListener(e -> cargarDatos());
-       
+        
         //- agregamos contenido a los contenedores
         contenedorBotones.getChildren().addAll(botonAgregar, botonEliminar, botonLimpiar);
-        contenedorCarga.getChildren().addAll(contenedorBotones, etiquetaInteractiva, etiquetaId, productoresBox);
-        contenedor.getChildren().addAll(tabla, contenedorCarga);
+        contenedorCarga.getChildren().addAll(etiquetaInteractiva, productoresBox);
+        contenedor.getChildren().addAll(tabla, contenedorCarga, contenedorBotones);
         
-
         return contenedor;
-
     }
-
-        // como mostrar los cuadros de un lote? 
-        // Podria crear otra tabla debajo que lea el loteSeleccionado 
-        // en la tabla de arriba y haga la busqueda.
 
     
 
-    private void clicAgregarEmpleado() {
-        // asumo selección simple
+    private void clicAgregarLote() {
+
         loteSeleccionado = tabla.getSelectionModel().getSelectedItem();
+
         try {
+
+            //- Si no hay elemento seleccionado en la tabla, se tiene un nuevo objeto por agregar
             if (loteSeleccionado == null) {
-                // Si no hay elemento seleccionado en la tabla
+
                 servicio.agregarLote(productoresBox.getSelectionModel().getSelectedItem());
+
+
+            //- SINO, modificamos el loteSeleccionado a partir de su id
             } else {
-                // cambiamos el empleado
-                servicio.editarLote(Integer.parseInt(etiquetaId.getText()), productoresBox.getSelectionModel().getSelectedItem());
+                servicio.modificarLote(loteSeleccionado.getIdLote(), productoresBox.getSelectionModel().getSelectedItem());
             }
+
             limpiar();
+
         } catch (IllegalArgumentException e) {
             mostrarAlerta(AlertType.ERROR, "Error", "Error al guardar", e.getMessage());
         }
@@ -136,31 +142,42 @@ public class Vista_ABM_Lote implements Vista {
 
 
 
-     // A partir de la seleccion de un objeto sobre la tabla, Se cargan sus datos en los elementos de la pantalla
     private void cargarDatos() {
+        
+        // A partir de la seleccion de un objeto sobre la tabla, Se cargan sus datos en los elementos de la pantalla
         loteSeleccionado = tabla.getSelectionModel().getSelectedItem();
+
         if (loteSeleccionado != null) {
-            etiquetaId.setText(String.valueOf(loteSeleccionado.getId_Lote()));
+
+            etiquetaInteractiva.setText("Está seleccionado el Lote con id: " + loteSeleccionado.getIdLote());
+
             productoresBox.getSelectionModel().select(loteSeleccionado.getProductor());
         }
     }
 
 
 
-    private void clicEliminarEmpleado() {
+    private void clicEliminarLote() {
+
         loteSeleccionado = tabla.getSelectionModel().getSelectedItem();
+
         if (loteSeleccionado != null) {
-            servicio.eliminarLote(loteSeleccionado.getId_Lote());
+
+            servicio.eliminarLote(loteSeleccionado.getIdLote());
             limpiar();
         }
     }
 
 
 
-     // limpiar vista 
-     private void limpiar() {
-        etiquetaId.setText("");
+    private void limpiar() {
+
+        //- limpiar elementos de la vista
         etiquetaInteractiva.setText("Puede seleccionar filas de la tabla para editarlas");
+
+        productoresBox.getSelectionModel().clearSelection();
+        productoresBox.setPromptText("Ingrese productor");
+
         tabla.getItems().clear();
         tabla.getItems().addAll(this.servicio.listarLotes());
     } 

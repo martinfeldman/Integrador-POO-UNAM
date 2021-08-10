@@ -1,7 +1,6 @@
 package servicios;
 import java.util.List;
 
-import modelo.Cuadro;
 import modelo.Lote;
 import modelo.Productor;
 import repositorios.Repositorio;
@@ -29,48 +28,52 @@ public class Servicio_Productores {
 
 
 
+
     // ABM PRODUCTOR 
 
     public void agregarProductor(String nombres, String apellidos, String dni) {
+
+        //- Exepcion si alguno de los datos(obligatrios) que toma de la Vista esta vacio
         if (nombres.trim().length() == 0 || apellidos.trim().length() == 0 ||
-        dni.trim().length() == 0) {
+         dni.trim().length() == 0) {
             throw new IllegalArgumentException("Faltan datos");
         }
-        this.repositorio.iniciarTransaccion();
+
         Productor productor = new Productor(nombres.toUpperCase().trim(), apellidos.toUpperCase().trim(), dni.trim());
+        this.repositorio.iniciarTransaccion();
         this.repositorio.insertar(productor);
         this.repositorio.confirmarTransaccion();
     }
 
 
-
-
    
-    public boolean editarProductor(int id_Productor, String nombres, String apellidos, String dni) {
+    public boolean modificarProductor(int idProductor, String nombres, String apellidos, String dni) {
 
-        // Execpion si alguno de los datos que toma de la Vista esta vacio,
-        // sino comienza una transaccion para editar 
+        //- Exepcion si alguno de los datos(obligatrios) que toma de la Vista esta vacio o es NULL 
         if (nombres.trim().length() == 0 || apellidos.trim().length() == 0 || dni.trim().length() == 0) {
             throw new IllegalArgumentException("Faltan datos");
         }
 
-        this.repositorio.iniciarTransaccion();
-    
-        // buscar el productor en la base de datos a partir de su ID 
-        Productor productor = this.repositorio.buscar(Productor.class, id_Productor);
+        //- buscar al productor en la base de datos a partir de su ID 
+        Productor productor = this.repositorio.buscar(Productor.class, idProductor);
 
-        // si regresa un objeto productor se cambia sus nombres, apellidos y dni
+        //- si regresa un objeto productor, se hacen TODAS las modificaciones debidas,
+        //- incluyendo las dependencias en otras clases y se inicia una transaccion 
         if (productor != null) {
-            productor.setApellidos(apellidos);
+
+        //- modificaciones al objeto
             productor.setNombres(nombres);
+            productor.setApellidos(apellidos);
             productor.setDni(dni);
+
+            this.repositorio.iniciarTransaccion();
             this.repositorio.modificar(productor);
             this.repositorio.confirmarTransaccion();
             return true;
 
-         // sino se descarta transaccion 
+        //- sino se informa y se retorna modificarObjeto = falso 
         } else {
-            this.repositorio.descartarTransaccion();
+            System.out.print("repositorio.buscar(idProductor) = NULL");
             return false;
         }
     }
@@ -92,11 +95,6 @@ public class Servicio_Productores {
         // se da de baja el productor, sus cuadros y lotes y se confirma transaccion
         } else {
             this.repositorio.iniciarTransaccion();
-
-            // dar de baja cuadros
-            for(Cuadro cuadro : productor.getCuadros()){
-                cuadro.setAlta(false);                       
-            }
 
             // dar de baja lotes 
             for(Lote lote : productor.getLotes()){

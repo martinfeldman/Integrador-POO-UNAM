@@ -4,57 +4,40 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 @Entity
 public class EntregaSecadero {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id_Entrega;
+    private int idEntrega;
 
+    private Cosecha cosecha;
     private Double pesoSecadero;
     private Double pesoCampo;
+    private Double diferenciaPeso;
+
     private LocalDate fechaEntrega;
     private boolean isAlta;
-    
-    // las cosechas que llegaron en esta entrega
-    @OneToMany
-    private List<Cosecha> cosechas = new ArrayList<>();
+
 
 
     public EntregaSecadero() {}
 
-    public EntregaSecadero(List<Cosecha> cosechas, Double pesoSecadero, LocalDate fechaEntrega){
-        this.cosechas = cosechas; 
-        this.pesoCampo = this.obtenerPesoCampo(cosechas);
-        this.pesoSecadero = pesoSecadero;
+    public EntregaSecadero(Cosecha cosecha, LocalDate fechaEntrega, Double pesoSecadero){
+        this.cosecha = cosecha; 
         this.fechaEntrega = fechaEntrega;
-    }
-   
-    // Este metodo debe sumar las cantidades totales de los Arrays KgsEntregados 
-    // de cada cosecha que ingresa como parte de la Entrega - ( en cosechas[] )
-    public Double obtenerPesoCampo(List<Cosecha> cosechas) {
-        double pesoCampo = 0;
-        
-        for(Cosecha obj_cos : cosechas){
-            //System.out.println(obj_cos);
-            pesoCampo = obj_cos.getTotalKgs();
-        }  
-
-        return pesoCampo;
-        
+        this.pesoSecadero = pesoSecadero;
+        this.pesoCampo = cosecha.getKgsCosechados();
+        this.diferenciaPeso = cosecha.getKgsCosechados() - pesoSecadero ;
     }
 
-    @Override
+
+   // @Override
     public String toString() {
-        return "EntregaCosechaSecadero [fechaEntrega=" + fechaEntrega + ", idEntrega=" + id_Entrega + ", pesoCampo="
-                + pesoCampo + ", pesoSecadero=" + pesoSecadero + "]";
+        return Integer.toString(idEntrega);
     }
 
 
@@ -64,26 +47,28 @@ public class EntregaSecadero {
     // getters & setters 
 
 
-    public int getId_Entrega() {
-        return id_Entrega;
+    public int getIdEntrega() {
+        return idEntrega;
     }    
 
-        
-    public boolean isAlta() {
-        return isAlta;
+
+    public Cosecha getCosecha() {
+        return cosecha;
     }
 
-    public void setAlta(boolean isAlta) {
-        this.isAlta = isAlta;
+    public void setCosecha(Cosecha cosecha) {
+        this.cosecha = cosecha;
     }
 
-    public Double getPesoCampo() {
-        return pesoCampo;
+
+    public LocalDate getFechaEntrega() {
+        return fechaEntrega;
     }
 
-    public void setPesoCampo(Double pesoCampo) {
-        this.pesoCampo = pesoCampo;
+    public void setFechaEntrega(LocalDate fechaEntrega) {
+        this.fechaEntrega = fechaEntrega;
     }
+    
 
     public Double getPesoSecadero() {
         return pesoSecadero;
@@ -93,22 +78,31 @@ public class EntregaSecadero {
         this.pesoSecadero = pesoSecadero;
     }
 
-    public LocalDate getFechaEntrega() {
-        return fechaEntrega;
+
+    public Double getPesoCampo() {
+        return pesoCampo;
     }
 
-    public void setFechaEntrega(LocalDate fechaEntrega) {
-        this.fechaEntrega = fechaEntrega;
+    public void setPesoCampo(Double pesoCampo) {
+        this.pesoCampo = pesoCampo;
     }
-  
+
+
+    public Double getDiferenciaPeso() {
+        return diferenciaPeso;
+    }
+
+    public void setDiferenciaPeso(Double diferenciaPeso) {
+        this.diferenciaPeso = diferenciaPeso;
+    }
+
     
-     
+    public boolean isAlta() {
+        return isAlta;
+    }
+
+    public void setAlta(boolean isAlta) {
+        this.isAlta = isAlta;
+    }
 }
- 
-
-
-
- 
-
-
 

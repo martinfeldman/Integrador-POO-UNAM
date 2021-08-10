@@ -38,15 +38,16 @@ public class Vista_ABM_Empleado implements Vista {
 
 
     // objetos de la pantalla
+    
+    Button botonAgregar, botonEliminar, botonLimpiar;
+    Label etiquetaInteractiva;
     TableView<Empleado> tabla;
     TableColumn<Empleado, Integer> columnaId;
     TableColumn<Empleado, String> columnaNombres;
     TableColumn<Empleado, String> columnaApellidos;
     TableColumn<Empleado, String> columnaDni;
-    Button botonAgregar, botonEliminar, botonLimpiar;
     TextField entradaNombres, entradaApellidos, entradaDni;
-    Label etiquetaId, etiquetaInteractiva;
-
+  
     // objetos para seguimiento de empleados
     Button botonKgsPorProductor, botonKgsPorLote, botonKgsPorCuadro;
     ComboBox<Productor> productorBox;
@@ -62,7 +63,6 @@ public class Vista_ABM_Empleado implements Vista {
         this.servicio_Productores = servicio_Productores;
         this.servicio_Lotes = servicio_Lotes;
         this.servicio_Cuadros = servicio_Cuadros;
-
     }
 
 
@@ -70,9 +70,9 @@ public class Vista_ABM_Empleado implements Vista {
     @Override
     public Parent obtenerVista() {
         
-        // definicion elementos de pantalla
+
+    // definicion elementos de pantalla
         
-        etiquetaId = new Label("");
         etiquetaInteractiva = new Label("Puede seleccionar filas de la tabla para editarlas");
         etiquetaKgsPorProductor = new Label("");
         etiquetaKgsPorLote = new Label("");
@@ -81,6 +81,10 @@ public class Vista_ABM_Empleado implements Vista {
         entradaNombres = new TextField();
         entradaApellidos = new TextField();
         entradaDni = new TextField();
+
+        entradaNombres.setMaxWidth(400);
+        entradaApellidos.setMaxWidth(400);
+        entradaDni.setMaxWidth(300);
 
         botonAgregar = new Button("Agregar");
         botonEliminar = new Button("Eliminar");
@@ -93,7 +97,7 @@ public class Vista_ABM_Empleado implements Vista {
         loteBox = new ComboBox<>();
         cuadroBox = new ComboBox<>();
         
-        columnaId = new TableColumn<>("Id");
+        columnaId = new TableColumn<>("Id de Empleado");
         columnaDni = new TableColumn<>("DNI");
         columnaNombres = new TableColumn<>("Nombres");
         columnaApellidos = new TableColumn<>("Apellidos");
@@ -106,7 +110,7 @@ public class Vista_ABM_Empleado implements Vista {
 
         
 
-        // propiedades de elementos
+    // propiedades de elementos
 
         tabla.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         tabla.setPrefHeight(300);
@@ -120,21 +124,21 @@ public class Vista_ABM_Empleado implements Vista {
         contenedorBotones.setPadding(new Insets(10, 10, 10, 10));
         contenedorCarga.setPadding(new Insets(10, 10, 10, 10));
 
-        // COLUMNAS - propiedades
+        //- COLUMNAS - propiedades
       
-        columnaId.setMinWidth(100);
+        columnaId.setMinWidth(200);
         columnaDni.setMinWidth(200);
         columnaNombres.setMinWidth(300);
         columnaApellidos.setMinWidth(300);
 
-        columnaId.setCellValueFactory(new PropertyValueFactory<>("id_Empleado"));
+        columnaId.setCellValueFactory(new PropertyValueFactory<>("idEmpleado"));
         columnaDni.setCellValueFactory(new PropertyValueFactory<>("dni"));
         columnaNombres.setCellValueFactory(new PropertyValueFactory<>("nombres"));
         columnaApellidos.setCellValueFactory(new PropertyValueFactory<>("apellidos"));
         
 
 
-        // acciones sobre elementos
+    // acciones sobre elementos
 
         botonAgregar.setOnAction(e -> clicAgregarEmpleado());
         botonEliminar.setOnAction(e -> clicEliminarEmpleado());
@@ -142,25 +146,26 @@ public class Vista_ABM_Empleado implements Vista {
         productorBox.setOnAction(e -> servicio_seguimiento.obtenerKgsEmpleado_productor());
         loteBox.setOnAction(e -> servicio_seguimiento.obtenerKgsEmpleado_lote());
         cuadroBox.setOnAction(e -> servicio_seguimiento.obtenerKgsEmpleado_cuadro());
+        tabla.getSelectionModel().selectedItemProperty().addListener(e -> cargarDatos());   
 
-        // pedimos los datos de Empleados a la BD y mostramos en tabla 
+        //- cargamos datos a la tabla y los comboBoxs, a partir de consultas a la BD 
         tabla.getItems().addAll(this.servicio.listarEmpleados());
-        // cargamos datos en los comboBoxs
+
         productorBox.getItems().addAll(this.servicio_Productores.listarProductores());
         loteBox.getItems().addAll(this.servicio_Lotes.listarLotes());
         cuadroBox.getItems().addAll(this.servicio_Cuadros.listarCuadros());
 
-        // agregamos las columnas a la tabla
+        //- agregamos las columnas a la tabla
         tabla.getColumns().add(columnaId);
         tabla.getColumns().add(columnaDni);
         tabla.getColumns().add(columnaNombres);
         tabla.getColumns().add(columnaApellidos);
-        tabla.getSelectionModel().selectedItemProperty().addListener(e -> cargarDatos());   
+       
         
-        // agregamos contenido a los contenedores  
+        //- agregamos contenido a los contenedores  
         contenedorBotones.getChildren().addAll(botonAgregar, botonEliminar, botonLimpiar);
-        contenedorCarga.getChildren().addAll(contenedorBotones, etiquetaInteractiva, etiquetaId, entradaNombres, entradaApellidos, entradaDni);
-        contenedor.getChildren().addAll(tabla, contenedorCarga);
+        contenedorCarga.getChildren().addAll(etiquetaInteractiva, entradaNombres, entradaApellidos, entradaDni);
+        contenedor.getChildren().addAll(tabla, contenedorCarga, contenedorBotones);
 
         return contenedor;
 
@@ -177,15 +182,21 @@ public class Vista_ABM_Empleado implements Vista {
     private void clicAgregarEmpleado() {
         
         empleadoSeleccionado = tabla.getSelectionModel().getSelectedItem();
+
         try {
+
+            // Si no hay elemento seleccionado en la tabla, se tiene un nuevo objeto por agregar
             if (empleadoSeleccionado == null) {
-                // Si no hay elemento seleccionado en la tabla
                 servicio.agregarEmpleado(entradaNombres.getText(), entradaApellidos.getText(), entradaDni.getText());
+           
+
+            //- SINO, modificamos el empleadoSeleccionado a partir de su id
             } else {
-                // SINO modificar el empleado
-                servicio.editarEmpleado(Integer.parseInt(etiquetaId.getText()), entradaNombres.getText(), entradaApellidos.getText(), entradaDni.getText());
+                servicio.modificarEmpleado(empleadoSeleccionado.getIdEmpleado(), entradaNombres.getText(), entradaApellidos.getText(), entradaDni.getText());
             }
+
             limpiar();
+
         } catch (IllegalArgumentException e) {
             mostrarAlerta(AlertType.ERROR, "Error", "Error al guardar", e.getMessage());
         }
@@ -193,40 +204,44 @@ public class Vista_ABM_Empleado implements Vista {
 
 
 
-    // A partir de la seleccion de un objeto sobre la tabla, Se cargan sus datos en los elementos de la pantalla
     private void cargarDatos() {
+
+        //- A partir de la seleccion de un objeto sobre la tabla, Se cargan sus datos en los elementos de la pantalla
         empleadoSeleccionado = tabla.getSelectionModel().getSelectedItem();
+
         if (empleadoSeleccionado != null) {
-            etiquetaInteractiva.setText("Está seleccionado el Empleado con id: ");
-            etiquetaId.setText(String.valueOf(empleadoSeleccionado.getId_Empleado()));
+
+            etiquetaInteractiva.setText("Está seleccionado el Empleado con id: " + empleadoSeleccionado.getIdEmpleado());
+            
             entradaNombres.setText(empleadoSeleccionado.getNombres());
             entradaApellidos.setText(empleadoSeleccionado.getApellidos());
-           
-            // este se usaria en Vista_ABM_Cuadro, y Vista_ABM_Lote
-            //departamentos.getSelectionModel().select(empleadoSeleccionado.getDepartamento());
+            entradaDni.setText(empleadoSeleccionado.getDni());
         }
     }
 
     
 
     private void clicEliminarEmpleado() {
+
         empleadoSeleccionado = tabla.getSelectionModel().getSelectedItem();
+
         if (empleadoSeleccionado != null) {
-            servicio.eliminarEmpleado(empleadoSeleccionado.getId_Empleado());
+
+            servicio.eliminarEmpleado(empleadoSeleccionado.getIdEmpleado());
             limpiar();
         }
     }
 
 
-    // limpiar vista 
     private void limpiar() {
-    
-        etiquetaId.setText("");
+        
+        //- limpiar elementos de la vista 
         etiquetaInteractiva.setText("Puede seleccionar filas de la tabla para editarlas");
         
         entradaNombres.clear();
         entradaApellidos.clear();
         entradaDni.clear();
+
         tabla.getItems().clear();
         tabla.getItems().addAll(this.servicio.listarEmpleados());
     } 

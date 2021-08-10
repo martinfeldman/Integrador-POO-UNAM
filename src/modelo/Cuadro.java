@@ -7,12 +7,9 @@ public class Cuadro {
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id_Cuadro;
-    private double superficie;
-    private boolean isAlta;
-
-   // @ManyToOne
-    private Productor productor;
+    private int idCuadro;
+    private Double superficie;
+    private boolean alta;
 
     @ManyToOne
     private Lote lote;
@@ -21,16 +18,15 @@ public class Cuadro {
 
     public Cuadro(){}
 
-    public Cuadro(Productor productor, Lote lote, double superficie){
-        this.productor = lote.getProductor();
+    public Cuadro(Lote lote, Double superficie){
         this.lote = lote;
         this.superficie = superficie; 
+        lote.agregarCuadro(this);
     }
     
     @Override
     public String toString() {
-        return "Cuadro [id_Cuadro=" + id_Cuadro +  ", productor=" + productor + ", superficie="
-                + superficie + "]";
+        return "Cuadro " + Integer.toString(idCuadro);
     }
 
 
@@ -40,26 +36,10 @@ public class Cuadro {
     // getters & setters 
   
     
-    public int getId_Cuadro() {
-        return id_Cuadro;
+    public int getIdCuadro() {
+        return idCuadro;
     }
 
-    public boolean isAlta() {
-        return isAlta;
-    }
-
-
-    public void setAlta(boolean isAlta) {
-        this.isAlta = isAlta;
-    }
-
-    public Productor getProductor() {
-        return productor;
-    }
-
-    public void setProductor(Productor productor) {
-        this.productor = productor;
-    }
 
     public Lote getLote() {
         return lote;
@@ -69,18 +49,21 @@ public class Cuadro {
         this.lote = lote;
     }
 
-    public double getSuperficie() {
+
+    public Double getSuperficie() {
         return superficie;
     }
 
-    public void setSuperficie(double superficie) {
+    public void setSuperficie(Double superficie) {
         this.superficie = superficie;
     }
-
-  
     
 
-   
-    
+    public boolean isAlta() {
+        return alta; 
+    }
 
+    public void setAlta(boolean alta) {
+       this.alta = alta;
+    }
 }

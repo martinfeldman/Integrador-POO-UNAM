@@ -31,62 +31,53 @@ public class Servicio_Empleados {
     // ABM EMPLEADO
 
     public void agregarEmpleado(String nombres, String apellidos, String dni) {
+        
+        //- Exepcion si alguno de los datos(obligatrios) que toma de la Vista esta vacio o es NULL
         if (nombres.trim().length() == 0 || apellidos.trim().length() == 0 || 
         dni.trim().length() == 0) {
             throw new IllegalArgumentException("Faltan datos");
         }
-        this.repositorio.iniciarTransaccion();
+
         Empleado empleado = new Empleado(nombres.toUpperCase().trim(), apellidos.toUpperCase().trim(), dni);
+
+        this.repositorio.iniciarTransaccion();
         this.repositorio.insertar(empleado);
         this.repositorio.confirmarTransaccion();
     }
 
 
 
+    public boolean modificarEmpleado(int idEmpleado, String nombres, String apellidos, String dni) {
 
-
-    // cambiar valor devuelto (por ejemplo: True ok, False problemas)
-    public boolean editarEmpleado(int idEmpleado, String nombres, String apellidos, String dni) {
-
-        // Execpion si alguno de los datos que toma de la Vista esta vacio,
-        // sino comienza una transaccion para editar 
+        //- Exepcion si alguno de los datos(obligatrios) que toma de la Vista esta vacio o es NULL 
         if (nombres.trim().length() == 0 || apellidos.trim().length() == 0 || 
         dni.trim().length() == 0) {
             throw new IllegalArgumentException("Faltan datos");
         }
 
-        this.repositorio.iniciarTransaccion();
-
-        // buscar el productor en la base de datos a partir de su ID
+        // buscar al empleado en la base de datos a partir de su ID
         Empleado empleado = this.repositorio.buscar(Empleado.class, idEmpleado);
 
-        // si regresa un objeto empleado se cambia sus nombres, apellidos y dni
+        //- si regresa un objeto empleado, se hacen TODAS las modificaciones debidas,
+        //- incluyendo las dependencias en otras clases y se inicia una transaccion 
         if (empleado != null) {
+           
+        //- modificaciones al objeto    
             empleado.setApellidos(apellidos);
             empleado.setNombres(nombres);
             empleado.setDni(dni);
+
+            this.repositorio.iniciarTransaccion();
             this.repositorio.modificar(empleado);
-            this.repositorio.confirmarTransaccion();
+            this.repositorio.confirmarTransaccion();    
             return true;
 
-        /*  si el departamento que se quiere cambiar al empleado es el mismo que se tiene se descarta la transaccion
-        // sino, se prosigue a modificarlo.
-            /* implementar comparable o comparator o si el id es unico pueden compararar por id
-            if (! empleado.getDepartamento().equals(departamento)) {
-                empleado.getDepartamento().getEmpleados().remove(empleado);
-                empleado.setDepartamento(departamento);
-                departamento.getEmpleados().add(empleado);
-            } */
-         
-        // sino se descarta transaccion     
+        //- sino se informa y se retorna modificarObjeto = falso 
         } else {
-            this.repositorio.descartarTransaccion();
+            System.out.print("repositorio.buscar(idEmpleado) = NULL");
             return false;
         }
     }
-
-
-
 
 
 
@@ -101,7 +92,7 @@ public class Servicio_Empleados {
             this.repositorio.descartarTransaccion();
             return false;
 
-        // sino comienza una transaccion con bd 
+        // SINO, comienza una transaccion con bd 
         // se da de baja el empleado, sus cosechas y se confirma transaccion
         } else {
             this.repositorio.iniciarTransaccion();
@@ -121,3 +112,16 @@ public class Servicio_Empleados {
 
    
 }
+
+
+
+
+ /*  si el departamento que se quiere cambiar al empleado es el mismo que se tiene se descarta la transaccion
+        // sino, se prosigue a modificarlo.
+            /* implementar comparable o comparator o si el id es unico pueden compararar por id
+            if (! empleado.getDepartamento().equals(departamento)) {
+                empleado.getDepartamento().getEmpleados().remove(empleado);
+                empleado.setDepartamento(departamento);
+                departamento.getEmpleados().add(empleado);
+            } */
+         

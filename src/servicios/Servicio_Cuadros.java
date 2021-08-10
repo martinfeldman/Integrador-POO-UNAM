@@ -43,16 +43,16 @@ public class Servicio_Cuadros{
 
     // ABM CUADRO 
 
-    // para agregar cuadro hace falta productor y lote 
-    public void agregarCuadro(Productor productor, Lote lote, double superficie) {
-        // falta si superficie esta vacio
-        if (productor == null || lote == null) {
+    // para agregar un cuadro hace falta lote y superficie
+    public void agregarCuadro(Lote lote, Double superficie) {
+        
+        if (lote == null || superficie.toString() == null ) {
             throw new IllegalArgumentException("Faltan datos");
         }
-        this.repositorio.iniciarTransaccion();
 
-        // Faltan agregar los parametros
-        Cuadro cuadro = new Cuadro(productor, lote, superficie);
+        Cuadro cuadro = new Cuadro(lote, superficie);
+
+        this.repositorio.iniciarTransaccion();
         this.repositorio.insertar(cuadro);
         this.repositorio.confirmarTransaccion();
     }
@@ -60,46 +60,63 @@ public class Servicio_Cuadros{
  
 
    
-    public boolean editarCuadro(int idCuadro, Productor productor, Lote lote , double superficie ) {
+    public boolean modificarCuadro(int idCuadro, Lote loteNuevo , Double superficie ) {
         
-        // Execpion si alguno de los datos que toma de la Vista esta vacio,
-        // sino comienza una transaccion para editar 
-        // falta si superficie esta vacio
-        if (productor == null || lote == null) {
+        //- Exepcion si alguno de los datos(obligatrios) que toma de la Vista esta vacio o es NULL
+        if (loteNuevo == null || superficie.toString() == null) {
             throw new IllegalArgumentException("Faltan datos");
         }
-        this.repositorio.iniciarTransaccion();
-        Cuadro cuadro = this.repositorio.buscar(Cuadro.class, idCuadro);
 
-        // solo realizar la modificacion si se corrobora que el lote ingresado pertenece al productor ingresado
+        //- buscar el cuadro en la base de datos a partir de su ID 
+        Cuadro cuadro = this.repositorio.buscar(Cuadro.class, idCuadro);
+        
+        //- si regresa un objeto cuadro, se hacen TODAS las modificaciones debidas,
+        //- incluyendo las dependencias en otras clases y se inicia una transaccion
         if (cuadro != null) {
-            cuadro.setProductor(productor);
-            cuadro.setLote(lote);
+            
+        //- dependencias de la modificación    
+            
+            var loteParaQuitar = cuadro.getLote();
+            this.repositorio.iniciarTransaccion();
+
+        //- Solo se cambia el lote del Cuadro si es diferente del que ya posee    
+            if (! loteParaQuitar.equals(loteNuevo)) {
+
+                loteParaQuitar.quitarCuadro(cuadro); 
+                loteNuevo.agregarCuadro(cuadro);
+
+                this.repositorio.modificar(loteParaQuitar);
+                this.repositorio.modificar(loteNuevo);
+        
+        //- modificaciones al objeto    
+
+                cuadro.setLote(loteNuevo);
+            
+            } else {
+                System.out.print("loteParaQuitar es igual a loteNuevo. Se omite esta modificación.");
+            }
+
             cuadro.setSuperficie(superficie);
-            // implementar comparable o comparator
-            // o si el id es unico pueden compararar por id
-          /*  if (! empleado.getDepartamento().equals(departamento)) {
-                empleado.getDepartamento().getEmpleados().remove(empleado);
-                empleado.setDepartamento(departamento);
-                departamento.getEmpleados().add(empleado);
-            }*/
+
             this.repositorio.modificar(cuadro);
             this.repositorio.confirmarTransaccion();
             return true;
+
+        //- sino se informa y se retorna modificarObjeto = falso     
         } else {
-            this.repositorio.descartarTransaccion();
+            System.out.print("repositorio.buscar(idCuadros) = NULL");
             return false;
         }
     }
 
 
 
-    // cambiar valor devuelto (por ejemplo: True ok, False problemas)
-    public int eliminarCuadro(int idEmpleado) {
+    
+    public boolean eliminarCuadro(int idEmpleado) {
         this.repositorio.iniciarTransaccion();
         Empleado empleado = this.repositorio.buscar(Empleado.class, idEmpleado);
-        return 1; 
-      
+
+        
       /*  // como se soluciona??
         if (empleado != null && empleado.getProyectos().isEmpty() ) {
             this.repositorio.eliminar(empleado);
@@ -109,6 +126,7 @@ public class Servicio_Cuadros{
             this.repositorio.descartarTransaccion();
             return 1;
         } */
+        return true; 
     }
 
    

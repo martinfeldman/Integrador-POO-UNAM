@@ -1,12 +1,10 @@
 package servicios;
-import repositorios.*;
+import java.time.LocalDate;
+import java.util.List;
+
 import modelo.Cosecha;
 import modelo.EntregaSecadero;
-
-import java.sql.Date;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import repositorios.Repositorio;
 
 public class Servicio_EntregasSecadero {
    
@@ -15,16 +13,9 @@ public class Servicio_EntregasSecadero {
     public Servicio_EntregasSecadero(Repositorio p) {
         this.repositorio = p;
     }
-   
-
-   
-    // obtener diferencia de kgs entre el peso registrado en el campo y en el secadero 
-    public double diffCampoSecadero(){
-        return 3.9;
-    }
 
 
-    // Listar y Buscar 
+    // Listar y Buscar  
     public List<EntregaSecadero> listarEntregaSecadero() {
         return this.repositorio.buscarTodos(EntregaSecadero.class);
         // cambiar por buscar todos ordenados por
@@ -38,45 +29,71 @@ public class Servicio_EntregasSecadero {
 
 
 
-   // ABM ENTREGA SECADERO 
+   // ABM ENTREGA a SECADERO 
 
-   public void agregarEntregaSecadero(ArrayList<Cosecha> cosechas ,double PesoSecadero, Date fechaEntrega) {
-        if (cosechas == null) {
-        throw new IllegalArgumentException("Faltan datos");
+  
+   public void agregarEntregaSecadero(Cosecha cosecha ,LocalDate fechaEntrega, Double pesoSecadero ) {
+
+        //- Exepcion si alguno de los datos(obligatrios) que toma de la Vista esta vacio o es NULL
+        if (cosecha == null || fechaEntrega == null ||pesoSecadero.toString().trim().length() == 0) {
+            throw new IllegalArgumentException("Faltan datos");
         }
+
+        EntregaSecadero entregaSecadero = new EntregaSecadero(cosecha, fechaEntrega, pesoSecadero);
+
         this.repositorio.iniciarTransaccion();
-        EntregaSecadero entregaSecadero = new EntregaSecadero();
         this.repositorio.insertar(entregaSecadero);
         this.repositorio.confirmarTransaccion();
     }
 
-    // cambiar valor devuelto (por ejemplo: True ok, False problemas)
-    public void editarEntregaSecadero(int idEntregaSecadero, double PesoSecadero, LocalDate fechaEntrega) {
+
+
+    
+    public boolean modificarEntregaSecadero(int idEntregaSecadero, Cosecha cosechaNueva, Double pesoSecadero, LocalDate fechaEntrega) {
         
-        // falta completar el if con los demas atributos
-        if (fechaEntrega == null) {
+        //- Exepcion si alguno de los datos(obligatrios) que toma de la Vista esta vacio o es NULL 
+        if (cosechaNueva == null || pesoSecadero.toString() == null ||  fechaEntrega == null) {
             throw new IllegalArgumentException("Faltan datos");
         }
-        this.repositorio.iniciarTransaccion();
+
+        //- buscar la EntregaSecadero en la base de datos a partir de su ID
         EntregaSecadero entregaSecadero = this.repositorio.buscar(EntregaSecadero.class, idEntregaSecadero);
+        
+        //- si regresa un objeto EntregaSecadero, se hacen TODAS las modificaciones debidas,
+        //- incluyendo las dependencias en otras clases y se inicia una transaccion 
         if (entregaSecadero != null) {
+
+             //- modificaciones al objeto
+
+             var cosechaParaQuitar = entregaSecadero.getCosecha();
+             this.repositorio.iniciarTransaccion();    
+             
+             //- Solo se cambia la cosecha de la EntregaSecadero si es diferente de la que ya posee    
+             if (! cosechaParaQuitar.equals(cosechaNueva)) {
+         
+                 entregaSecadero.setCosecha(cosechaNueva);     
+            
+             } else {
+                 System.out.print("cosechaParaQuitar es igual a cosechaNueva. Se omite esta modificación.");
+             }
+
+            entregaSecadero.setPesoSecadero(pesoSecadero); 
             entregaSecadero.setFechaEntrega(fechaEntrega);
-            //entregaSecadero.setNombres(nombres);
 
-
-            // implementar comparable o comparator
-            // o si el id es unico pueden compararar por id
-           /* if (! entregaSecadero.getDepartamento().equals(departamento)) {
-                entregaSecadero.getDepartamento().getEmpleados().remove(empleado);
-                entregaSecadero.setDepartamento(departamento);
-                departamento.getEmpleados().add(empleado);
-            }    */
+       
+            //- persistir en la bd todo objeto que haya sido modificado    
             this.repositorio.modificar(entregaSecadero);
             this.repositorio.confirmarTransaccion();
+            return true; 
+
+        //- sino se informa y se retorna modificarObjeto = falso
         } else {
-            this.repositorio.descartarTransaccion();
+            System.out.print("repositorio.buscar(idLote) = NULL");
+            return false;
         }
     }
+
+
 
     public int eliminarEntregaSecadero(int idEntregaSecadero) {
         this.repositorio.iniciarTransaccion();
@@ -94,3 +111,11 @@ public class Servicio_EntregasSecadero {
 
 
 }
+         
+            // implementar comparable o comparator
+            // o si el id es unico pueden compararar por id
+           /* if (! entregaSecadero.getDepartamento().equals(departamento)) {
+                entregaSecadero.getDepartamento().getEmpleados().remove(empleado);
+                entregaSecadero.setDepartamento(departamento);
+                departamento.getEmpleados().add(empleado);
+            }    */

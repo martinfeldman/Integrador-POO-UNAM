@@ -8,6 +8,7 @@ public interface Vista {
     public Parent obtenerVista();
 
     public default void mostrarAlerta(AlertType tipo, String titulo, String cabecera, String mensaje) {
+        
         // mostramos una alerta
         var alerta = new Alert(tipo);
         alerta.setTitle(titulo);

@@ -1,5 +1,6 @@
 package vistas;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -69,23 +70,29 @@ public class Vista_ABM_Lote implements Vista {
 
     // propiedades de elementos
 
-        productoresBox.setPromptText("Ingrese productor");
-        productoresBox.setMinWidth(200);
-
         // COLUMNAS - propiedades
-        columnaId.setMinWidth(100);
+        columnaId.setMinWidth(200);
         columnaProductor.setMinWidth(300);
 
         columnaId.setCellValueFactory(new PropertyValueFactory<>("idLote"));
         columnaProductor.setCellValueFactory(new PropertyValueFactory<>("productor"));
 
-        contenedorCarga.setSpacing(10);
-        contenedorBotones.setSpacing(10);
+        contenedor.setAlignment(Pos.CENTER);
+        contenedorBotones.setAlignment(Pos.CENTER);
+        contenedorCarga.setAlignment(Pos.CENTER);
+
         contenedorBotones.setPadding(new Insets(10, 10, 10, 10));
         contenedorCarga.setPadding(new Insets(10, 10, 10, 10));
+        contenedorCarga.setSpacing(10);
+        contenedorBotones.setSpacing(10);
+      
+        productoresBox.setPromptText("Ingrese productor");
+        productoresBox.setMinWidth(200);
 
         tabla.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        tabla.setPadding(new Insets(0, 0, 10, 0));
         tabla.setPrefHeight(300);
+
 
 
 

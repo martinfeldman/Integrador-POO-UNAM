@@ -74,7 +74,7 @@ public class Servicio_Empleados {
 
         //- sino se informa y se retorna modificarObjeto = falso 
         } else {
-            System.out.print("repositorio.buscar(idEmpleado) = NULL");
+            System.out.print("repositorio.buscar(idEmpleado) = NULL \n\n");
             return false;
         }
     }

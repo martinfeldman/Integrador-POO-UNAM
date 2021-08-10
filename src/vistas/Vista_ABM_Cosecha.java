@@ -3,6 +3,7 @@ import java.time.LocalDate;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -108,7 +109,7 @@ public class Vista_ABM_Cosecha implements Vista {
     // propiedades de elementos
 
         //- propiedades de COLUMNAS
-        columnaId.setMinWidth(100);
+        columnaId.setMinWidth(200);
         columnaFecha.setMinWidth(150);
         columnaEmpleado.setMinWidth(300);
         columnaCuadros.setMinWidth(200);
@@ -120,24 +121,32 @@ public class Vista_ABM_Cosecha implements Vista {
         columnaCuadros.setCellValueFactory(new PropertyValueFactory<>("cuadro"));
         columnaKgsCosechados.setCellValueFactory(new PropertyValueFactory<>("kgsCosechados"));
 
-        contenedorBotones.setSpacing(10);
-        contenedorCarga.setSpacing(10);
+        contenedor.setAlignment(Pos.CENTER);
+        contenedorBotones.setAlignment(Pos.CENTER);
+        contenedorCarga.setAlignment(Pos.CENTER);
+        contenedorHorizontal1.setAlignment(Pos.CENTER);
+        contenedorHorizontal2.setAlignment(Pos.CENTER);
+
         contenedorBotones.setPadding(new Insets(10, 10, 10, 10));
         contenedorCarga.setPadding(new Insets(10, 10, 10, 10));
         contenedorHorizontal1.setPadding(new Insets(10, 10, 10, 10));
         contenedorHorizontal2.setPadding(new Insets(10, 10, 10, 10));
 
-        separador1.setPrefHeight(100);
-        separador2.setPrefHeight(100);
-        separador3.setPrefWidth(100);
+        contenedorBotones.setSpacing(10);
+        contenedorCarga.setSpacing(10);
+        
         separador1.setPadding(new Insets(10, 10, 10, 10));
         separador2.setPadding(new Insets(10, 10, 10, 140));
 
+        separador1.setPrefHeight(100);
+        separador2.setPrefHeight(100);
+        separador3.setPrefWidth(100);
+
         tabla.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         tabla.setPrefHeight(300);
-        tabla.setPrefWidth(950);
+        tabla.setPrefWidth(1050);
 
- 
+
 
     // acciones sobre elementos 
     
@@ -213,6 +222,8 @@ public class Vista_ABM_Cosecha implements Vista {
 
         if (cosechaSeleccionada != null) {
           
+            etiquetaInteractiva.setText("Está seleccionada la Cosecha con id: " + String.valueOf(cosechaSeleccionada.getIdCosecha()));
+
             cuadroBox.setValue(cosechaSeleccionada.getCuadro());
             datepicker.setValue(cosechaSeleccionada.getFecha());
             empleadoBox.setValue(cosechaSeleccionada.getEmpleado());
@@ -240,10 +251,11 @@ public class Vista_ABM_Cosecha implements Vista {
     private void limpiar() {
         
         //- limpiar elementos de la vista 
-        etiquetaInteractiva.setText("Puede seleccionar filas de la tabla para editarlas" + cosechaSeleccionada.getIdCosecha());
-        empleadoBox.getSelectionModel().clearSelection();
-        cuadroBox.getSelectionModel().clearSelection();
         entradaKgsCosechados.clear();
+        etiquetaInteractiva.setText("Puede seleccionar filas de la tabla para editarlas");
+
+        cuadroBox.getSelectionModel().clearSelection();
+        empleadoBox.getSelectionModel().clearSelection();
  
         tabla.getItems().clear();
         tabla.getItems().addAll(this.servicio.listarCosechas());

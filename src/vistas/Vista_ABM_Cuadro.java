@@ -1,6 +1,7 @@
 package vistas;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -39,7 +40,6 @@ public class Vista_ABM_Cuadro implements Vista {
     TableView<Cuadro> tabla;
     TableColumn<Cuadro, Integer> columnaId;
     TableColumn<Cuadro, Lote> columnaLote;
-    TableColumn<Cuadro, Productor> columnaProductor;
     TableColumn<Cuadro, Double> columnaSuperficie;
     TextField entradaSuperficie;
     Separator separador1, separador2, separador3 ; 
@@ -58,21 +58,13 @@ public class Vista_ABM_Cuadro implements Vista {
 
     // definicion elementos de pantalla 
 
-
         botonAgregar = new Button("Agregar/Modificar Selección");
         botonEliminar = new Button("Eliminar");
         botonLimpiar = new Button("Limpiar");
 
         columnaId = new TableColumn<>("Id de Cuadro");
         columnaLote = new TableColumn<>("Lote");
-        columnaProductor = new TableColumn<>("Productor");
         columnaSuperficie = new TableColumn<>("Superficie");
-
-        entradaSuperficie = new TextField("");
-
-        etiquetaInteractiva = new Label("Puede seleccionar filas de la tabla para editarlas");
-        etiquetaComboBox_lotes = new Label ("Seleccione el lote al que pertenece el cuadro   ");
-        etiqueta_productor = new Label("");
 
         VBox contenedor = new VBox();
         HBox contenedorBotones = new HBox();
@@ -80,6 +72,12 @@ public class Vista_ABM_Cuadro implements Vista {
         HBox contenedorBox = new HBox();
         HBox contenedorHorizontal1 = new HBox();
         HBox contenedorHorizontal2 = new HBox();
+
+        entradaSuperficie = new TextField("");
+
+        etiquetaInteractiva = new Label("Puede seleccionar filas de la tabla para editarlas");
+        etiquetaComboBox_lotes = new Label ("Seleccione el lote al que pertenece el cuadro   ");
+        etiqueta_productor = new Label("");
 
         lotesBox = new ComboBox<>();
 
@@ -92,29 +90,35 @@ public class Vista_ABM_Cuadro implements Vista {
 
     // propiedades de elementos
 
-        entradaSuperficie.setPromptText("Ingrese Superficie");
-        entradaSuperficie.setMaxWidth(300);
-
         //- propiedades de COLUMNAS
-        columnaId.setMinWidth(100);
-        columnaLote.setMinWidth(300);
-        columnaProductor.setMinWidth(300);
-        columnaSuperficie.setMinWidth(300);
-
         columnaId.setCellValueFactory(new PropertyValueFactory<>("idCuadro"));
-        columnaProductor.setCellValueFactory(new PropertyValueFactory<>("productor"));
         columnaLote.setCellValueFactory(new PropertyValueFactory<>("lote"));
         columnaSuperficie.setCellValueFactory(new PropertyValueFactory<>("superficie"));
 
-        contenedorBotones.setSpacing(10);
-        contenedorCarga.setSpacing(10);
+        columnaId.setMinWidth(200);
+        columnaLote.setMinWidth(200);
+        columnaSuperficie.setMinWidth(200);
+
+        contenedor.setAlignment(Pos.CENTER);
+        contenedorBotones.setAlignment(Pos.CENTER);
+        contenedorCarga.setAlignment(Pos.CENTER);
+
         contenedorBotones.setPadding(new Insets(10, 10, 10, 10));
         contenedorCarga.setPadding(new Insets(10, 10, 10, 10));
-        
-        tabla.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
+        contenedorBotones.setSpacing(10);
+        contenedorCarga.setSpacing(10);
+
+        entradaSuperficie.setPromptText("Ingrese Superficie en km²");
+        entradaSuperficie.setMaxWidth(300);
+        
         separador1.setPadding(new Insets(0,40,0,40));
         separador2.setPadding(new Insets(40,0,40,0));
+
+        tabla.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        tabla.setPadding(new Insets(0, 0, 10, 0));
+
+       
 
 
 
@@ -133,7 +137,6 @@ public class Vista_ABM_Cuadro implements Vista {
 
         //- asociamos las columnas a la tabla
         tabla.getColumns().add(columnaId);
-        tabla.getColumns().add(columnaProductor);
         tabla.getColumns().add(columnaLote);
         tabla.getColumns().add(columnaSuperficie);
         tabla.getSelectionModel().selectedItemProperty().addListener(e -> cargarDatos());

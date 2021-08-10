@@ -3,6 +3,7 @@ import jakarta.persistence.Persistence;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -51,8 +52,11 @@ public class App extends Application {
         launch(args);
     }
 
+
+    
     @Override
     public void start(Stage stage) throws Exception {
+
 
         // definicion elementos de pantalla
 
@@ -60,10 +64,6 @@ public class App extends Application {
          botonEntregasSecadero, botonSalir ; 
          
         Separator separador1, separador2, separador3, separador4, separador5, separador6, separadorX;
-        
-        HBox contenedorBotones = new HBox();
-        VBox contenedorPrincipal = new VBox();
-        Scene escena = new Scene(contenedorPrincipal, 1000, 2000);
 
         botonProductores = new Button("Productores");
         botonLotes = new Button("Lotes");
@@ -72,6 +72,11 @@ public class App extends Application {
         botonCosechas = new Button("Cosechas");
         botonEntregasSecadero = new Button("Entregas al Secadero");
         botonSalir = new Button ("Salir");
+        
+        HBox contenedorBotones = new HBox();
+        VBox contenedorPrincipal = new VBox();
+
+        Scene escena = new Scene(contenedorPrincipal, 1200, 2000);
 
         separador1 = new Separator(Orientation.VERTICAL);
         separador2 = new Separator(Orientation.VERTICAL);
@@ -83,20 +88,33 @@ public class App extends Application {
 
 
         
-        // propiedades de elementos
-        
-        stage.setTitle("Empresa - Productores");
-        stage.setResizable(false);
-   
-        contenedorPrincipal.setSpacing(10);    
-        contenedorBotones.setSpacing(10);
+    // propiedades de elementos
+
+        botonProductores.setPrefWidth(130);
+        botonLotes.setPrefWidth(110);
+        botonCuadros.setPrefWidth(110);
+        botonEmpleados.setPrefWidth(130);
+        botonCosechas.setPrefWidth(120);
+        botonEntregasSecadero.setPrefWidth(180);
+        botonSalir.setPrefWidth(100);
+
+        contenedorPrincipal.setSpacing(10);   
+        contenedorBotones.setSpacing(7);
         contenedorPrincipal.setPadding(new Insets(5, 20, 5, 20));
         contenedorBotones.setPadding(new Insets(10, 10, 10, 10));
         
-        separador6.setPadding(new Insets(0, 550, 0, 0));
+        separador6.setPadding(new Insets(0, 120, 0, 0));
+
+        stage.setTitle("Empresa - Productores");
+        stage.setResizable(true);      
+        
+        /*  posibles propiedades para usar sobre el stage
+            stage.sizeToScene();
+            stage.centerOnScreen(); */
 
 
-        // acciones sobre elementos 
+
+    // acciones sobre elementos 
         botonProductores.setOnAction(e -> clicMostrarVistaProductores(stage));
         botonLotes.setOnAction(e -> clicMostrarVistaLotes(stage));
         botonCuadros.setOnAction(e -> clicMostrarVistaCuadros(stage));
@@ -120,20 +138,13 @@ public class App extends Application {
     }
 
 
-    // definicion de metodos disparados por clic
-
-    /*  posibles propiedades para usar al invocar al stage
-        stage.sizeToScene();
-        stage.centerOnScreen(); */
-
-
-    
 
     private void clicMostrarVistaProductores(Stage stage) {
         cambiante.getChildren().clear();
         cambiante.getChildren().add(vistaProductores.obtenerVista());
         stage.setTitle("Empresa - Productores");
     }
+
 
 
     private void clicMostrarVistaLotes(Stage stage) {
@@ -143,11 +154,13 @@ public class App extends Application {
     }
 
 
+
     private void clicMostrarVistaCuadros(Stage stage) {
         cambiante.getChildren().clear();
         cambiante.getChildren().add(vistaCuadros.obtenerVista());
         stage.setTitle("Empresa - Cuadros");
     }
+
 
 
     private void clicMostrarVistaEmpleados(Stage stage) {
@@ -157,6 +170,7 @@ public class App extends Application {
     }
 
 
+
     private void clicMostrarVistaCosechas(Stage stage) {
         cambiante.getChildren().clear();
         cambiante.getChildren().add(vistaCosechas.obtenerVista());
@@ -164,11 +178,11 @@ public class App extends Application {
     }
 
 
+
     private void clicMostrarVistaEntregaSecadero(Stage stage) {
         cambiante.getChildren().clear();
         cambiante.getChildren().add(vistaEntregasSecadero.obtenerVista());
         stage.setTitle("Empresa - Entregas al Secadero");
     }
-
 
 }

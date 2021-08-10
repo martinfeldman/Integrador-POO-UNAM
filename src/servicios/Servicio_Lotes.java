@@ -78,7 +78,7 @@ public class Servicio_Lotes{
                 productorNuevo.agregarLote(lote);
             
             } else {
-                System.out.print("ProductorParaQuitar es igual a ProductorNuevo. Se omite esta modificación.");
+                System.out.print("ProductorParaQuitar es igual a ProductorNuevo. Se omite esta modificación.\n");
                 return false;
             }
 
@@ -97,7 +97,7 @@ public class Servicio_Lotes{
 
         //- sino se informa y se retorna modificarObjeto = falso    
         } else {
-            System.out.print("repositorio.buscar(idLote) = NULL");
+            System.out.print("repositorio.buscar(idLote) = NULL \n\n");
             return false;
         }
     }

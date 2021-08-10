@@ -3,6 +3,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -90,12 +91,6 @@ public class Vista_ABM_EntregaSecadero implements Vista {
 
     // propiedades de elementos
     
-        contenedorBotones.setSpacing(10);
-        contenedorCarga.setSpacing(10);
-        contenedorBotones.setPadding(new Insets(10, 10, 10, 10));
-        contenedorCarga.setPadding(new Insets(10, 10, 10, 10));
-        contenedorHorizontal.setPadding(new Insets(10, 0, 10, 0));
-        
         //- propiedades de COLUMNAS
         columnaId.setMinWidth(200);
         columnaFecha.setMinWidth(150);
@@ -111,10 +106,23 @@ public class Vista_ABM_EntregaSecadero implements Vista {
         columnaPesoCampo.setCellValueFactory(new PropertyValueFactory<>("pesoCampo"));
         columnaDiferenciaPeso.setCellValueFactory(new PropertyValueFactory<>("diferenciaPeso"));
 
+        contenedor.setAlignment(Pos.CENTER);
+        contenedorBotones.setAlignment(Pos.CENTER);
+        contenedorCarga.setAlignment(Pos.CENTER);
+        contenedorHorizontal.setAlignment(Pos.CENTER);
+        
+        contenedorBotones.setPadding(new Insets(10, 10, 10, 10));
+        contenedorCarga.setPadding(new Insets(10, 10, 10, 10));
+        contenedorHorizontal.setPadding(new Insets(10, 0, 10, 0));
+        
+        contenedorBotones.setSpacing(10);
+        contenedorCarga.setSpacing(10);
+       
         etiquetaFecha.setText("Ingrese Fecha:   ");
         entradaPesoSecadero.setMaxWidth(300);
 
         tabla.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        tabla.setPadding(new Insets(0, 0, 10, 0));
         tabla.setPrefHeight(300);
 
 

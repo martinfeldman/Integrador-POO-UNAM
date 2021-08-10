@@ -1,11 +1,14 @@
 package vistas;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.Separator;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -41,6 +44,7 @@ public class Vista_ABM_Empleado implements Vista {
     
     Button botonAgregar, botonEliminar, botonLimpiar;
     Label etiquetaInteractiva;
+    Separator separador;
     TableView<Empleado> tabla;
     TableColumn<Empleado, Integer> columnaId;
     TableColumn<Empleado, String> columnaNombres;
@@ -72,19 +76,6 @@ public class Vista_ABM_Empleado implements Vista {
         
 
     // definicion elementos de pantalla
-        
-        etiquetaInteractiva = new Label("Puede seleccionar filas de la tabla para editarlas");
-        etiquetaKgsPorProductor = new Label("");
-        etiquetaKgsPorLote = new Label("");
-        etiquetaKgsPorCuadro = new Label("");
-
-        entradaNombres = new TextField();
-        entradaApellidos = new TextField();
-        entradaDni = new TextField();
-
-        entradaNombres.setMaxWidth(400);
-        entradaApellidos.setMaxWidth(400);
-        entradaDni.setMaxWidth(300);
 
         botonAgregar = new Button("Agregar");
         botonEliminar = new Button("Eliminar");
@@ -93,39 +84,38 @@ public class Vista_ABM_Empleado implements Vista {
         botonKgsPorLote = new Button("obtener kgs cosechados por X lote");
         botonKgsPorCuadro = new Button("obtener kgs cosechados por X cuadro");
 
-        productorBox = new ComboBox<>();
-        loteBox = new ComboBox<>();
-        cuadroBox = new ComboBox<>();
-        
         columnaId = new TableColumn<>("Id de Empleado");
         columnaDni = new TableColumn<>("DNI");
         columnaNombres = new TableColumn<>("Nombres");
         columnaApellidos = new TableColumn<>("Apellidos");
 
-        tabla = new TableView<>();
-
         VBox contenedor = new VBox();
         HBox contenedorBotones = new HBox();
         VBox contenedorCarga = new VBox();
 
+        cuadroBox = new ComboBox<>();
         
+        entradaNombres = new TextField();
+        entradaApellidos = new TextField();
+        entradaDni = new TextField();
+
+        etiquetaInteractiva = new Label("Puede seleccionar filas de la tabla para editarlas");
+        etiquetaKgsPorProductor = new Label("");
+        etiquetaKgsPorLote = new Label("");
+        etiquetaKgsPorCuadro = new Label("");
+
+        loteBox = new ComboBox<>();
+        productorBox = new ComboBox<>();
+    
+        separador = new Separator(Orientation.HORIZONTAL); 
+
+        tabla = new TableView<>();
+
+       
 
     // propiedades de elementos
 
-        tabla.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        tabla.setPrefHeight(300);
-
-        entradaNombres.setPromptText("Nombres del empleado");       
-        entradaApellidos.setPromptText("Apellidos del empleado");
-        entradaDni.setPromptText("DNI del empleado");
-
-        contenedorBotones.setSpacing(10);
-        contenedorCarga.setSpacing(10);
-        contenedorBotones.setPadding(new Insets(10, 10, 10, 10));
-        contenedorCarga.setPadding(new Insets(10, 10, 10, 10));
-
         //- COLUMNAS - propiedades
-      
         columnaId.setMinWidth(200);
         columnaDni.setMinWidth(200);
         columnaNombres.setMinWidth(300);
@@ -135,7 +125,31 @@ public class Vista_ABM_Empleado implements Vista {
         columnaDni.setCellValueFactory(new PropertyValueFactory<>("dni"));
         columnaNombres.setCellValueFactory(new PropertyValueFactory<>("nombres"));
         columnaApellidos.setCellValueFactory(new PropertyValueFactory<>("apellidos"));
+
+        contenedor.setAlignment(Pos.CENTER);
+        contenedorBotones.setAlignment(Pos.CENTER);
+        contenedorCarga.setAlignment(Pos.CENTER);
+
+        contenedorBotones.setPadding(new Insets(10, 10, 10, 10));
+        contenedorCarga.setPadding(new Insets(10, 10, 10, 10));
         
+        contenedorBotones.setSpacing(10);
+        contenedorCarga.setSpacing(10);
+
+        entradaNombres.setMaxWidth(400);
+        entradaApellidos.setMaxWidth(400);
+        entradaDni.setMaxWidth(300);
+
+        entradaNombres.setPromptText("Nombres del empleado");       
+        entradaApellidos.setPromptText("Apellidos del empleado");
+        entradaDni.setPromptText("DNI del empleado");
+
+        separador.setPadding(new Insets(0, 0, 25, 0));
+
+        tabla.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        tabla.setPadding(new Insets(0, 0, 10, 0));
+        tabla.setPrefHeight(300);
+
 
 
     // acciones sobre elementos
@@ -155,27 +169,21 @@ public class Vista_ABM_Empleado implements Vista {
         loteBox.getItems().addAll(this.servicio_Lotes.listarLotes());
         cuadroBox.getItems().addAll(this.servicio_Cuadros.listarCuadros());
 
+
         //- agregamos las columnas a la tabla
         tabla.getColumns().add(columnaId);
         tabla.getColumns().add(columnaDni);
         tabla.getColumns().add(columnaNombres);
         tabla.getColumns().add(columnaApellidos);
        
-        
         //- agregamos contenido a los contenedores  
         contenedorBotones.getChildren().addAll(botonAgregar, botonEliminar, botonLimpiar);
-        contenedorCarga.getChildren().addAll(etiquetaInteractiva, entradaNombres, entradaApellidos, entradaDni);
+        contenedorCarga.getChildren().addAll(etiquetaInteractiva, separador, entradaNombres, entradaApellidos, entradaDni);
         contenedor.getChildren().addAll(tabla, contenedorCarga, contenedorBotones);
 
         return contenedor;
 
     }
-
-
-    // como mostrar las cosechas de un empleado? 
-    // Podria crear otra tabla debajo que lea el empleadoSeleccionado 
-    // en la tabla de arriba y haga la busqueda. 
-
 
 
 
@@ -231,6 +239,7 @@ public class Vista_ABM_Empleado implements Vista {
             limpiar();
         }
     }
+
 
 
     private void limpiar() {

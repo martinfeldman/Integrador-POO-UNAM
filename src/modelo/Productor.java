@@ -5,9 +5,12 @@ import java.util.List;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name= "productores")
 public class Productor {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "idProductor")
     private int idProductor;
 
     @Column(name = "nombres_productor", nullable = false, length = 50)
@@ -18,15 +21,14 @@ public class Productor {
 
     @Column(name = "dni_productor", nullable = false, length = 15)
     private String dni;
-
-    @Column(name = "alta_productor", nullable = false)
-    private boolean alta;
     
-   
     // lotes que posee el productor
+    @JoinColumn(name = "lotes_productor")
     @OneToMany (mappedBy = "productor")
     private List<Lote> lotes = new ArrayList<>();
 
+    @Column(name = "alta_productor", nullable = false)
+    private boolean alta;
 
 
     public Productor(){}
@@ -35,13 +37,15 @@ public class Productor {
         this.nombres = nombres;                  
         this.apellidos = apellidos; 
         this.dni = dni ;
+        this.alta = true;
     }
+
+
 
     @Override
     public String toString() {
         return nombres + " " + apellidos + ", (" + dni + ")\n";
     }
-
 
 
 

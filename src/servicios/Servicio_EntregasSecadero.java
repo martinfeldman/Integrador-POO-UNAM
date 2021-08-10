@@ -74,11 +74,12 @@ public class Servicio_EntregasSecadero {
                  entregaSecadero.setCosecha(cosechaNueva);     
             
              } else {
-                 System.out.print("cosechaParaQuitar es igual a cosechaNueva. Se omite esta modificación.");
+                 System.out.print("cosechaParaQuitar es igual a cosechaNueva. Se omite esta modificación.\n");
              }
 
             entregaSecadero.setPesoSecadero(pesoSecadero); 
             entregaSecadero.setFechaEntrega(fechaEntrega);
+            entregaSecadero.setDiferenciaPeso(pesoSecadero - cosechaNueva.getKgsCosechados() );
 
        
             //- persistir en la bd todo objeto que haya sido modificado    
@@ -88,7 +89,7 @@ public class Servicio_EntregasSecadero {
 
         //- sino se informa y se retorna modificarObjeto = falso
         } else {
-            System.out.print("repositorio.buscar(idLote) = NULL");
+            System.out.print("repositorio.buscar(idLote) = NULL \n\n");
             return false;
         }
     }

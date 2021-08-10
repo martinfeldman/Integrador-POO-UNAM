@@ -4,6 +4,7 @@ import modelo.Productor;
 import servicios.Servicio_Productores;
 
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert.AlertType;
@@ -11,6 +12,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.Separator;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -30,6 +32,7 @@ public class Vista_ABM_Productor implements Vista {
 
     Button botonAgregar, botonEliminar, botonLimpiar;
     Label etiquetaInteractiva;
+    Separator separador;
     TableView<Productor> tabla;
     TableColumn<Productor, Integer> columnaId;
     TableColumn<Productor, String> columnaNombres;
@@ -43,6 +46,7 @@ public class Vista_ABM_Productor implements Vista {
     }
 
 
+    
     @Override
     public Parent obtenerVista() {
 
@@ -53,7 +57,7 @@ public class Vista_ABM_Productor implements Vista {
         botonEliminar = new Button("Eliminar");
         botonLimpiar = new Button("Limpiar");
     
-        columnaId = new TableColumn<>("Id");
+        columnaId = new TableColumn<>("Id de Productor");
         columnaDni = new TableColumn<>("DNI");
         columnaNombres = new TableColumn<>("Nombres");
         columnaApellidos = new TableColumn<>("Apellidos");
@@ -68,11 +72,17 @@ public class Vista_ABM_Productor implements Vista {
         
         etiquetaInteractiva = new Label("Puede seleccionar filas de la tabla para editarlas");
 
+        separador = new Separator(Orientation.HORIZONTAL); 
+
         tabla = new TableView<>();
 
 
 
     // propiedades de elementos
+
+        contenedor.setAlignment(Pos.CENTER);
+        contenedorBotones.setAlignment(Pos.CENTER);
+        contenedorCarga.setAlignment(Pos.CENTER);
 
         contenedorBotones.setPadding(new Insets(10, 10, 10, 10));
         contenedorCarga.setPadding(new Insets(10, 10, 10, 10));
@@ -80,29 +90,33 @@ public class Vista_ABM_Productor implements Vista {
         contenedorCarga.setSpacing(10);
 
         //- COLUMNAS - propiedades
-        columnaId.setMinWidth(100);
-        columnaDni.setMinWidth(200);
-        columnaNombres.setMinWidth(300);
-        columnaApellidos.setMinWidth(300);
-        
+
         columnaId.setCellValueFactory(new PropertyValueFactory<>("idProductor"));
         columnaDni.setCellValueFactory(new PropertyValueFactory<>("dni"));
         columnaNombres.setCellValueFactory(new PropertyValueFactory<>("nombres"));
         columnaApellidos.setCellValueFactory(new PropertyValueFactory<>("apellidos"));
 
-        entradaNombres.setMaxWidth(400);
-        entradaApellidos.setMaxWidth(400);
-        entradaDni.setMaxWidth(300);
-
+        columnaId.setMinWidth(200);
+        columnaDni.setMinWidth(200);
+        columnaNombres.setMinWidth(300);
+        columnaApellidos.setMinWidth(300);
+        
         entradaNombres.setPromptText("Nombres del productor");
         entradaApellidos.setPromptText("Apellidos del productor");
         entradaDni.setPromptText("DNI del productor");
 
+        entradaNombres.setMaxWidth(400);
+        entradaApellidos.setMaxWidth(400);
+        entradaDni.setMaxWidth(300);
+
+        separador.setPadding(new Insets(0, 0, 25, 0));
+
         tabla.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        tabla.setPadding(new Insets(0, 0, 10, 0));
         tabla.setPrefHeight(300);
 
 
-        
+
     // acciones sobre elementos 
 
         botonAgregar.setOnAction(e -> clicAgregarProductor());
@@ -123,7 +137,7 @@ public class Vista_ABM_Productor implements Vista {
        
         //- agregamos al contenedor la tabla
         contenedorBotones.getChildren().addAll(botonAgregar, botonEliminar, botonLimpiar);    
-        contenedorCarga.getChildren().addAll(etiquetaInteractiva, entradaNombres, entradaApellidos, entradaDni);
+        contenedorCarga.getChildren().addAll(etiquetaInteractiva, separador, entradaNombres, entradaApellidos, entradaDni);
         contenedor.getChildren().addAll(tabla, contenedorCarga, contenedorBotones);
         
         return contenedor;

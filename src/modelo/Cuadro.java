@@ -3,33 +3,40 @@ package modelo;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name= "cuadros")
 public class Cuadro {
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "idCuadro")
     private int idCuadro;
-    private Double superficie;
-    private boolean alta;
 
+    @JoinColumn(name = "lote_cuadro", nullable = false)
     @ManyToOne
     private Lote lote;
 
-    
+    @Column(name = "superficieCuadro", nullable = false, length = 50)
+    private Double superficie;
 
+    @Column(name = "alta", nullable = false)
+    private boolean alta;
+
+    
     public Cuadro(){}
 
     public Cuadro(Lote lote, Double superficie){
         this.lote = lote;
         this.superficie = superficie; 
         lote.agregarCuadro(this);
+        this.alta = true;
     }
     
+
+
     @Override
     public String toString() {
         return "Cuadro " + Integer.toString(idCuadro);
     }
-
-
 
     
 

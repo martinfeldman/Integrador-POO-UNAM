@@ -86,7 +86,7 @@ public class Servicio_Cosechas {
                 this.repositorio.modificar(empleadoNuevo);        
            
             } else {
-                System.out.print("empleadoParaQuitar es igual a empleadoNuevo. Se omite esta modificación.");
+                System.out.print("empleadoParaQuitar es igual a empleadoNuevo. Se omite esta modificación.\n");
             }
 
         //- Solo se cambia el cuadro de la Cosecha si es diferente del que ya posee      
@@ -97,7 +97,7 @@ public class Servicio_Cosechas {
                 cosecha.setCuadro(cuadroCosechadoNuevo);
             
             } else {
-                System.out.print("cuadroParaQuitar es igual a cuadroNuevo. Se omite esta modificación.");
+                System.out.print("cuadroParaQuitar es igual a cuadroNuevo. Se omite esta modificación.\n");
             }
 
 
@@ -110,7 +110,7 @@ public class Servicio_Cosechas {
 
         //- sino se informa y se retorna modificarObjeto = falso
         } else {
-            System.out.print("repositorio.buscar(idCosecha) = NULL");
+            System.out.print("repositorio.buscar(idCosecha) = NULL \n\n");
             return false; 
         }
     }

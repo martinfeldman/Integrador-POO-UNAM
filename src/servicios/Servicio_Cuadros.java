@@ -93,7 +93,7 @@ public class Servicio_Cuadros{
                 cuadro.setLote(loteNuevo);
             
             } else {
-                System.out.print("loteParaQuitar es igual a loteNuevo. Se omite esta modificación.");
+                System.out.print("loteParaQuitar es igual a loteNuevo. Se omite esta modificación.\n");
             }
 
             cuadro.setSuperficie(superficie);
@@ -104,7 +104,7 @@ public class Servicio_Cuadros{
 
         //- sino se informa y se retorna modificarObjeto = falso     
         } else {
-            System.out.print("repositorio.buscar(idCuadros) = NULL");
+            System.out.print("repositorio.buscar(idCuadros) = NULL \n\n");
             return false;
         }
     }

@@ -73,7 +73,7 @@ public class Servicio_Productores {
 
         //- sino se informa y se retorna modificarObjeto = falso 
         } else {
-            System.out.print("repositorio.buscar(idProductor) = NULL");
+            System.out.print("repositorio.buscar(idProductor) = NULL \n\n");
             return false;
         }
     }

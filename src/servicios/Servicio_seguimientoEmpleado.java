@@ -18,15 +18,19 @@ public class Servicio_seguimientoEmpleado {
     }
 
 
-    public double obtenerKgsEmpleado_productor(){
+    public double obtenerKgsEmpleado_productor(Empleado empleado, Productor productor){
+        
+
         return 3.9 ;
     }
 
-    public double obtenerKgsEmpleado_lote(){
+    public double obtenerKgsEmpleado_lote(Empleado empleado, Lote lote){
+
         return 3.9 ;
     }
 
-    public double obtenerKgsEmpleado_cuadro(){
+    public double obtenerKgsEmpleado_cuadro(Empleado empleado, Cuadro cuadro){
+        
         return 3.9 ;
     }
     

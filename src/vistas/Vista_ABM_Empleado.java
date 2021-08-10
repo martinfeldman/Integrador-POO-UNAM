@@ -44,7 +44,6 @@ public class Vista_ABM_Empleado implements Vista {
     
     Button botonAgregar, botonEliminar, botonLimpiar;
     Label etiquetaInteractiva;
-    Separator separador;
     TableView<Empleado> tabla;
     TableColumn<Empleado, Integer> columnaId;
     TableColumn<Empleado, String> columnaNombres;
@@ -57,7 +56,8 @@ public class Vista_ABM_Empleado implements Vista {
     ComboBox<Productor> productorBox;
     ComboBox<Lote> loteBox;
     ComboBox<Cuadro> cuadroBox;
-    Label etiquetaKgsPorProductor, etiquetaKgsPorLote, etiquetaKgsPorCuadro;
+    Label etiquetaInteractiva2, etiquetaSalidaSeguimiento;
+    Separator separador1, separador2, separador3, separador4, separador5, separador6, separador7;
 
     
     public Vista_ABM_Empleado(Servicio_Empleados servicio, Servicio_seguimientoEmpleado servicio_seguimiento,
@@ -92,6 +92,9 @@ public class Vista_ABM_Empleado implements Vista {
         VBox contenedor = new VBox();
         HBox contenedorBotones = new HBox();
         VBox contenedorCarga = new VBox();
+        HBox contenedorSeguimientoEmpleados1 = new HBox();
+        HBox contenedorSeguimientoEmpleados2 = new HBox();
+        HBox contenedorSeguimientoEmpleados3 = new HBox();
 
         cuadroBox = new ComboBox<>();
         
@@ -100,14 +103,20 @@ public class Vista_ABM_Empleado implements Vista {
         entradaDni = new TextField();
 
         etiquetaInteractiva = new Label("Puede seleccionar filas de la tabla para editarlas");
-        etiquetaKgsPorProductor = new Label("");
-        etiquetaKgsPorLote = new Label("");
-        etiquetaKgsPorCuadro = new Label("");
+        etiquetaInteractiva2 = new Label("Seguimiento de Producción de Kgs producidos por empleado por:  ");
+        etiquetaSalidaSeguimiento= new Label("");
 
         loteBox = new ComboBox<>();
         productorBox = new ComboBox<>();
     
-        separador = new Separator(Orientation.HORIZONTAL); 
+        separador1 = new Separator(Orientation.HORIZONTAL); 
+        separador2 = new Separator(Orientation.HORIZONTAL); 
+        separador3 = new Separator(Orientation.VERTICAL); 
+        separador4 = new Separator(Orientation.VERTICAL); 
+        separador5 = new Separator(Orientation.VERTICAL); 
+        separador6 = new Separator(Orientation.HORIZONTAL); 
+        separador7 = new Separator(Orientation.HORIZONTAL); 
+
 
         tabla = new TableView<>();
 
@@ -129,12 +138,21 @@ public class Vista_ABM_Empleado implements Vista {
         contenedor.setAlignment(Pos.CENTER);
         contenedorBotones.setAlignment(Pos.CENTER);
         contenedorCarga.setAlignment(Pos.CENTER);
-
+        contenedorSeguimientoEmpleados1.setAlignment(Pos.CENTER);
+        contenedorSeguimientoEmpleados2.setAlignment(Pos.CENTER);
+        contenedorSeguimientoEmpleados3.setAlignment(Pos.CENTER);
+        
         contenedorBotones.setPadding(new Insets(10, 10, 10, 10));
         contenedorCarga.setPadding(new Insets(10, 10, 10, 10));
+        contenedorSeguimientoEmpleados1.setPadding(new Insets(30, 10, 20, 10));
+        contenedorSeguimientoEmpleados2.setPadding(new Insets(20, 10, 20, 10));
+        contenedorSeguimientoEmpleados3.setPadding(new Insets(20, 10, 50, 10));
         
         contenedorBotones.setSpacing(10);
         contenedorCarga.setSpacing(10);
+
+        cuadroBox.setPromptText("Seleccione un cuadro");
+        cuadroBox.setMinWidth(200);
 
         entradaNombres.setMaxWidth(400);
         entradaApellidos.setMaxWidth(400);
@@ -144,7 +162,19 @@ public class Vista_ABM_Empleado implements Vista {
         entradaApellidos.setPromptText("Apellidos del empleado");
         entradaDni.setPromptText("DNI del empleado");
 
-        separador.setPadding(new Insets(0, 0, 25, 0));
+        etiquetaInteractiva2.setPadding(new Insets(20, 0, 0, 0));
+
+        loteBox.setPromptText("Seleccione un lote");
+        loteBox.setMinWidth(200);
+
+        productorBox.setPromptText("Seleccione un productor");
+        productorBox.setMinWidth(200);
+
+        separador1.setPadding(new Insets(0, 0, 25, 0));
+        separador2.setPadding(new Insets(25, 0, 0, 0));
+        separador3.setPadding(new Insets(0, 20, 0, 20));
+        separador4.setPadding(new Insets(0, 20, 0, 20));
+        separador5.setPadding(new Insets(0, 20, 0, 20));
 
         tabla.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         tabla.setPadding(new Insets(0, 0, 10, 0));
@@ -157,10 +187,10 @@ public class Vista_ABM_Empleado implements Vista {
         botonAgregar.setOnAction(e -> clicAgregarEmpleado());
         botonEliminar.setOnAction(e -> clicEliminarEmpleado());
         botonLimpiar.setOnAction(e -> limpiar());
-        productorBox.setOnAction(e -> servicio_seguimiento.obtenerKgsEmpleado_productor());
-        loteBox.setOnAction(e -> servicio_seguimiento.obtenerKgsEmpleado_lote());
-        cuadroBox.setOnAction(e -> servicio_seguimiento.obtenerKgsEmpleado_cuadro());
-        tabla.getSelectionModel().selectedItemProperty().addListener(e -> cargarDatos());   
+        botonKgsPorProductor.setOnAction(e -> servicio_seguimiento.obtenerKgsEmpleado_productor(empleadoSeleccionado, productorBox.getValue()));
+        botonKgsPorLote.setOnAction(e -> servicio_seguimiento.obtenerKgsEmpleado_lote(empleadoSeleccionado, loteBox.getValue()));
+        botonKgsPorCuadro.setOnAction(e -> servicio_seguimiento.obtenerKgsEmpleado_cuadro(empleadoSeleccionado, cuadroBox.getValue()));
+        tabla.getSelectionModel().selectedItemProperty().addListener(e -> cargarDatos());  
 
         //- cargamos datos a la tabla y los comboBoxs, a partir de consultas a la BD 
         tabla.getItems().addAll(this.servicio.listarEmpleados());
@@ -178,8 +208,18 @@ public class Vista_ABM_Empleado implements Vista {
        
         //- agregamos contenido a los contenedores  
         contenedorBotones.getChildren().addAll(botonAgregar, botonEliminar, botonLimpiar);
-        contenedorCarga.getChildren().addAll(etiquetaInteractiva, separador, entradaNombres, entradaApellidos, entradaDni);
-        contenedor.getChildren().addAll(tabla, contenedorCarga, contenedorBotones);
+
+        contenedorCarga.getChildren().addAll(etiquetaInteractiva, separador1, entradaNombres, entradaApellidos, entradaDni);
+
+        contenedorSeguimientoEmpleados1.getChildren().addAll(productorBox, separador3, botonKgsPorProductor);
+
+        contenedorSeguimientoEmpleados2.getChildren().addAll(loteBox, separador4, botonKgsPorLote);
+
+        contenedorSeguimientoEmpleados3.getChildren().addAll(cuadroBox, separador5, botonKgsPorCuadro);
+
+        contenedor.getChildren().addAll(tabla, contenedorCarga, contenedorBotones, separador2, etiquetaInteractiva2 , contenedorSeguimientoEmpleados1, 
+       contenedorSeguimientoEmpleados2,  contenedorSeguimientoEmpleados3, separador6 , etiquetaSalidaSeguimiento);
+
 
         return contenedor;
 

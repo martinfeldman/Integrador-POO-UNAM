@@ -17,7 +17,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import modelo.Cuadro;
 import modelo.Lote;
-import modelo.Productor;
 import servicios.Servicio_Cuadros;
 import servicios.Servicio_Lotes;
 import servicios.Servicio_Productores;
@@ -117,6 +116,7 @@ public class Vista_ABM_Cuadro implements Vista {
 
         tabla.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         tabla.setPadding(new Insets(0, 0, 10, 0));
+        tabla.setPrefWidth(600);
 
        
 

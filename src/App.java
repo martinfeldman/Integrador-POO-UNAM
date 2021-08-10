@@ -74,6 +74,7 @@ public class App extends Application {
         botonSalir = new Button ("Salir");
         
         HBox contenedorBotones = new HBox();
+        VBox contenedorCambiante = new VBox();
         VBox contenedorPrincipal = new VBox();
 
         Scene escena = new Scene(contenedorPrincipal, 1200, 2000);
@@ -98,10 +99,14 @@ public class App extends Application {
         botonEntregasSecadero.setPrefWidth(180);
         botonSalir.setPrefWidth(100);
 
-        contenedorPrincipal.setSpacing(10);   
-        contenedorBotones.setSpacing(7);
+        contenedorCambiante.setAlignment(Pos.CENTER);
+        contenedorBotones.setAlignment(Pos.CENTER);
+
         contenedorPrincipal.setPadding(new Insets(5, 20, 5, 20));
         contenedorBotones.setPadding(new Insets(10, 10, 10, 10));
+
+        contenedorPrincipal.setSpacing(10);   
+        contenedorBotones.setSpacing(7);
         
         separador6.setPadding(new Insets(0, 120, 0, 0));
 
@@ -130,7 +135,8 @@ public class App extends Application {
 
         // que muestro inicialmente : Creo que se puede dar vuelta el orden de las siguientes dos sentencias 
         cambiante.getChildren().add(vistaProductores.obtenerVista());
-        contenedorPrincipal.getChildren().addAll(contenedorBotones, separadorX, cambiante);
+        contenedorCambiante.getChildren().add(cambiante);
+        contenedorPrincipal.getChildren().addAll(contenedorBotones, separadorX, contenedorCambiante );
         
         stage.setScene(escena);
         stage.show();     

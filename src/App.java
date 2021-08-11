@@ -38,7 +38,7 @@ public class App extends Application {
     Vista_ABM_Cuadro vistaCuadros = new Vista_ABM_Cuadro(servicio_cuadros, servicio_productores, servicio_lotes);
 
     Servicio_Empleados servicio_empleados = new Servicio_Empleados(new Repositorio(emf));
-    Servicio_seguimientoEmpleado servicio_seguimientoEmpleado = new Servicio_seguimientoEmpleado(new Repositorio(emf));
+    Servicio_seguimientoEmpleado servicio_seguimientoEmpleado = new Servicio_seguimientoEmpleado();
     Vista_ABM_Empleado vistaEmpleados = new Vista_ABM_Empleado(servicio_empleados, servicio_seguimientoEmpleado, servicio_productores, servicio_lotes, servicio_cuadros);
 
     Servicio_Cosechas servicio_cosechas = new Servicio_Cosechas(new Repositorio(emf));

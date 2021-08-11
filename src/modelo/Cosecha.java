@@ -31,12 +31,13 @@ public class Cosecha {
 
     public Cosecha() {}
     
-    public Cosecha(Empleado empleado, LocalDate fecha, Cuadro cuadro, Double kgCosechados) {
+    public Cosecha(Empleado empleado, LocalDate fecha, Cuadro cuadro, Double kgsCosechados) {
         this.empleado = empleado;
         this.fecha = fecha;
         this.cuadro = cuadro;
-        this.kgsCosechados = kgCosechados;
+        this.kgsCosechados = kgsCosechados;
         this.alta = true;
+        empleado.agregarCosecha(this);
     }
     
 

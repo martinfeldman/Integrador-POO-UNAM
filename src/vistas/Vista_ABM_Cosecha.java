@@ -43,14 +43,14 @@ public class Vista_ABM_Cosecha implements Vista {
     TableColumn<Cosecha, Cuadro> columnaCuadros;
     TableColumn<Cosecha, Double> columnaKgsCosechados;
     Button botonAgregar, botonEliminar, botonLimpiar;
-    Label etiquetaInteractiva;
-    Separator separador1, separador2, separador3;
+    Label etiquetaInteractiva, etiquetaInformativa;
+    Separator separador1, separador2, separador3, separador4;
 
     // objetos para tomar los datos
     ComboBox<Empleado> empleadoBox;
     ComboBox<Cuadro> cuadroBox;
     DatePicker datepicker;
-    Label etiquetaEmpleado, etiquetaComboBox_empleado, etiquetaFecha, etiquetaCuadro, etiquetaKgsCosechados;
+    Label etiquetaComboBox_empleado, etiquetaFecha, etiquetaCuadro, etiquetaKgsCosechados;
     TextField entradaKgsCosechados; 
 
 
@@ -90,9 +90,10 @@ public class Vista_ABM_Cosecha implements Vista {
         
         entradaKgsCosechados = new TextField();
         
+        etiquetaInformativa = new Label("");
         etiquetaInteractiva = new Label("Puede seleccionar filas de la tabla para editarlas");
         etiquetaComboBox_empleado = new Label ("Seleccione el empleado que ha realizado la cosecha   ");
-        etiquetaEmpleado = new Label ("");
+      
         etiquetaFecha = new Label ("Ingrese Fecha   ");
         etiquetaCuadro = new Label ("Cuadro:   ");
         etiquetaKgsCosechados = new Label("Kilos Cosechados:   ");
@@ -100,6 +101,7 @@ public class Vista_ABM_Cosecha implements Vista {
         separador1 = new Separator(Orientation.VERTICAL);
         separador2 = new Separator(Orientation.VERTICAL);
         separador3 = new Separator(Orientation.HORIZONTAL);
+        separador4 = new Separator(Orientation.VERTICAL);
         
 
         tabla = new TableView<>();    
@@ -136,7 +138,8 @@ public class Vista_ABM_Cosecha implements Vista {
         contenedorCarga.setSpacing(10);
         
         separador1.setPadding(new Insets(10, 10, 10, 10));
-        separador2.setPadding(new Insets(10, 10, 10, 140));
+        separador2.setPadding(new Insets(10, 20, 10, 70));
+        separador4.setPadding(new Insets(10, 70, 10, 70));
 
         separador1.setPrefHeight(100);
         separador2.setPrefHeight(100);
@@ -153,7 +156,8 @@ public class Vista_ABM_Cosecha implements Vista {
         botonAgregar.setOnAction(e -> clicAgregarCosecha());
         botonEliminar.setOnAction(e -> clicEliminarCosecha());
         botonLimpiar.setOnAction(e -> limpiar());
-        empleadoBox.setOnAction(e -> cambiarEtiquetaEmpleado());
+        empleadoBox.setOnAction(e -> cambiarEtiquetaComboBox_Empleado());
+        cuadroBox.setOnAction(e -> cambiarEtiquetaInformativa());
         tabla.getSelectionModel().selectedItemProperty().addListener(e -> cargarDatos());
 
         empleadoBox.getItems().addAll(servicio_Empleados.listarEmpleados());
@@ -173,7 +177,7 @@ public class Vista_ABM_Cosecha implements Vista {
         contenedorCarga.getChildren().addAll(etiquetaInteractiva);
          
         contenedorHorizontal1.getChildren().addAll(etiquetaFecha, datepicker, separador1 , etiquetaComboBox_empleado, empleadoBox); 
-        contenedorHorizontal2.getChildren().addAll(etiquetaCuadro, cuadroBox, separador2,
+        contenedorHorizontal2.getChildren().addAll(etiquetaCuadro, cuadroBox, separador4, etiquetaInformativa , separador2,
          etiquetaKgsCosechados, entradaKgsCosechados);
 
         contenedor.getChildren().addAll(tabla, contenedorCarga, contenedorHorizontal1, separador3,
@@ -223,6 +227,7 @@ public class Vista_ABM_Cosecha implements Vista {
         if (cosechaSeleccionada != null) {
           
             etiquetaInteractiva.setText("Está seleccionada la Cosecha con id: " + String.valueOf(cosechaSeleccionada.getIdCosecha()));
+            etiquetaComboBox_empleado.setPadding(new Insets(0, 15, 0, 0));
 
             cuadroBox.setValue(cosechaSeleccionada.getCuadro());
             datepicker.setValue(cosechaSeleccionada.getFecha());
@@ -248,11 +253,40 @@ public class Vista_ABM_Cosecha implements Vista {
 
 
 
+    private void cambiarEtiquetaComboBox_Empleado() {
+
+        cosechaSeleccionada = tabla.getSelectionModel().getSelectedItem();
+
+        if (empleadoBox.getValue() != null && cosechaSeleccionada != null ){
+
+            etiquetaComboBox_empleado.setText("Esta cosecha fue realizada por el empleado " + empleadoBox.getValue().getIdEmpleado());
+        }
+    }
+
+
+
+    private void cambiarEtiquetaInformativa() {
+
+        //- luego de seleccionar algo en cuadroBox, a su derecha esta etiqueta informa a qué lote y qué productor pertence el cuadro
+        if (cuadroBox.getValue() != null){
+
+            etiquetaInformativa.setText("Este cuadro pertenece al productor " + cuadroBox.getValue().getLote().getProductor().toString() + "y al " + cuadroBox.getValue().getLote().toString() + "\n");
+            
+        } else {
+
+        }
+    }
+
+
     private void limpiar() {
         
-        //- limpiar elementos de la vista 
+        //- limpiar elementos de la vista   
         entradaKgsCosechados.clear();
+        etiquetaInformativa.setText("");
         etiquetaInteractiva.setText("Puede seleccionar filas de la tabla para editarlas");
+
+        etiquetaComboBox_empleado.setText("Seleccione el empleado que ha realizado la cosecha   ");
+        etiquetaComboBox_empleado.setPadding(new Insets(0, 0, 0, 0));
 
         cuadroBox.getSelectionModel().clearSelection();
         empleadoBox.getSelectionModel().clearSelection();
@@ -260,13 +294,5 @@ public class Vista_ABM_Cosecha implements Vista {
         tabla.getItems().clear();
         tabla.getItems().addAll(this.servicio.listarCosechas());
     } 
-
-
-
-    private void cambiarEtiquetaEmpleado() {
-        if (empleadoBox.getValue() != null){
-            etiquetaEmpleado.setText("Esta cosecha fue realizada por el empleado \n" + empleadoBox.getValue().getIdEmpleado());
-        }
-    }
 
 }

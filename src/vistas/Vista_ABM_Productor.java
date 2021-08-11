@@ -196,6 +196,7 @@ public class Vista_ABM_Productor implements Vista {
         productorSeleccionado = tabla.getSelectionModel().getSelectedItem();
         
         if (productorSeleccionado != null) {
+            
             servicio.eliminarProductor(productorSeleccionado.getIdProductor());
             limpiar();
         }

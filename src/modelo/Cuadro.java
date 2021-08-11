@@ -27,8 +27,8 @@ public class Cuadro {
     public Cuadro(Lote lote, Double superficie){
         this.lote = lote;
         this.superficie = superficie; 
-        lote.agregarCuadro(this);
         this.alta = true;
+        lote.agregarCuadro(this);
     }
     
 

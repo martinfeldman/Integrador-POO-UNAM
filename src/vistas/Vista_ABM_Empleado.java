@@ -15,6 +15,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+
 import modelo.Cuadro;
 import modelo.Empleado;
 import modelo.Lote;
@@ -103,7 +104,7 @@ public class Vista_ABM_Empleado implements Vista {
         entradaDni = new TextField();
 
         etiquetaInteractiva = new Label("Puede seleccionar filas de la tabla para editarlas");
-        etiquetaInteractiva2 = new Label("Seguimiento de Producción de Kgs producidos por empleado por:  ");
+        etiquetaInteractiva2 = new Label("Seguimiento de Producción de Kgs producidos por empleado por Productor, Lote o Cuadro. \nDebe seleccionar un empleado de la tabla");
         etiquetaSalidaSeguimiento= new Label("");
 
         loteBox = new ComboBox<>();
@@ -175,6 +176,7 @@ public class Vista_ABM_Empleado implements Vista {
         separador3.setPadding(new Insets(0, 20, 0, 20));
         separador4.setPadding(new Insets(0, 20, 0, 20));
         separador5.setPadding(new Insets(0, 20, 0, 20));
+        separador6.setPadding(new Insets(0, 0, 20, 0));
 
         tabla.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         tabla.setPadding(new Insets(0, 0, 10, 0));
@@ -187,9 +189,9 @@ public class Vista_ABM_Empleado implements Vista {
         botonAgregar.setOnAction(e -> clicAgregarEmpleado());
         botonEliminar.setOnAction(e -> clicEliminarEmpleado());
         botonLimpiar.setOnAction(e -> limpiar());
-        botonKgsPorProductor.setOnAction(e -> servicio_seguimiento.obtenerKgsEmpleado_productor(empleadoSeleccionado, productorBox.getValue()));
-        botonKgsPorLote.setOnAction(e -> servicio_seguimiento.obtenerKgsEmpleado_lote(empleadoSeleccionado, loteBox.getValue()));
-        botonKgsPorCuadro.setOnAction(e -> servicio_seguimiento.obtenerKgsEmpleado_cuadro(empleadoSeleccionado, cuadroBox.getValue()));
+        botonKgsPorProductor.setOnAction(e -> clicBotonKgsPorProductor());
+        botonKgsPorLote.setOnAction(e -> clicBotonKgsPorLote());
+        botonKgsPorCuadro.setOnAction(e -> clicBotonKgsPorCuadro());
         tabla.getSelectionModel().selectedItemProperty().addListener(e -> cargarDatos());  
 
         //- cargamos datos a la tabla y los comboBoxs, a partir de consultas a la BD 
@@ -218,9 +220,9 @@ public class Vista_ABM_Empleado implements Vista {
         contenedorSeguimientoEmpleados3.getChildren().addAll(cuadroBox, separador5, botonKgsPorCuadro);
 
         contenedor.getChildren().addAll(tabla, contenedorCarga, contenedorBotones, separador2, etiquetaInteractiva2 , contenedorSeguimientoEmpleados1, 
-       contenedorSeguimientoEmpleados2,  contenedorSeguimientoEmpleados3, separador6 , etiquetaSalidaSeguimiento);
+         contenedorSeguimientoEmpleados2,  contenedorSeguimientoEmpleados3, separador6 , etiquetaSalidaSeguimiento);
 
-
+        
         return contenedor;
 
     }
@@ -278,6 +280,46 @@ public class Vista_ABM_Empleado implements Vista {
             servicio.eliminarEmpleado(empleadoSeleccionado.getIdEmpleado());
             limpiar();
         }
+
+    }
+
+
+
+    private void clicBotonKgsPorProductor (){
+
+        empleadoSeleccionado = tabla.getSelectionModel().getSelectedItem();
+
+        //- Se utiliza una etiqueta para desplegar la salida del método 
+        if (empleadoSeleccionado != null) {
+
+            etiquetaSalidaSeguimiento.setText(servicio_seguimiento.obtenerKgsEmpleado_productor(empleadoSeleccionado, productorBox.getValue()));
+        }    
+    }
+
+
+
+    private void clicBotonKgsPorLote (){
+
+        empleadoSeleccionado = tabla.getSelectionModel().getSelectedItem();
+
+        //- Se utiliza una etiqueta para desplegar la salida del método 
+        if (empleadoSeleccionado != null) {
+
+            etiquetaSalidaSeguimiento.setText(servicio_seguimiento.obtenerKgsEmpleado_lote(empleadoSeleccionado, loteBox.getValue()));
+        }
+    }
+
+
+
+    private void clicBotonKgsPorCuadro (){
+
+        empleadoSeleccionado = tabla.getSelectionModel().getSelectedItem();
+        
+        //- Se utiliza una etiqueta para desplegar la salida del método 
+        if (empleadoSeleccionado != null) {
+            
+            etiquetaSalidaSeguimiento.setText(servicio_seguimiento.obtenerKgsEmpleado_cuadro(empleadoSeleccionado, cuadroBox.getValue()));
+        }
     }
 
 
@@ -285,11 +327,16 @@ public class Vista_ABM_Empleado implements Vista {
     private void limpiar() {
         
         //- limpiar elementos de la vista 
+        etiquetaSalidaSeguimiento.setText("");
         etiquetaInteractiva.setText("Puede seleccionar filas de la tabla para editarlas");
         
         entradaNombres.clear();
         entradaApellidos.clear();
         entradaDni.clear();
+
+        cuadroBox.setPromptText("Seleccione un cuadro");
+        loteBox.setPromptText("Seleccione un lote");
+        productorBox.setPromptText("Seleccione un productor");
 
         tabla.getItems().clear();
         tabla.getItems().addAll(this.servicio.listarEmpleados());

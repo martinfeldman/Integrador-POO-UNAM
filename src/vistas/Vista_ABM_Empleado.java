@@ -15,7 +15,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import modelo.Cuadro;
 import modelo.Empleado;
 import modelo.Lote;
@@ -58,6 +60,7 @@ public class Vista_ABM_Empleado implements Vista {
     ComboBox<Productor> productorBox;
     ComboBox<Lote> loteBox;
     ComboBox<Cuadro> cuadroBox;
+    Font fuenteNegrita;
     Label etiquetaInteractiva2, etiquetaSalidaSeguimiento;
     Separator separador1, separador2, separador3, separador4, separador5, separador6, separador7;
 
@@ -80,7 +83,7 @@ public class Vista_ABM_Empleado implements Vista {
     // definicion elementos de pantalla
 
         botonAgregar = new Button("Agregar");
-        botonEliminar = new Button("Eliminar");
+        botonEliminar = new Button("Dar de baja");
         botonLimpiar = new Button("Limpiar");
         botonKgsPorProductor = new Button("obtener kgs cosechados por X productor");
         botonKgsPorLote = new Button("obtener kgs cosechados por X lote");
@@ -105,10 +108,13 @@ public class Vista_ABM_Empleado implements Vista {
         entradaApellidos = new TextField();
         entradaDni = new TextField();
 
-        etiquetaInteractiva = new Label("Puede seleccionar filas de la tabla para editarlas");
+        etiquetaInteractiva = new Label("Puede seleccionar filas de la tabla para modificarlas (si su estado de alta es Verdadero)");
         etiquetaInteractiva2 = new Label("Seguimiento de Producción de Kgs producidos por empleado por Productor, Lote o Cuadro. \nDebe seleccionar un empleado de la tabla");
         etiquetaSalidaSeguimiento= new Label("");
+        fuenteNegrita = Font.font("", FontWeight.BOLD, FontPosture.REGULAR , 15);
+        etiquetaSalidaSeguimiento.setFont(fuenteNegrita);
 
+        
         loteBox = new ComboBox<>();
         productorBox = new ComboBox<>();
     
@@ -151,7 +157,7 @@ public class Vista_ABM_Empleado implements Vista {
         contenedorCarga.setPadding(new Insets(10, 10, 10, 10));
         contenedorSeguimientoEmpleados1.setPadding(new Insets(30, 10, 20, 10));
         contenedorSeguimientoEmpleados2.setPadding(new Insets(20, 10, 20, 10));
-        contenedorSeguimientoEmpleados3.setPadding(new Insets(20, 10, 50, 10));
+        contenedorSeguimientoEmpleados3.setPadding(new Insets(20, 10, 30, 10));
         
         contenedorBotones.setSpacing(10);
         contenedorCarga.setSpacing(10);
@@ -175,16 +181,16 @@ public class Vista_ABM_Empleado implements Vista {
         productorBox.setPromptText("Seleccione un productor");
         productorBox.setMinWidth(200);
 
-        separador1.setPadding(new Insets(0, 0, 25, 0));
+        separador1.setPadding(new Insets(0, 0, 30, 0));
         separador2.setPadding(new Insets(25, 0, 0, 0));
         separador3.setPadding(new Insets(0, 20, 0, 20));
         separador4.setPadding(new Insets(0, 20, 0, 20));
         separador5.setPadding(new Insets(0, 20, 0, 20));
-        separador6.setPadding(new Insets(0, 0, 20, 0));
+        separador6.setPadding(new Insets(0, 0, 15, 0));
 
         tabla.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         tabla.setPadding(new Insets(0, 0, 10, 0));
-        tabla.setPrefHeight(300);
+        tabla.setPrefHeight(400);
 
 
 
@@ -224,8 +230,8 @@ public class Vista_ABM_Empleado implements Vista {
 
         contenedorSeguimientoEmpleados3.getChildren().addAll(cuadroBox, separador5, botonKgsPorCuadro);
 
-        contenedor.getChildren().addAll(tabla, contenedorCarga, contenedorBotones, separador2, etiquetaInteractiva2 , contenedorSeguimientoEmpleados1, 
-         contenedorSeguimientoEmpleados2,  contenedorSeguimientoEmpleados3, separador6 , etiquetaSalidaSeguimiento);
+        contenedor.getChildren().addAll(tabla, contenedorCarga, contenedorBotones, separador2, etiquetaInteractiva2, contenedorSeguimientoEmpleados1, 
+         contenedorSeguimientoEmpleados2,  contenedorSeguimientoEmpleados3, separador6, etiquetaSalidaSeguimiento);
 
         
         return contenedor;
@@ -254,7 +260,7 @@ public class Vista_ABM_Empleado implements Vista {
             //- SINO, se informa y se retorna falso 
                 } else {
 
-                    System.out.print("El empleado seleccionado está dado de BAJA. No se puede modificar.\n"); 
+                    etiquetaInteractiva.setText("El empleado seleccionado está dado de BAJA. No se puede modificar.\n"); 
                     limpiar();
                     return false;
 
@@ -308,14 +314,20 @@ public class Vista_ABM_Empleado implements Vista {
 
         empleadoSeleccionado = tabla.getSelectionModel().getSelectedItem();
 
+     
         //- Se utiliza una etiqueta para desplegar la salida del método 
         if (empleadoSeleccionado != null) {
 
-            etiquetaSalidaSeguimiento.setText(servicio_seguimiento.obtenerKgsEmpleado_productor(empleadoSeleccionado, productorBox.getValue()));
+            if (productorBox.getValue() == null){
+                etiquetaSalidaSeguimiento.setText("Si bien tiene seleccionado un empleado, no ha especificado el productor");
 
-        }  else {
+            } else {
+                etiquetaSalidaSeguimiento.setText(servicio_seguimiento.obtenerKgsEmpleado_productor(empleadoSeleccionado, productorBox.getValue()));
+            }
+    
+
+        } else {
             etiquetaSalidaSeguimiento.setText("No ha seleccionado ningún empleado de la tabla");
-
         }
     }
 
@@ -328,11 +340,16 @@ public class Vista_ABM_Empleado implements Vista {
         //- Se utiliza una etiqueta para desplegar la salida del método 
         if (empleadoSeleccionado != null) {
 
-            etiquetaSalidaSeguimiento.setText(servicio_seguimiento.obtenerKgsEmpleado_lote(empleadoSeleccionado, loteBox.getValue()));
+            if (loteBox.getValue() == null){
+                etiquetaSalidaSeguimiento.setText("Si bien tiene seleccionado un empleado, no ha especificado el lote");
+
+            } else {
+                etiquetaSalidaSeguimiento.setText(servicio_seguimiento.obtenerKgsEmpleado_lote(empleadoSeleccionado, loteBox.getValue()));
+            }
+                
 
         } else {
             etiquetaSalidaSeguimiento.setText("No ha seleccionado ningún empleado de la tabla");
-
         }
     }
 
@@ -345,11 +362,15 @@ public class Vista_ABM_Empleado implements Vista {
         //- Se utiliza una etiqueta para desplegar la salida del método 
         if (empleadoSeleccionado != null) {
             
-            etiquetaSalidaSeguimiento.setText(servicio_seguimiento.obtenerKgsEmpleado_cuadro(empleadoSeleccionado, cuadroBox.getValue()));
+            if (cuadroBox.getValue() == null){
+                etiquetaSalidaSeguimiento.setText("Si bien tiene seleccionado un empleado, no ha especificado el cuadro");
+
+            } else {
+                etiquetaSalidaSeguimiento.setText(servicio_seguimiento.obtenerKgsEmpleado_cuadro(empleadoSeleccionado, cuadroBox.getValue()));
+            }
 
         } else {
             etiquetaSalidaSeguimiento.setText("No ha seleccionado ningún empleado de la tabla");
-
         }
     }
 
@@ -359,7 +380,7 @@ public class Vista_ABM_Empleado implements Vista {
         
         //- limpiar elementos de la vista 
         etiquetaSalidaSeguimiento.setText("");
-        etiquetaInteractiva.setText("Puede seleccionar filas de la tabla para editarlas");
+        etiquetaInteractiva.setText("Puede seleccionar filas de la tabla para modificarlas (si su estado de alta es Verdadero)");
         
         entradaNombres.clear();
         entradaApellidos.clear();

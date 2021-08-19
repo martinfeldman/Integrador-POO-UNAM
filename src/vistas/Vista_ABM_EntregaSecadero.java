@@ -3,6 +3,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert.AlertType;
@@ -11,6 +12,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.Separator;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -44,6 +46,7 @@ public class Vista_ABM_EntregaSecadero implements Vista {
     TableColumn<EntregaSecadero, Double> columnaDiferenciaPeso;
     TableColumn<EntregaSecadero, Boolean> columnaAlta;
     TextField entradaNombres, entradaApellidos, entradaDni, entradaPesoSecadero; 
+    Separator separador1H, separador1V;
 
 
     public Vista_ABM_EntregaSecadero(Servicio_EntregasSecadero servicio, Servicio_Cosechas servicio_Cosechas){
@@ -59,7 +62,7 @@ public class Vista_ABM_EntregaSecadero implements Vista {
     // definicion elementos de pantalla 
 
         botonAgregar = new Button("Agregar/Modificar Selección");
-        botonEliminar = new Button("Eliminar");
+        botonEliminar = new Button("Dar de baja");
         botonLimpiar = new Button("Limpiar");
 
         columnaId = new TableColumn<>("Id de Entrega Secadero");
@@ -81,10 +84,12 @@ public class Vista_ABM_EntregaSecadero implements Vista {
         
         entradaPesoSecadero = new TextField();
 
-        etiquetaInteractiva = new Label("Puede seleccionar filas de la tabla para editarlas");
+        etiquetaInteractiva = new Label("Puede seleccionar filas de la tabla para modificarlas (si su estado de alta es Verdadero)");
         etiquetaComboBox_cosechas = new Label ("Seleccione la cosecha que llega en la entrega   ");
         etiquetaFecha = new Label ("Fecha de Entrega:   ");
-        etiquetaPesoSecadero = new Label ("Peso (en kgs) en Secadero:   ");    
+
+        separador1H = new Separator(Orientation.HORIZONTAL);
+        separador1V = new Separator(Orientation.VERTICAL);
 
         tabla = new TableView<>(); 
               
@@ -114,19 +119,28 @@ public class Vista_ABM_EntregaSecadero implements Vista {
         contenedorCarga.setAlignment(Pos.CENTER);
         contenedorHorizontal.setAlignment(Pos.CENTER);
         
-        contenedorBotones.setPadding(new Insets(10, 10, 10, 10));
+        contenedorBotones.setPadding(new Insets(30, 10, 10, 10));
         contenedorCarga.setPadding(new Insets(10, 10, 10, 10));
-        contenedorHorizontal.setPadding(new Insets(10, 0, 10, 0));
+        contenedorHorizontal.setPadding(new Insets(10, 0, 30, 0));
         
         contenedorBotones.setSpacing(10);
         contenedorCarga.setSpacing(10);
-       
-        etiquetaFecha.setText("Ingrese Fecha:   ");
+
+        cosechasBox.setMinWidth(140);
+        
+        entradaPesoSecadero.setPromptText("Ingrese peso en Secadero (kgs)   ");
         entradaPesoSecadero.setMaxWidth(300);
+
+        etiquetaFecha.setText("Ingrese Fecha:   ");
+        // QUITAR SI sigue en 0 
+        etiquetaInteractiva.setPadding(new Insets(0, 0, 0, 0));
+
+        separador1H.setPadding(new Insets(0, 0, 30, 0));
+        separador1V.setPadding(new Insets(0, 20, 0, 20));
 
         tabla.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         tabla.setPadding(new Insets(0, 0, 10, 0));
-        tabla.setPrefHeight(300);
+        tabla.setPrefHeight(400);
 
 
 
@@ -155,9 +169,9 @@ public class Vista_ABM_EntregaSecadero implements Vista {
 
         //- agregamos contenido a los contenedores
         contenedorBotones.getChildren().addAll(botonAgregar, botonEliminar, botonLimpiar);
-        contenedorCarga.getChildren().addAll(etiquetaInteractiva , etiquetaFecha, datepicker);
-        contenedorHorizontal.getChildren().addAll(etiquetaComboBox_cosechas, cosechasBox);
-        contenedor.getChildren().addAll(tabla, contenedorCarga, contenedorHorizontal, etiquetaPesoSecadero, entradaPesoSecadero , contenedorBotones);
+        contenedorCarga.getChildren().addAll(etiquetaInteractiva, separador1H);
+        contenedorHorizontal.getChildren().addAll(etiquetaFecha, datepicker, separador1V , etiquetaComboBox_cosechas, cosechasBox);
+        contenedor.getChildren().addAll(tabla, contenedorCarga, contenedorHorizontal, entradaPesoSecadero , contenedorBotones);
     
         return contenedor;     
        }
@@ -189,7 +203,7 @@ public class Vista_ABM_EntregaSecadero implements Vista {
             //- SINO, se informa y se retorna falso                  
                 } else {
 
-                    System.out.print("La cosecha seleccionada está dada de BAJA. No se puede modificar.\n"); 
+                    etiquetaInteractiva.setText("La cosecha seleccionada está dada de BAJA. No se puede modificar.\n"); 
                     limpiar();
                     return false;
                 }
@@ -239,7 +253,8 @@ public class Vista_ABM_EntregaSecadero implements Vista {
     private void limpiar() {
 
         //- limpiar elementos de la vista
-        etiquetaInteractiva.setText("Puede seleccionar filas de la tabla para editarlas");
+        entradaPesoSecadero.setPromptText("Ingrese peso en Secadero (kgs)   ");
+        etiquetaInteractiva.setText("Puede seleccionar filas de la tabla para modificarlas (si su estado de alta es Verdadero)");
         cosechasBox.getSelectionModel().clearSelection();
         entradaPesoSecadero.clear();
  

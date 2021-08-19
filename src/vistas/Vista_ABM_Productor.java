@@ -54,7 +54,7 @@ public class Vista_ABM_Productor implements Vista {
     // definicion elementos de pantalla
 
         botonAgregar = new Button("Agregar/Modificar Selección");
-        botonEliminar = new Button("Eliminar");
+        botonEliminar = new Button("Dar de baja");
         botonLimpiar = new Button("Limpiar");
     
         columnaId = new TableColumn<>("Id de Productor");
@@ -71,7 +71,7 @@ public class Vista_ABM_Productor implements Vista {
         entradaApellidos = new TextField();
         entradaDni = new TextField();
         
-        etiquetaInteractiva = new Label("Puede seleccionar filas de la tabla para editarlas");
+        etiquetaInteractiva = new Label("Puede seleccionar filas de la tabla para modificarlas (si su estado de alta es Verdadero)");
 
         separador = new Separator(Orientation.HORIZONTAL); 
 
@@ -112,11 +112,11 @@ public class Vista_ABM_Productor implements Vista {
         entradaApellidos.setMaxWidth(400);
         entradaDni.setMaxWidth(300);
 
-        separador.setPadding(new Insets(0, 0, 25, 0));
+        separador.setPadding(new Insets(0, 0, 30, 0));
 
         tabla.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         tabla.setPadding(new Insets(0, 0, 10, 0));
-        tabla.setPrefHeight(300);
+        tabla.setPrefHeight(400);
 
 
 
@@ -172,7 +172,7 @@ public class Vista_ABM_Productor implements Vista {
         //- SINO, se informa y se retorna falso              
                 } else {
 
-                    System.out.print("El productor seleccionado está dado de BAJA. No se puede modificar.\n"); 
+                    etiquetaInteractiva.setText("El productor seleccionado está dado de BAJA. No se puede modificar.\n"); 
                     limpiar();
                     return false;
                 }
@@ -224,7 +224,7 @@ public class Vista_ABM_Productor implements Vista {
     private void limpiar() {
     
         //- limpiar elementos de la vista    
-        etiquetaInteractiva.setText("Puede seleccionar filas de la tabla para editarlas");
+        etiquetaInteractiva.setText("Puede seleccionar filas de la tabla para modificarlas (si su estado de alta es Verdadero)");
 
         entradaNombres.clear();
         entradaApellidos.clear();

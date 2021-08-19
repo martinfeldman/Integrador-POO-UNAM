@@ -45,7 +45,7 @@ public class Vista_ABM_Cosecha implements Vista {
     TableColumn<Cosecha, Boolean> columnaAlta;
     Button botonAgregar, botonEliminar, botonLimpiar;
     Label etiquetaInteractiva, etiquetaInformativa;
-    Separator separador1, separador2, separador3, separador4;
+    Separator separador1H, separador2H, separador1V, separador2V;
 
     // objetos para tomar los datos
     ComboBox<Empleado> empleadoBox;
@@ -68,10 +68,10 @@ public class Vista_ABM_Cosecha implements Vista {
     // definicion elementos de pantalla 
 
         botonAgregar = new Button("Agregar/Modificar Selección");
-        botonEliminar = new Button("Eliminar");
+        botonEliminar = new Button("Dar de baja");
         botonLimpiar = new Button("Limpiar");
 
-        columnaId = new TableColumn<>("Id Cosecha");
+        columnaId = new TableColumn<>("Id de Cosecha");
         columnaEmpleado = new TableColumn<>("Empleado");
         columnaFecha = new TableColumn<>("Fecha");
         columnaCuadros = new TableColumn<>("Cuadro Cosechado");
@@ -83,6 +83,9 @@ public class Vista_ABM_Cosecha implements Vista {
         VBox contenedorCarga = new VBox();
         HBox contenedorHorizontal1 = new HBox();
         HBox contenedorHorizontal2 = new HBox();
+        VBox contenedor2V = new VBox();
+        HBox contenedor3H = new HBox();
+
 
         cuadroBox = new ComboBox<>();
 
@@ -93,18 +96,17 @@ public class Vista_ABM_Cosecha implements Vista {
         entradaKgsCosechados = new TextField();
         
         etiquetaInformativa = new Label("");
-        etiquetaInteractiva = new Label("Puede seleccionar filas de la tabla para editarlas");
+        etiquetaInteractiva = new Label("Puede seleccionar filas de la tabla para modificarlas (si su estado de alta es Verdadero)");
         etiquetaComboBox_empleado = new Label ("Seleccione el empleado que ha realizado la cosecha   ");
       
         etiquetaFecha = new Label ("Ingrese Fecha   ");
         etiquetaCuadro = new Label ("Cuadro:   ");
         etiquetaKgsCosechados = new Label("Kilos Cosechados:   ");
       
-        separador1 = new Separator(Orientation.VERTICAL);
-        separador2 = new Separator(Orientation.VERTICAL);
-        separador3 = new Separator(Orientation.HORIZONTAL);
-        separador4 = new Separator(Orientation.VERTICAL);
-        
+        separador1V = new Separator(Orientation.VERTICAL);
+        separador2V = new Separator(Orientation.VERTICAL);
+        separador1H = new Separator(Orientation.HORIZONTAL);
+        separador2H = new Separator(Orientation.HORIZONTAL);
 
         tabla = new TableView<>();    
        
@@ -132,6 +134,8 @@ public class Vista_ABM_Cosecha implements Vista {
         contenedorCarga.setAlignment(Pos.CENTER);
         contenedorHorizontal1.setAlignment(Pos.CENTER);
         contenedorHorizontal2.setAlignment(Pos.CENTER);
+        contenedor2V.setAlignment(Pos.CENTER);
+        contenedor3H.setAlignment(Pos.CENTER);
 
         contenedorBotones.setPadding(new Insets(10, 10, 10, 10));
         contenedorCarga.setPadding(new Insets(10, 10, 10, 10));
@@ -140,17 +144,23 @@ public class Vista_ABM_Cosecha implements Vista {
 
         contenedorBotones.setSpacing(10);
         contenedorCarga.setSpacing(10);
-        
-        separador1.setPadding(new Insets(10, 10, 10, 10));
-        separador2.setPadding(new Insets(10, 20, 10, 70));
-        separador4.setPadding(new Insets(10, 70, 10, 70));
 
-        separador1.setPrefHeight(100);
-        separador2.setPrefHeight(100);
-        separador3.setPrefWidth(100);
+        contenedor2V.setMinWidth(300);
+
+        cuadroBox.setMinWidth(120);
+        empleadoBox.setMinWidth(200);
+
+        etiquetaInformativa.setPadding(new Insets(10, 0, 0, 0));
+        
+        separador1H.setPadding(new Insets(0, 0, 30, 0));
+        separador1V.setPadding(new Insets(0, 15, 10, 15));
+        separador2V.setPadding(new Insets(10, 20, 10, 70));
+
+        separador1V.setPrefHeight(100);
+        separador2V.setPrefHeight(100);
 
         tabla.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        tabla.setPrefHeight(300);
+        tabla.setPrefHeight(400);
         tabla.setPrefWidth(1150);
 
 
@@ -179,13 +189,14 @@ public class Vista_ABM_Cosecha implements Vista {
 
         //- agregamos contenido a los contenedores
         contenedorBotones.getChildren().addAll(botonAgregar, botonEliminar, botonLimpiar);
-        contenedorCarga.getChildren().addAll(etiquetaInteractiva);
+        contenedorCarga.getChildren().addAll(etiquetaInteractiva, separador1H);
          
-        contenedorHorizontal1.getChildren().addAll(etiquetaFecha, datepicker, separador1 , etiquetaComboBox_empleado, empleadoBox); 
-        contenedorHorizontal2.getChildren().addAll(etiquetaCuadro, cuadroBox, separador4, etiquetaInformativa , separador2,
-         etiquetaKgsCosechados, entradaKgsCosechados);
+        contenedorHorizontal1.getChildren().addAll(etiquetaFecha, datepicker, separador1V , etiquetaComboBox_empleado, empleadoBox); 
+        contenedor3H.getChildren().addAll(etiquetaCuadro, cuadroBox);
+        contenedor2V.getChildren().addAll(contenedor3H, etiquetaInformativa);
+        contenedorHorizontal2.getChildren().addAll(contenedor2V, separador2V, etiquetaKgsCosechados, entradaKgsCosechados);
 
-        contenedor.getChildren().addAll(tabla, contenedorCarga, contenedorHorizontal1, separador3,
+        contenedor.getChildren().addAll(tabla, contenedorCarga, contenedorHorizontal1, separador2H,
          contenedorHorizontal2, contenedorBotones);
 
         return contenedor;
@@ -219,7 +230,7 @@ public class Vista_ABM_Cosecha implements Vista {
         //- SINO, se informa y se retorna falso                  
                 } else {
 
-                    System.out.print("La cosecha seleccionada está dada de BAJA. No se puede modificar.\n"); 
+                    etiquetaInteractiva.setText("La cosecha seleccionada está dada de BAJA. No se puede modificar.\n"); 
                     limpiar();
                     return false;
                 }
@@ -301,7 +312,7 @@ public class Vista_ABM_Cosecha implements Vista {
         //- limpiar elementos de la vista   
         entradaKgsCosechados.clear();
         etiquetaInformativa.setText("");
-        etiquetaInteractiva.setText("Puede seleccionar filas de la tabla para editarlas");
+        etiquetaInteractiva.setText("Puede seleccionar filas de la tabla para modificarlas (si su estado de alta es Verdadero)");
 
         etiquetaComboBox_empleado.setText("Seleccione el empleado que ha realizado la cosecha   ");
         etiquetaComboBox_empleado.setPadding(new Insets(0, 0, 0, 0));

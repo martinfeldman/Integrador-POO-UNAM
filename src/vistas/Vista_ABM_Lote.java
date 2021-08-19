@@ -1,5 +1,6 @@
 package vistas;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert.AlertType;
@@ -7,6 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.Separator;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -35,6 +37,7 @@ public class Vista_ABM_Lote implements Vista {
     TableColumn<Lote, Integer> columnaId;
     TableColumn<Lote, Productor> columnaProductor;
     TableColumn<Lote, Boolean> columnaAlta;
+    Separator separador1H;
 
 
     public Vista_ABM_Lote(Servicio_Lotes servicio, Servicio_Productores servicio_Productores) {
@@ -51,7 +54,7 @@ public class Vista_ABM_Lote implements Vista {
     // definicion elementos de pantalla
       
         botonAgregar = new Button("Agregar");
-        botonEliminar = new Button("Eliminar");
+        botonEliminar = new Button("Dar de baja");
         botonLimpiar = new Button("Limpiar");
 
         columnaId = new TableColumn<>("Id de Lote");
@@ -62,9 +65,11 @@ public class Vista_ABM_Lote implements Vista {
         HBox contenedorBotones = new HBox();
         VBox contenedorCarga = new VBox();
 
-        etiquetaInteractiva = new Label("Puede seleccionar filas de la tabla para editarlas");
+        etiquetaInteractiva = new Label("Puede seleccionar filas de la tabla para modificarlas (si su estado de alta es Verdadero)");
         
         productoresBox = new ComboBox<>();
+
+        separador1H = new Separator(Orientation.HORIZONTAL);
 
         tabla = new TableView<>();
         
@@ -93,9 +98,11 @@ public class Vista_ABM_Lote implements Vista {
         productoresBox.setPromptText("Ingrese productor");
         productoresBox.setMinWidth(200);
 
+        separador1H.setPadding(new Insets(0, 0, 30, 0));
+
         tabla.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         tabla.setPadding(new Insets(0, 0, 10, 0));
-        tabla.setPrefHeight(300);
+        tabla.setPrefHeight(400);
 
 
 
@@ -121,7 +128,7 @@ public class Vista_ABM_Lote implements Vista {
         
         //- agregamos contenido a los contenedores
         contenedorBotones.getChildren().addAll(botonAgregar, botonEliminar, botonLimpiar);
-        contenedorCarga.getChildren().addAll(etiquetaInteractiva, productoresBox);
+        contenedorCarga.getChildren().addAll(etiquetaInteractiva, separador1H, productoresBox);
         contenedor.getChildren().addAll(tabla, contenedorCarga, contenedorBotones);
         
         return contenedor;
@@ -150,7 +157,7 @@ public class Vista_ABM_Lote implements Vista {
             //- SINO, se informa y se retorna falso
                 } else {
 
-                    System.out.print("El lote seleccionado está dado de BAJA. No se puede modificar.\n"); 
+                    etiquetaInteractiva.setText("El lote seleccionado está dado de BAJA. No se puede modificar.\n"); 
                     limpiar();
                     return false;
                 }
@@ -199,7 +206,7 @@ public class Vista_ABM_Lote implements Vista {
     private void limpiar() {
 
         //- limpiar elementos de la vista
-        etiquetaInteractiva.setText("Puede seleccionar filas de la tabla para editarlas");
+        etiquetaInteractiva.setText("Puede seleccionar filas de la tabla para modificarlas (si su estado de alta es Verdadero)");
 
         productoresBox.getSelectionModel().clearSelection();
         productoresBox.setPromptText("Ingrese productor");

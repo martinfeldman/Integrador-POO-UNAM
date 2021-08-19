@@ -42,7 +42,7 @@ public class Vista_ABM_Cuadro implements Vista {
     TableColumn<Cuadro, Double> columnaSuperficie;
     TableColumn<Cuadro, Boolean> columnaAlta;
     TextField entradaSuperficie;
-    Separator separador1, separador2, separador3 ; 
+    Separator separador1V, separador1H, separador2H, separador3 ; 
     
         
     public Vista_ABM_Cuadro(Servicio_Cuadros servicio, Servicio_Productores servicio_Productores, Servicio_Lotes servicio_Lotes) {
@@ -59,7 +59,7 @@ public class Vista_ABM_Cuadro implements Vista {
     // definicion elementos de pantalla 
 
         botonAgregar = new Button("Agregar/Modificar Selección");
-        botonEliminar = new Button("Eliminar");
+        botonEliminar = new Button("Dar de baja");
         botonLimpiar = new Button("Limpiar");
 
         columnaId = new TableColumn<>("Id de Cuadro");
@@ -76,14 +76,16 @@ public class Vista_ABM_Cuadro implements Vista {
 
         entradaSuperficie = new TextField("");
 
-        etiquetaInteractiva = new Label("Puede seleccionar filas de la tabla para editarlas");
+        etiquetaInteractiva = new Label("Puede seleccionar filas de la tabla para modificarlas (si su estado de alta es Verdadero)");
         etiquetaComboBox_lotes = new Label ("Seleccione el lote al que pertenece el cuadro   ");
         etiqueta_productor = new Label("");
 
         lotesBox = new ComboBox<>();
 
-        separador1 = new Separator(Orientation.VERTICAL);
-        separador2 = new Separator(Orientation.HORIZONTAL); 
+        separador1H = new Separator(Orientation.HORIZONTAL); 
+        separador2H = new Separator(Orientation.HORIZONTAL); 
+        separador1V = new Separator(Orientation.VERTICAL);
+        
      
         tabla = new TableView<>(); 
 
@@ -106,20 +108,25 @@ public class Vista_ABM_Cuadro implements Vista {
         contenedorBotones.setAlignment(Pos.CENTER);
         contenedorCarga.setAlignment(Pos.CENTER);
 
-        contenedorBotones.setPadding(new Insets(10, 10, 10, 10));
-        contenedorCarga.setPadding(new Insets(10, 10, 10, 10));
+        contenedorBotones.setPadding(new Insets(20, 10, 10, 10));
+        contenedorCarga.setPadding(new Insets(10, 10, 50, 10));
 
         contenedorBotones.setSpacing(10);
         contenedorCarga.setSpacing(10);
 
         entradaSuperficie.setPromptText("Ingrese Superficie en km²");
         entradaSuperficie.setMaxWidth(300);
+
+        lotesBox.setMinWidth(100);
+        lotesBox.setPrefWidth(100);
         
-        separador1.setPadding(new Insets(0,40,0,40));
-        separador2.setPadding(new Insets(40,0,40,0));
+        separador1H.setPadding(new Insets(0, 0, 0, 0));
+        separador2H.setPadding(new Insets(20, 0, 20, 0));
+        separador1V.setPadding(new Insets(0, 10, 0, 20));
 
         tabla.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         tabla.setPadding(new Insets(0, 0, 10, 0));
+        tabla.setPrefHeight(400);
         tabla.setPrefWidth(700);
 
        
@@ -148,11 +155,11 @@ public class Vista_ABM_Cuadro implements Vista {
 
         //- agregamos contenido a los contenedores
         contenedorBotones.getChildren().addAll(botonAgregar, botonEliminar, botonLimpiar);
-        contenedorCarga.getChildren().addAll(etiquetaInteractiva);
-        contenedorBox.getChildren().addAll(etiquetaComboBox_lotes, lotesBox, separador1, etiqueta_productor);
+        contenedorCarga.getChildren().addAll(etiquetaInteractiva, separador1H);
+        contenedorBox.getChildren().addAll(etiquetaComboBox_lotes, lotesBox, separador1V, etiqueta_productor);
        // contenedorHorizontal1.getChildren().addAll(
         //contenedorHorizontal2.getChildren().addAll(
-        contenedor.getChildren().addAll(tabla, contenedorCarga, contenedorBox, separador2, entradaSuperficie, contenedorBotones);
+        contenedor.getChildren().addAll(tabla, contenedorCarga, contenedorBox, separador2H, entradaSuperficie, contenedorBotones);
 
         return contenedor;
 
@@ -180,7 +187,7 @@ public class Vista_ABM_Cuadro implements Vista {
             //- SINO, se informa y se retorna falso    
                 } else {
                     
-                    System.out.print("El cuadro seleccionado está dado de BAJA. No se puede modificar.\n"); 
+                    etiquetaInteractiva.setText("El cuadro seleccionado está dado de BAJA. No se puede modificar.\n"); 
                     limpiar();
                     return false;
                 }    
@@ -228,7 +235,7 @@ public class Vista_ABM_Cuadro implements Vista {
     private void limpiar() {
 
     // limpiar elementos de la vista
-        etiquetaInteractiva.setText("Puede seleccionar filas de la tabla para editarlas");
+        etiquetaInteractiva.setText("Puede seleccionar filas de la tabla para modificarlas (si su estado de alta es Verdadero)");
         etiqueta_productor.setText("");
         entradaSuperficie.clear();
         
@@ -244,7 +251,7 @@ public class Vista_ABM_Cuadro implements Vista {
 
         if (lotesBox.getValue() != null){
 
-            etiqueta_productor.setText("Este lote pertenece al productor \n" + lotesBox.getValue().getProductor().toString());
+            etiqueta_productor.setText("Este lote pertenece al productor " + lotesBox.getValue().getProductor().toString());
             
         } else {
 

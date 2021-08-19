@@ -46,7 +46,7 @@ public class Vista_ABM_Empleado implements Vista {
     // objetos de la pantalla
     
     Button botonAgregar, botonEliminar, botonLimpiar;
-    Label etiquetaInteractiva;
+    Label etiquetaInteractiva, etiquetaInteractiva3;
     TableView<Empleado> tabla;
     TableColumn<Empleado, Integer> columnaId;
     TableColumn<Empleado, String> columnaNombres;
@@ -110,9 +110,10 @@ public class Vista_ABM_Empleado implements Vista {
 
         etiquetaInteractiva = new Label("Puede seleccionar filas de la tabla para modificarlas (si su estado de alta es Verdadero)");
         etiquetaInteractiva2 = new Label("Seguimiento de Producción de Kgs producidos por empleado por Productor, Lote o Cuadro. \nDebe seleccionar un empleado de la tabla");
+        etiquetaInteractiva3 = new Label("");
         etiquetaSalidaSeguimiento= new Label("");
+        
         fuenteNegrita = Font.font("", FontWeight.BOLD, FontPosture.REGULAR , 15);
-        etiquetaSalidaSeguimiento.setFont(fuenteNegrita);
 
         
         loteBox = new ComboBox<>();
@@ -153,7 +154,7 @@ public class Vista_ABM_Empleado implements Vista {
         contenedorSeguimientoEmpleados2.setAlignment(Pos.CENTER);
         contenedorSeguimientoEmpleados3.setAlignment(Pos.CENTER);
         
-        contenedorBotones.setPadding(new Insets(10, 10, 10, 10));
+        contenedorBotones.setPadding(new Insets(10, 10, 25, 10));
         contenedorCarga.setPadding(new Insets(10, 10, 10, 10));
         contenedorSeguimientoEmpleados1.setPadding(new Insets(30, 10, 20, 10));
         contenedorSeguimientoEmpleados2.setPadding(new Insets(20, 10, 20, 10));
@@ -174,6 +175,8 @@ public class Vista_ABM_Empleado implements Vista {
         entradaDni.setPromptText("DNI del empleado");
 
         etiquetaInteractiva2.setPadding(new Insets(20, 0, 0, 0));
+        etiquetaInteractiva3.setFont(fuenteNegrita);
+        etiquetaSalidaSeguimiento.setFont(fuenteNegrita);
 
         loteBox.setPromptText("Seleccione un lote");
         loteBox.setMinWidth(200);
@@ -190,7 +193,7 @@ public class Vista_ABM_Empleado implements Vista {
 
         tabla.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         tabla.setPadding(new Insets(0, 0, 10, 0));
-        tabla.setPrefHeight(400);
+        tabla.setPrefHeight(350);
 
 
 
@@ -230,7 +233,7 @@ public class Vista_ABM_Empleado implements Vista {
 
         contenedorSeguimientoEmpleados3.getChildren().addAll(cuadroBox, separador5, botonKgsPorCuadro);
 
-        contenedor.getChildren().addAll(tabla, contenedorCarga, contenedorBotones, separador2, etiquetaInteractiva2, contenedorSeguimientoEmpleados1, 
+        contenedor.getChildren().addAll(tabla, contenedorCarga, contenedorBotones, etiquetaInteractiva3, separador2, etiquetaInteractiva2, contenedorSeguimientoEmpleados1, 
          contenedorSeguimientoEmpleados2,  contenedorSeguimientoEmpleados3, separador6, etiquetaSalidaSeguimiento);
 
         
@@ -260,8 +263,8 @@ public class Vista_ABM_Empleado implements Vista {
             //- SINO, se informa y se retorna falso 
                 } else {
 
-                    etiquetaInteractiva.setText("El empleado seleccionado está dado de BAJA. No se puede modificar.\n"); 
                     limpiar();
+                    etiquetaInteractiva3.setText("El empleado seleccionado está dado de BAJA. No se puede modificar.\n"); 
                     return false;
 
                 }
@@ -379,8 +382,9 @@ public class Vista_ABM_Empleado implements Vista {
     private void limpiar() {
         
         //- limpiar elementos de la vista 
-        etiquetaSalidaSeguimiento.setText("");
         etiquetaInteractiva.setText("Puede seleccionar filas de la tabla para modificarlas (si su estado de alta es Verdadero)");
+        etiquetaInteractiva3.setText("");
+        etiquetaSalidaSeguimiento.setText("");
         
         entradaNombres.clear();
         entradaApellidos.clear();

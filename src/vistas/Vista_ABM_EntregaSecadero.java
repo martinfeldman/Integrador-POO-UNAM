@@ -19,6 +19,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import modelo.Cosecha;
 import modelo.EntregaSecadero;
 import servicios.Servicio_Cosechas;
@@ -36,7 +39,8 @@ public class Vista_ABM_EntregaSecadero implements Vista {
     Button botonAgregar, botonEliminar, botonLimpiar;
     ComboBox<Cosecha> cosechasBox;
     DatePicker datepicker;
-    Label etiquetaInteractiva, etiquetaComboBox_cosechas, etiquetaFecha, etiquetaPesoSecadero;
+    Font fuenteNegrita;
+    Label etiquetaInteractiva, etiquetaInteractiva2, etiquetaComboBox_cosechas, etiquetaFecha, etiquetaPesoSecadero;
     TableView<EntregaSecadero> tabla;
     TableColumn<EntregaSecadero, Integer> columnaId;
     TableColumn<EntregaSecadero, LocalDate> columnaFecha;
@@ -85,8 +89,11 @@ public class Vista_ABM_EntregaSecadero implements Vista {
         entradaPesoSecadero = new TextField();
 
         etiquetaInteractiva = new Label("Puede seleccionar filas de la tabla para modificarlas (si su estado de alta es Verdadero)");
+        etiquetaInteractiva2 = new Label("");
         etiquetaComboBox_cosechas = new Label ("Seleccione la cosecha que llega en la entrega   ");
         etiquetaFecha = new Label ("Fecha de Entrega:   ");
+
+        fuenteNegrita = Font.font("", FontWeight.BOLD, FontPosture.REGULAR , 15);
 
         separador1H = new Separator(Orientation.HORIZONTAL);
         separador1V = new Separator(Orientation.VERTICAL);
@@ -119,7 +126,7 @@ public class Vista_ABM_EntregaSecadero implements Vista {
         contenedorCarga.setAlignment(Pos.CENTER);
         contenedorHorizontal.setAlignment(Pos.CENTER);
         
-        contenedorBotones.setPadding(new Insets(30, 10, 10, 10));
+        contenedorBotones.setPadding(new Insets(30, 10, 30, 10));
         contenedorCarga.setPadding(new Insets(10, 10, 10, 10));
         contenedorHorizontal.setPadding(new Insets(10, 0, 30, 0));
         
@@ -132,8 +139,7 @@ public class Vista_ABM_EntregaSecadero implements Vista {
         entradaPesoSecadero.setMaxWidth(300);
 
         etiquetaFecha.setText("Ingrese Fecha:   ");
-        // QUITAR SI sigue en 0 
-        etiquetaInteractiva.setPadding(new Insets(0, 0, 0, 0));
+        etiquetaInteractiva2.setFont(fuenteNegrita);
 
         separador1H.setPadding(new Insets(0, 0, 30, 0));
         separador1V.setPadding(new Insets(0, 20, 0, 20));
@@ -171,7 +177,7 @@ public class Vista_ABM_EntregaSecadero implements Vista {
         contenedorBotones.getChildren().addAll(botonAgregar, botonEliminar, botonLimpiar);
         contenedorCarga.getChildren().addAll(etiquetaInteractiva, separador1H);
         contenedorHorizontal.getChildren().addAll(etiquetaFecha, datepicker, separador1V , etiquetaComboBox_cosechas, cosechasBox);
-        contenedor.getChildren().addAll(tabla, contenedorCarga, contenedorHorizontal, entradaPesoSecadero , contenedorBotones);
+        contenedor.getChildren().addAll(tabla, contenedorCarga, contenedorHorizontal, entradaPesoSecadero , contenedorBotones, etiquetaInteractiva2);
     
         return contenedor;     
        }
@@ -203,8 +209,8 @@ public class Vista_ABM_EntregaSecadero implements Vista {
             //- SINO, se informa y se retorna falso                  
                 } else {
 
-                    etiquetaInteractiva.setText("La cosecha seleccionada está dada de BAJA. No se puede modificar.\n"); 
                     limpiar();
+                    etiquetaInteractiva2.setText("La cosecha seleccionada está dada de BAJA. No se puede modificar.\n"); 
                     return false;
                 }
 
@@ -255,6 +261,8 @@ public class Vista_ABM_EntregaSecadero implements Vista {
         //- limpiar elementos de la vista
         entradaPesoSecadero.setPromptText("Ingrese peso en Secadero (kgs)   ");
         etiquetaInteractiva.setText("Puede seleccionar filas de la tabla para modificarlas (si su estado de alta es Verdadero)");
+        etiquetaInteractiva2.setText("");
+
         cosechasBox.getSelectionModel().clearSelection();
         entradaPesoSecadero.clear();
  

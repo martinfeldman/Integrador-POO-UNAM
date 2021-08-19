@@ -18,6 +18,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 
 // para esta vista se utilizó como referencia la vista de empleado del ejemploIntegrador
 
@@ -30,7 +33,8 @@ public class Vista_ABM_Productor implements Vista {
     // objetos de la pantalla
 
     Button botonAgregar, botonEliminar, botonLimpiar;
-    Label etiquetaInteractiva;
+    Font fuenteNegrita;
+    Label etiquetaInteractiva, etiquetaInteractiva2;
     Separator separador;
     TableView<Productor> tabla;
     TableColumn<Productor, Integer> columnaId;
@@ -72,6 +76,9 @@ public class Vista_ABM_Productor implements Vista {
         entradaDni = new TextField();
         
         etiquetaInteractiva = new Label("Puede seleccionar filas de la tabla para modificarlas (si su estado de alta es Verdadero)");
+        etiquetaInteractiva2 = new Label("");
+        
+        fuenteNegrita = Font.font("", FontWeight.BOLD, FontPosture.REGULAR , 15);
 
         separador = new Separator(Orientation.HORIZONTAL); 
 
@@ -85,7 +92,7 @@ public class Vista_ABM_Productor implements Vista {
         contenedorBotones.setAlignment(Pos.CENTER);
         contenedorCarga.setAlignment(Pos.CENTER);
 
-        contenedorBotones.setPadding(new Insets(10, 10, 10, 10));
+        contenedorBotones.setPadding(new Insets(10, 10, 30, 10));
         contenedorCarga.setPadding(new Insets(10, 10, 10, 10));
         contenedorBotones.setSpacing(10);
         contenedorCarga.setSpacing(10);
@@ -112,11 +119,13 @@ public class Vista_ABM_Productor implements Vista {
         entradaApellidos.setMaxWidth(400);
         entradaDni.setMaxWidth(300);
 
+        etiquetaInteractiva2.setFont(fuenteNegrita);
+
         separador.setPadding(new Insets(0, 0, 30, 0));
 
         tabla.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         tabla.setPadding(new Insets(0, 0, 10, 0));
-        tabla.setPrefHeight(400);
+        tabla.setPrefHeight(350);
 
 
 
@@ -142,7 +151,7 @@ public class Vista_ABM_Productor implements Vista {
         //- agregamos al contenedor la tabla
         contenedorBotones.getChildren().addAll(botonAgregar, botonEliminar, botonLimpiar);    
         contenedorCarga.getChildren().addAll(etiquetaInteractiva, separador, entradaNombres, entradaApellidos, entradaDni);
-        contenedor.getChildren().addAll(tabla, contenedorCarga, contenedorBotones);
+        contenedor.getChildren().addAll(tabla, contenedorCarga, contenedorBotones, etiquetaInteractiva2);
         
         return contenedor;
 
@@ -172,8 +181,8 @@ public class Vista_ABM_Productor implements Vista {
         //- SINO, se informa y se retorna falso              
                 } else {
 
-                    etiquetaInteractiva.setText("El productor seleccionado está dado de BAJA. No se puede modificar.\n"); 
                     limpiar();
+                    etiquetaInteractiva2.setText("El productor seleccionado está dado de BAJA. No se puede modificar.\n"); 
                     return false;
                 }
             }
@@ -225,6 +234,7 @@ public class Vista_ABM_Productor implements Vista {
     
         //- limpiar elementos de la vista    
         etiquetaInteractiva.setText("Puede seleccionar filas de la tabla para modificarlas (si su estado de alta es Verdadero)");
+        etiquetaInteractiva2.setText("");
 
         entradaNombres.clear();
         entradaApellidos.clear();

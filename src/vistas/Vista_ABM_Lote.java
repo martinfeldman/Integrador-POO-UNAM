@@ -14,6 +14,9 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import modelo.Lote;
 import modelo.Productor;
 import servicios.Servicio_Lotes;
@@ -32,7 +35,8 @@ public class Vista_ABM_Lote implements Vista {
  
     Button botonAgregar, botonEliminar, botonLimpiar;
     ComboBox<Productor> productoresBox;
-    Label etiquetaInteractiva;
+    Font fuenteNegrita;
+    Label etiquetaInteractiva, etiquetaInteractiva2;
     TableView<Lote> tabla;
     TableColumn<Lote, Integer> columnaId;
     TableColumn<Lote, Productor> columnaProductor;
@@ -66,6 +70,9 @@ public class Vista_ABM_Lote implements Vista {
         VBox contenedorCarga = new VBox();
 
         etiquetaInteractiva = new Label("Puede seleccionar filas de la tabla para modificarlas (si su estado de alta es Verdadero)");
+        etiquetaInteractiva2 = new Label("");
+
+        fuenteNegrita = Font.font("", FontWeight.BOLD, FontPosture.REGULAR , 15);
         
         productoresBox = new ComboBox<>();
 
@@ -90,10 +97,12 @@ public class Vista_ABM_Lote implements Vista {
         contenedorBotones.setAlignment(Pos.CENTER);
         contenedorCarga.setAlignment(Pos.CENTER);
 
-        contenedorBotones.setPadding(new Insets(10, 10, 10, 10));
+        contenedorBotones.setPadding(new Insets(10, 10, 30, 10));
         contenedorCarga.setPadding(new Insets(10, 10, 10, 10));
         contenedorCarga.setSpacing(10);
         contenedorBotones.setSpacing(10);
+
+        etiquetaInteractiva2.setFont(fuenteNegrita);
       
         productoresBox.setPromptText("Ingrese productor");
         productoresBox.setMinWidth(200);
@@ -129,7 +138,7 @@ public class Vista_ABM_Lote implements Vista {
         //- agregamos contenido a los contenedores
         contenedorBotones.getChildren().addAll(botonAgregar, botonEliminar, botonLimpiar);
         contenedorCarga.getChildren().addAll(etiquetaInteractiva, separador1H, productoresBox);
-        contenedor.getChildren().addAll(tabla, contenedorCarga, contenedorBotones);
+        contenedor.getChildren().addAll(tabla, contenedorCarga, contenedorBotones, etiquetaInteractiva2);
         
         return contenedor;
     }
@@ -157,8 +166,8 @@ public class Vista_ABM_Lote implements Vista {
             //- SINO, se informa y se retorna falso
                 } else {
 
-                    etiquetaInteractiva.setText("El lote seleccionado está dado de BAJA. No se puede modificar.\n"); 
                     limpiar();
+                    etiquetaInteractiva2.setText("El lote seleccionado está dado de BAJA. No se puede modificar.\n"); 
                     return false;
                 }
             
@@ -207,6 +216,7 @@ public class Vista_ABM_Lote implements Vista {
 
         //- limpiar elementos de la vista
         etiquetaInteractiva.setText("Puede seleccionar filas de la tabla para modificarlas (si su estado de alta es Verdadero)");
+        etiquetaInteractiva2.setText("");
 
         productoresBox.getSelectionModel().clearSelection();
         productoresBox.setPromptText("Ingrese productor");

@@ -11,6 +11,7 @@
             "vmArgs": "--module-path /home/mnf/Facultad/3erAnio/1erCuatr/POO\\ I/practica/implementar/javafx/javafx-sdk-11.0.2/lib --add-modules javafx.controls,javafx.fxml",
             "mainClass": "App"
         },
+        
         {
             "type": "java",
             "name": "Launch App",

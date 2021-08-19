@@ -110,10 +110,9 @@ public class Servicio_Cuadros{
 
     
     public boolean eliminarCuadro(int idCuadro) {
-        this.repositorio.iniciarTransaccion();
-        //Empleado empleado = this.repositorio.buscar(Empleado.class, idEmpleado);
+        // se implementa borrado logico
 
-        // buscar el productor en la base de datos a partir de su ID 
+        // buscar el cuadro en la base de datos a partir de su ID 
         Cuadro cuadro = this.repositorio.buscar(Cuadro.class, (Object) idCuadro);
 
         // si bd no retorna objeto es porque no existe, eliminarProductor devuelve falso
@@ -127,10 +126,10 @@ public class Servicio_Cuadros{
             this.repositorio.iniciarTransaccion();
 
             // dar de baja en el lote al que pertenece 
-            
             cuadro.getLote().quitarCuadro(cuadro);
             this.repositorio.modificar(cuadro.getLote()); 
 
+            // dar de baja el cuadro
             cuadro.setAlta(false);
             this.repositorio.modificar(cuadro); 
  

@@ -15,6 +15,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import modelo.Cuadro;
 import modelo.Lote;
 import servicios.Servicio_Cuadros;
@@ -35,14 +38,15 @@ public class Vista_ABM_Cuadro implements Vista {
 
     Button botonAgregar, botonEliminar, botonLimpiar;
     ComboBox<Lote> lotesBox;
-    Label etiquetaInteractiva, etiqueta_productor, etiquetaComboBox_lotes;
+    Font fuenteNegrita;
+    Label etiquetaInteractiva, etiquetaInteractiva2, etiqueta_productor, etiquetaComboBox_lotes;
     TableView<Cuadro> tabla;
     TableColumn<Cuadro, Integer> columnaId;
     TableColumn<Cuadro, Lote> columnaLote;
     TableColumn<Cuadro, Double> columnaSuperficie;
     TableColumn<Cuadro, Boolean> columnaAlta;
     TextField entradaSuperficie;
-    Separator separador1V, separador1H, separador2H, separador3 ; 
+    Separator separador1V, separador1H, separador2H; 
     
         
     public Vista_ABM_Cuadro(Servicio_Cuadros servicio, Servicio_Productores servicio_Productores, Servicio_Lotes servicio_Lotes) {
@@ -55,7 +59,7 @@ public class Vista_ABM_Cuadro implements Vista {
     @Override
     public Parent obtenerVista() {
 
-
+    
     // definicion elementos de pantalla 
 
         botonAgregar = new Button("Agregar/Modificar Selección");
@@ -71,12 +75,11 @@ public class Vista_ABM_Cuadro implements Vista {
         HBox contenedorBotones = new HBox();
         VBox contenedorCarga = new VBox();
         HBox contenedorBox = new HBox();
-        //HBox contenedorHorizontal1 = new HBox();
-        //HBox contenedorHorizontal2 = new HBox();
 
         entradaSuperficie = new TextField("");
 
         etiquetaInteractiva = new Label("Puede seleccionar filas de la tabla para modificarlas (si su estado de alta es Verdadero)");
+        etiquetaInteractiva2 = new Label("");
         etiquetaComboBox_lotes = new Label ("Seleccione el lote al que pertenece el cuadro   ");
         etiqueta_productor = new Label("");
 
@@ -108,7 +111,7 @@ public class Vista_ABM_Cuadro implements Vista {
         contenedorBotones.setAlignment(Pos.CENTER);
         contenedorCarga.setAlignment(Pos.CENTER);
 
-        contenedorBotones.setPadding(new Insets(20, 10, 10, 10));
+        contenedorBotones.setPadding(new Insets(20, 10, 30, 10));
         contenedorCarga.setPadding(new Insets(10, 10, 50, 10));
 
         contenedorBotones.setSpacing(10);
@@ -116,6 +119,10 @@ public class Vista_ABM_Cuadro implements Vista {
 
         entradaSuperficie.setPromptText("Ingrese Superficie en km²");
         entradaSuperficie.setMaxWidth(300);
+
+        fuenteNegrita = Font.font("", FontWeight.BOLD, FontPosture.REGULAR , 15);
+        etiquetaInteractiva2.setFont(fuenteNegrita);
+        
 
         lotesBox.setMinWidth(100);
         lotesBox.setPrefWidth(100);
@@ -157,9 +164,7 @@ public class Vista_ABM_Cuadro implements Vista {
         contenedorBotones.getChildren().addAll(botonAgregar, botonEliminar, botonLimpiar);
         contenedorCarga.getChildren().addAll(etiquetaInteractiva, separador1H);
         contenedorBox.getChildren().addAll(etiquetaComboBox_lotes, lotesBox, separador1V, etiqueta_productor);
-       // contenedorHorizontal1.getChildren().addAll(
-        //contenedorHorizontal2.getChildren().addAll(
-        contenedor.getChildren().addAll(tabla, contenedorCarga, contenedorBox, separador2H, entradaSuperficie, contenedorBotones);
+        contenedor.getChildren().addAll(tabla, contenedorCarga, contenedorBox, separador2H, entradaSuperficie, contenedorBotones, etiquetaInteractiva2);
 
         return contenedor;
 
@@ -187,8 +192,8 @@ public class Vista_ABM_Cuadro implements Vista {
             //- SINO, se informa y se retorna falso    
                 } else {
                     
-                    etiquetaInteractiva.setText("El cuadro seleccionado está dado de BAJA. No se puede modificar.\n"); 
                     limpiar();
+                    etiquetaInteractiva2.setText("El cuadro seleccionado está dado de BAJA. No se puede modificar.\n"); 
                     return false;
                 }    
 
@@ -236,6 +241,7 @@ public class Vista_ABM_Cuadro implements Vista {
 
     // limpiar elementos de la vista
         etiquetaInteractiva.setText("Puede seleccionar filas de la tabla para modificarlas (si su estado de alta es Verdadero)");
+        etiquetaInteractiva2.setText("");
         etiqueta_productor.setText("");
         entradaSuperficie.clear();
         

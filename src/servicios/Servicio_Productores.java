@@ -1,6 +1,7 @@
 package servicios;
 import java.util.List;
 
+import modelo.Cuadro;
 import modelo.Lote;
 import modelo.Productor;
 import repositorios.Repositorio;
@@ -61,12 +62,14 @@ public class Servicio_Productores {
         //- incluyendo las dependencias en otras clases y se inicia una transaccion 
         if (productor != null) {
 
-        //- modificaciones al objeto
-            productor.setNombres(nombres);
-            productor.setApellidos(apellidos);
-            productor.setDni(dni);
-
             this.repositorio.iniciarTransaccion();
+
+        //- modificaciones al objeto
+            productor.setNombres(nombres.trim().toUpperCase());
+            productor.setApellidos(apellidos.trim().toUpperCase());
+            productor.setDni(dni.trim());
+
+            
             this.repositorio.modificar(productor);
             this.repositorio.confirmarTransaccion();
             return true;
@@ -86,22 +89,31 @@ public class Servicio_Productores {
         // buscar el productor en la base de datos a partir de su ID 
         Productor productor = this.repositorio.buscar(Productor.class, (Object) idProductor);
 
-        // si bd no retorna objeto es porque no existe, y se cancela transaccion
+        // si bd no retorna objeto es porque no existe, eliminarProductor devuelve falso
         if (productor == null) {
-            this.repositorio.descartarTransaccion();
+            System.out.print("repositorio.buscar(idProductor) = NULL \n\n");
             return false;
 
         // sino comienza una transaccion con bd 
-        // se da de baja el productor, sus cuadros y lotes y se confirma transaccion
+        // se da de baja el productor, sus lotes y cuadros y se confirma transaccion
         } else {
             this.repositorio.iniciarTransaccion();
 
             // dar de baja lotes 
             for(Lote lote : productor.getLotes()){
-                lote.setAlta(false);                       
+
+                // dar de baja cuadros de Lote 
+                for (Cuadro cuadro : lote.getCuadros()){
+                    cuadro.setAlta(false);
+                    this.repositorio.modificar(cuadro);      
+                }
+
+                lote.setAlta(false);
+                this.repositorio.modificar(lote);
             }
 
             productor.setAlta(false);
+            this.repositorio.modificar(productor); 
 
             this.repositorio.confirmarTransaccion();
             

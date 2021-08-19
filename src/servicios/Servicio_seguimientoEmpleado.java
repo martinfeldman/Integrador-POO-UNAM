@@ -24,7 +24,6 @@ public class Servicio_seguimientoEmpleado {
 
                 if (cosecha.getCuadro().getLote().getProductor().equals(productor)){
                     totalKgsCosechados += cosecha.getKgsCosechados(); 
-                    System.out.print("totalKgsCosechados: " + totalKgsCosechados + "\n");
                 }
         }
 
@@ -53,10 +52,10 @@ public class Servicio_seguimientoEmpleado {
 
         if (totalKgsCosechados == 0.00) {
             return "Empleado " + empleado.getNombres() + " " + empleado.getApellidos() +  ", (" + empleado.getDni() +") " +
-             "no ha realizado ninguna cosecha para el lote " + lote;
+             "no ha realizado ninguna cosecha para el " + lote;
 
         } else {
-            return "El empeado cosechó " + totalKgsCosechados.toString() + " kgs. para el lote " + lote + ", (" + String.valueOf(lote.getProductor()) +") "  ;
+            return "El empeado cosechó " + totalKgsCosechados.toString() + " kgs. para el " + lote + ", (del productor " + String.valueOf(lote.getProductor()) +") "  ;
         }
     }
 
@@ -76,10 +75,10 @@ public class Servicio_seguimientoEmpleado {
 
         if (totalKgsCosechados == 0.00) {
             return "Empleado " + empleado.getNombres() + " " + empleado.getApellidos() +  ", (" + empleado.getDni() +") " +
-             "no ha realizado ninguna cosecha para cuadro " + cuadro;
+             "no ha realizado ninguna cosecha para " + cuadro;
 
             } else {
-                return "El empeado cosechó " + totalKgsCosechados.toString() + " kgs. en el cuadro " + cuadro + ", (" + String.valueOf(cuadro.getLote().getProductor()) +", " + ", (" + String.valueOf(cuadro.getLote().getProductor()) +") ";
+                return "El empeado cosechó " + totalKgsCosechados.toString() + " kgs. en el " + cuadro + " (del " + String.valueOf(cuadro.getLote()) +", del productor " +  String.valueOf(cuadro.getLote().getProductor()) +") ";
             }
     }
     

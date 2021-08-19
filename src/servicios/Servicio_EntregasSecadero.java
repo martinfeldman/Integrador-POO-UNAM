@@ -96,18 +96,34 @@ public class Servicio_EntregasSecadero {
 
 
 
-    public int eliminarEntregaSecadero(int idEntregaSecadero) {
-        this.repositorio.iniciarTransaccion();
-        EntregaSecadero entregaSecadero = this.repositorio.buscar(EntregaSecadero.class, idEntregaSecadero);
-        // como se soluciona??
-       /* if (empleado != null && empleado.getProyectos().isEmpty() ) {
-            this.repositorio.eliminar(empleado);
+    public boolean eliminarEntregaSecadero(int idEntregaSecadero) {
+       // se implementa borrado logico
+        
+        // buscar el productor en la base de datos a partir de su ID 
+        EntregaSecadero entregaSecadero = this.repositorio.buscar(EntregaSecadero.class, (Object) idEntregaSecadero);
+
+        // si bd no retorna objeto es porque no existe, eliminarProductor devuelve falso
+        if (entregaSecadero == null) {
+            System.out.print("repositorio.buscar(idProductor) = NULL \n\n");
+            return false;
+
+        // sino comienza una transaccion con bd 
+        // se da de baja el productor, sus lotes y cuadros y se confirma transaccion
+        } else {
+            this.repositorio.iniciarTransaccion();
+
+            // dar de baja cosecha asociada a la entregaSecadero
+            
+            entregaSecadero.getCosecha().setAlta(false);
+            this.repositorio.modificar(entregaSecadero.getCosecha()); 
+
+            entregaSecadero.setAlta(false);
+            this.repositorio.modificar(entregaSecadero);
+
             this.repositorio.confirmarTransaccion();
-            return 0;
-        } else {        */
-            this.repositorio.descartarTransaccion();
-            return 1;
-        //}
+            
+            return true;
+        }
     }
 
 

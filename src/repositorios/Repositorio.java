@@ -83,11 +83,12 @@ public class Repositorio {
     }
 
 
+
     /*  Metodo genérico para Recuperar Datos de BD:
         Para poder recibir todo tipo de objetos se utiliza T.       T =  cualquier tipo de clase que extienda de Object.
         Devuelve un objeto de tipo (T)  */
-    public <T extends Object> T buscar(Class<T> clase, Object id) {
-        return (T) this.em.find(clase, id);
+    public <T extends Object> T buscar(Class<T> clase, Object o) {
+        return (T) this.em.find(clase, o);
     }    
 
 
@@ -102,7 +103,7 @@ public class Repositorio {
 
 
      public <T extends Object> List<Object[]> buscarTodos_v2 (Class<T> clase) {
-        CriteriaBuilder cb = this.em.getCriteriaBuilder();
+        //CriteriaBuilder cb = this.em.getCriteriaBuilder();
       //  CriteriaQuery<T> consulta = cb.createQuery(clase);
         TypedQuery<Object[]> consulta = em.createQuery("select * FROM productores " + clase , Object[].class);
         //Root<T> origen = consulta.from(clase);
@@ -126,5 +127,6 @@ public class Repositorio {
         //consulta.orderBy(cb.desc(origen.get(orden)));
         return em.createQuery(consulta).getResultList();
     }
+
 
 }

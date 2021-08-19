@@ -1,7 +1,7 @@
 package servicios;
 import java.util.List;
-import java.io.*;
 
+import modelo.Cuadro;
 import modelo.Lote;
 import modelo.Productor;
 import repositorios.Repositorio;
@@ -73,6 +73,8 @@ public class Servicio_Lotes{
 
         //- Solo se cambia el productor del lote si es diferente del que ya posee    
             if (! productorParaQuitar.equals(productorNuevo)) {
+                
+                this.repositorio.iniciarTransaccion();
 
                 productorParaQuitar.quitarLote(lote); 
                 productorNuevo.agregarLote(lote);
@@ -88,7 +90,7 @@ public class Servicio_Lotes{
             
             
         //- persistir en la bd todo objeto que haya sido modificado  
-            this.repositorio.iniciarTransaccion();
+
             this.repositorio.modificar(productorParaQuitar);
             this.repositorio.modificar(productorNuevo);
             this.repositorio.modificar(lote);
@@ -104,19 +106,41 @@ public class Servicio_Lotes{
 
 
 
-    // cambiar valor devuelto (por ejemplo: True ok, False problemas)
+
     public boolean eliminarLote(int idLote) {
-        this.repositorio.iniciarTransaccion();
-        Lote lote = this.repositorio.buscar(Lote.class, idLote);
-        // como se soluciona??
-        /* if (empleado != null && empleado.getProyectos().isEmpty() ) {
-            this.repositorio.eliminar(empleado);
-            this.repositorio.confirmarTransaccion();
-            return true;
-        } else { */ 
-            this.repositorio.descartarTransaccion();
+
+        // se implementa borrado logico
+        
+        // buscar el lote en la base de datos a partir de su ID 
+        Lote lote = this.repositorio.buscar(Lote.class, (Object) idLote);
+
+        // si bd no retorna objeto es porque no existe, eliminarProductor devuelve falso
+        if (lote == null) {
+            System.out.print("repositorio.buscar(idProductor) = NULL \n\n");
             return false;
-        //}
+
+        // sino comienza una transaccion con bd 
+        // se da de baja el productor, sus lotes y cuadros y se confirma transaccion
+        } else {
+            this.repositorio.iniciarTransaccion();
+
+            // dar de baja cuadros de Lote 
+            for (Cuadro cuadro : lote.getCuadros()){
+                cuadro.setAlta(false);
+                this.repositorio.modificar(cuadro);      
+            }
+
+            // quitar el lote de la lista de lotes del productor
+            lote.getProductor().quitarLote(lote);
+            this.repositorio.modificar(lote.getProductor()); 
+
+            lote.setAlta(false);
+            this.repositorio.modificar(lote);
+            
+            this.repositorio.confirmarTransaccion();
+            
+            return true;
+        }
     }
 
 }

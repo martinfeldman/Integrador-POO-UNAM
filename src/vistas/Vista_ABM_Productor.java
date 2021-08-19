@@ -9,7 +9,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.Separator;
@@ -38,6 +37,7 @@ public class Vista_ABM_Productor implements Vista {
     TableColumn<Productor, String> columnaNombres;
     TableColumn<Productor, String> columnaApellidos;
     TableColumn<Productor, String> columnaDni;
+    TableColumn<Productor, Boolean> columnaAlta;
     TextField entradaNombres, entradaApellidos, entradaDni;
 
 
@@ -61,6 +61,7 @@ public class Vista_ABM_Productor implements Vista {
         columnaDni = new TableColumn<>("DNI");
         columnaNombres = new TableColumn<>("Nombres");
         columnaApellidos = new TableColumn<>("Apellidos");
+        columnaAlta = new TableColumn<>("Alta");
 
         VBox contenedor = new VBox();
         HBox contenedorBotones = new HBox();
@@ -95,11 +96,13 @@ public class Vista_ABM_Productor implements Vista {
         columnaDni.setCellValueFactory(new PropertyValueFactory<>("dni"));
         columnaNombres.setCellValueFactory(new PropertyValueFactory<>("nombres"));
         columnaApellidos.setCellValueFactory(new PropertyValueFactory<>("apellidos"));
+        columnaAlta.setCellValueFactory(new PropertyValueFactory<>("alta"));
 
         columnaId.setMinWidth(200);
         columnaDni.setMinWidth(200);
         columnaNombres.setMinWidth(300);
         columnaApellidos.setMinWidth(300);
+        columnaAlta.setMinWidth(100);
         
         entradaNombres.setPromptText("Nombres del productor");
         entradaApellidos.setPromptText("Apellidos del productor");
@@ -133,6 +136,7 @@ public class Vista_ABM_Productor implements Vista {
         tabla.getColumns().add(columnaDni);
         tabla.getColumns().add(columnaNombres);
         tabla.getColumns().add(columnaApellidos);
+        tabla.getColumns().add(columnaAlta);
         
        
         //- agregamos al contenedor la tabla
@@ -146,7 +150,7 @@ public class Vista_ABM_Productor implements Vista {
 
 
 
-    private void clicAgregarProductor(){
+    private boolean clicAgregarProductor(){
 
         //- A partir del objetoSeleccionado en la tabla
         productorSeleccionado = tabla.getSelectionModel().getSelectedItem();
@@ -156,19 +160,31 @@ public class Vista_ABM_Productor implements Vista {
         //- Si no hay elemento seleccionado en la tabla, se tiene un nuevo objeto por agregar
             if (productorSeleccionado == null) {
                 servicio.agregarProductor(entradaNombres.getText(), entradaApellidos.getText(), entradaDni.getText());
+            
                
-        //- SINO, modificamos el productorSeleccionado a partir de su id
+        //- SINO, si el productorSeleccionado está de Alta, podremos modificarlo a partir de su id
             } else {
-              
-                servicio.modificarProductor(productorSeleccionado.getIdProductor(), entradaNombres.getText(), 
-                 entradaApellidos.getText(), entradaDni.getText());
+                
+                if (productorSeleccionado.isAlta() == true) {
+                    servicio.modificarProductor(productorSeleccionado.getIdProductor(), entradaNombres.getText(), 
+                     entradaApellidos.getText(), entradaDni.getText());
+        
+        //- SINO, se informa y se retorna falso              
+                } else {
+
+                    System.out.print("El productor seleccionado está dado de BAJA. No se puede modificar.\n"); 
+                    limpiar();
+                    return false;
+                }
             }
 
             limpiar();
             
         } catch (IllegalArgumentException e) {
             mostrarAlerta(AlertType.ERROR, "Error", "Error al guardar", e.getMessage());
-        }
+        } 
+        
+        return true; 
     }
 
 

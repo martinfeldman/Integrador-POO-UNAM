@@ -1,12 +1,11 @@
 package servicios;
-import repositorios.*;
+import java.time.LocalDate;
+import java.util.List;
+
 import modelo.Cosecha;
 import modelo.Cuadro;
 import modelo.Empleado;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import repositorios.Repositorio;
 
 
 public class Servicio_Cosechas {
@@ -117,18 +116,34 @@ public class Servicio_Cosechas {
 
   
 
-    public boolean eliminarCosecha(int id_Cosecha) {
-        this.repositorio.iniciarTransaccion();
-        Cosecha cosecha = this.repositorio.buscar(Cosecha.class, id_Cosecha);
-        // como se soluciona??
-       /* if (empleado != null && empleado.getProyectos().isEmpty() ) {
-            this.repositorio.eliminar(cosecha);
-            this.repositorio.confirmarTransaccion();
-            return 0;
-        } else {  */
-            this.repositorio.descartarTransaccion();
+    public boolean eliminarCosecha(int idCosecha) {
+       
+        // se implementa borrado logico
+        
+        // buscar el productor en la base de datos a partir de su ID 
+        Cosecha cosecha = this.repositorio.buscar(Cosecha.class, (Object) idCosecha);
+
+        // si bd no retorna objeto es porque no existe, eliminarProductor devuelve falso
+        if (cosecha == null) {
+            System.out.print("repositorio.buscar(idProductor) = NULL \n\n");
             return false;
-        //}
+
+        // sino comienza una transaccion con bd 
+        // se da de baja el productor, sus lotes y cuadros y se confirma transaccion
+        } else {
+            this.repositorio.iniciarTransaccion();
+
+            // quitar la cosecha de la lista de cosechas del empleado al que corresponde la cosecha 
+            cosecha.getEmpleado().quitarCosecha(cosecha);
+            this.repositorio.modificar(cosecha.getEmpleado());      
+            
+            cosecha.setAlta(false);
+            this.repositorio.modificar(cosecha);
+            
+            this.repositorio.confirmarTransaccion();
+            
+            return true;
+        }
     }
     
 

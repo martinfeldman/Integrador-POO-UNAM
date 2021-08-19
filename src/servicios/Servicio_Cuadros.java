@@ -1,11 +1,8 @@
 package servicios;
 import repositorios.*;
 import modelo.Cuadro;
-import modelo.Empleado;
 import modelo.Lote;
-import modelo.Productor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -112,21 +109,35 @@ public class Servicio_Cuadros{
 
 
     
-    public boolean eliminarCuadro(int idEmpleado) {
+    public boolean eliminarCuadro(int idCuadro) {
         this.repositorio.iniciarTransaccion();
-        Empleado empleado = this.repositorio.buscar(Empleado.class, idEmpleado);
+        //Empleado empleado = this.repositorio.buscar(Empleado.class, idEmpleado);
 
-        
-      /*  // como se soluciona??
-        if (empleado != null && empleado.getProyectos().isEmpty() ) {
-            this.repositorio.eliminar(empleado);
-            this.repositorio.confirmarTransaccion();
-            return 0;
+        // buscar el productor en la base de datos a partir de su ID 
+        Cuadro cuadro = this.repositorio.buscar(Cuadro.class, (Object) idCuadro);
+
+        // si bd no retorna objeto es porque no existe, eliminarProductor devuelve falso
+        if (cuadro == null) {
+            System.out.print("repositorio.buscar(idProductor) = NULL \n\n");
+            return false;
+ 
+        // sino comienza una transaccion con bd 
+        // se quita el cuadro del lote al que pertenece, se da de baja el cuadro y se confirma transaccion
         } else {
-            this.repositorio.descartarTransaccion();
-            return 1;
-        } */
-        return true; 
+            this.repositorio.iniciarTransaccion();
+
+            // dar de baja en el lote al que pertenece 
+            
+            cuadro.getLote().quitarCuadro(cuadro);
+            this.repositorio.modificar(cuadro.getLote()); 
+
+            cuadro.setAlta(false);
+            this.repositorio.modificar(cuadro); 
+ 
+            this.repositorio.confirmarTransaccion();
+             
+            return true; 
+        }
     }
 
    

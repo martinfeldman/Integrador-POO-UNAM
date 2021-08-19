@@ -40,6 +40,7 @@ public class Vista_ABM_Cuadro implements Vista {
     TableColumn<Cuadro, Integer> columnaId;
     TableColumn<Cuadro, Lote> columnaLote;
     TableColumn<Cuadro, Double> columnaSuperficie;
+    TableColumn<Cuadro, Boolean> columnaAlta;
     TextField entradaSuperficie;
     Separator separador1, separador2, separador3 ; 
     
@@ -64,13 +65,14 @@ public class Vista_ABM_Cuadro implements Vista {
         columnaId = new TableColumn<>("Id de Cuadro");
         columnaLote = new TableColumn<>("Lote");
         columnaSuperficie = new TableColumn<>("Superficie");
+        columnaAlta = new TableColumn<>("Alta");
 
         VBox contenedor = new VBox();
         HBox contenedorBotones = new HBox();
         VBox contenedorCarga = new VBox();
         HBox contenedorBox = new HBox();
-        HBox contenedorHorizontal1 = new HBox();
-        HBox contenedorHorizontal2 = new HBox();
+        //HBox contenedorHorizontal1 = new HBox();
+        //HBox contenedorHorizontal2 = new HBox();
 
         entradaSuperficie = new TextField("");
 
@@ -93,10 +95,12 @@ public class Vista_ABM_Cuadro implements Vista {
         columnaId.setCellValueFactory(new PropertyValueFactory<>("idCuadro"));
         columnaLote.setCellValueFactory(new PropertyValueFactory<>("lote"));
         columnaSuperficie.setCellValueFactory(new PropertyValueFactory<>("superficie"));
+        columnaAlta.setCellValueFactory(new PropertyValueFactory<>("alta"));
 
         columnaId.setMinWidth(200);
         columnaLote.setMinWidth(200);
         columnaSuperficie.setMinWidth(200);
+        columnaAlta.setMinWidth(100);
 
         contenedor.setAlignment(Pos.CENTER);
         contenedorBotones.setAlignment(Pos.CENTER);
@@ -116,7 +120,7 @@ public class Vista_ABM_Cuadro implements Vista {
 
         tabla.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         tabla.setPadding(new Insets(0, 0, 10, 0));
-        tabla.setPrefWidth(600);
+        tabla.setPrefWidth(700);
 
        
 
@@ -139,6 +143,7 @@ public class Vista_ABM_Cuadro implements Vista {
         tabla.getColumns().add(columnaId);
         tabla.getColumns().add(columnaLote);
         tabla.getColumns().add(columnaSuperficie);
+        tabla.getColumns().add(columnaAlta);
         tabla.getSelectionModel().selectedItemProperty().addListener(e -> cargarDatos());
 
         //- agregamos contenido a los contenedores
@@ -155,7 +160,7 @@ public class Vista_ABM_Cuadro implements Vista {
 
 
 
-    private void clicAgregarCuadro() {
+    private boolean clicAgregarCuadro() {
 
         cuadroSeleccionado = tabla.getSelectionModel().getSelectedItem();
 
@@ -166,9 +171,20 @@ public class Vista_ABM_Cuadro implements Vista {
                 servicio.agregarCuadro(lotesBox.getValue(), Double.parseDouble(entradaSuperficie.getText()));
 
 
-            //- SINO, modificamos el cuadroSeleccionado a partir de su id
+            //- SINO, si el cuadroSeleccionado está de Alta, podremos modificarlo a partir de su id
             } else {
-                servicio.modificarCuadro(cuadroSeleccionado.getIdCuadro(), lotesBox.getValue(), Double.parseDouble(entradaSuperficie.getText()));
+
+                if (cuadroSeleccionado.isAlta() == true) {
+                    servicio.modificarCuadro(cuadroSeleccionado.getIdCuadro(), lotesBox.getValue(), Double.parseDouble(entradaSuperficie.getText()));
+
+            //- SINO, se informa y se retorna falso    
+                } else {
+                    
+                    System.out.print("El cuadro seleccionado está dado de BAJA. No se puede modificar.\n"); 
+                    limpiar();
+                    return false;
+                }    
+
             }
 
             limpiar();
@@ -177,7 +193,10 @@ public class Vista_ABM_Cuadro implements Vista {
             mostrarAlerta(AlertType.ERROR, "Error", "Error al guardar", e.getMessage());
    
         }
+
+        return true; 
     }
+
 
 
     private void cargarDatos() {
@@ -186,8 +205,8 @@ public class Vista_ABM_Cuadro implements Vista {
 
         if (cuadroSeleccionado != null) {
 
-            entradaSuperficie.setText(String.valueOf(cuadroSeleccionado.getSuperficie()));
             etiquetaInteractiva.setText("Está seleccionado el Cuadro con id: " + cuadroSeleccionado.getIdCuadro());
+            entradaSuperficie.setText(String.valueOf(cuadroSeleccionado.getSuperficie()));
             lotesBox.setValue(cuadroSeleccionado.getLote());
         }
     }

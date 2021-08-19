@@ -34,6 +34,7 @@ public class Vista_ABM_Lote implements Vista {
     TableView<Lote> tabla;
     TableColumn<Lote, Integer> columnaId;
     TableColumn<Lote, Productor> columnaProductor;
+    TableColumn<Lote, Boolean> columnaAlta;
 
 
     public Vista_ABM_Lote(Servicio_Lotes servicio, Servicio_Productores servicio_Productores) {
@@ -55,6 +56,7 @@ public class Vista_ABM_Lote implements Vista {
 
         columnaId = new TableColumn<>("Id de Lote");
         columnaProductor = new TableColumn<>("Productor");
+        columnaAlta = new TableColumn<>("Alta");
 
         VBox contenedor = new VBox();
         HBox contenedorBotones = new HBox();
@@ -71,11 +73,13 @@ public class Vista_ABM_Lote implements Vista {
     // propiedades de elementos
 
         // COLUMNAS - propiedades
-        columnaId.setMinWidth(200);
-        columnaProductor.setMinWidth(300);
-
         columnaId.setCellValueFactory(new PropertyValueFactory<>("idLote"));
         columnaProductor.setCellValueFactory(new PropertyValueFactory<>("productor"));
+        columnaAlta.setCellValueFactory(new PropertyValueFactory<>("alta"));
+        
+        columnaId.setMinWidth(200);
+        columnaProductor.setMinWidth(300);
+        columnaAlta.setMinWidth(100);
 
         contenedor.setAlignment(Pos.CENTER);
         contenedorBotones.setAlignment(Pos.CENTER);
@@ -112,6 +116,8 @@ public class Vista_ABM_Lote implements Vista {
         //- agregamos las columnas a la tabla
         tabla.getColumns().add(columnaId);
         tabla.getColumns().add(columnaProductor);
+        tabla.getColumns().add(columnaAlta);
+
         
         //- agregamos contenido a los contenedores
         contenedorBotones.getChildren().addAll(botonAgregar, botonEliminar, botonLimpiar);
@@ -123,7 +129,7 @@ public class Vista_ABM_Lote implements Vista {
 
     
 
-    private void clicAgregarLote() {
+    private boolean clicAgregarLote() {
 
         loteSeleccionado = tabla.getSelectionModel().getSelectedItem();
 
@@ -135,9 +141,20 @@ public class Vista_ABM_Lote implements Vista {
                 servicio.agregarLote(productoresBox.getSelectionModel().getSelectedItem());
 
 
-            //- SINO, modificamos el loteSeleccionado a partir de su id
+            //- SINO, si el loteSeleccionado está de Alta, podremos modificarlo a partir de su id
             } else {
-                servicio.modificarLote(loteSeleccionado.getIdLote(), productoresBox.getSelectionModel().getSelectedItem());
+
+                if (loteSeleccionado.isAlta() == true) {
+                    servicio.modificarLote(loteSeleccionado.getIdLote(), productoresBox.getSelectionModel().getSelectedItem());
+
+            //- SINO, se informa y se retorna falso
+                } else {
+
+                    System.out.print("El lote seleccionado está dado de BAJA. No se puede modificar.\n"); 
+                    limpiar();
+                    return false;
+                }
+            
             }
 
             limpiar();
@@ -145,6 +162,8 @@ public class Vista_ABM_Lote implements Vista {
         } catch (IllegalArgumentException e) {
             mostrarAlerta(AlertType.ERROR, "Error", "Error al guardar", e.getMessage());
         }
+
+        return true; 
     }
 
 

@@ -42,6 +42,7 @@ public class Vista_ABM_Cosecha implements Vista {
     TableColumn<Cosecha, LocalDate> columnaFecha;
     TableColumn<Cosecha, Cuadro> columnaCuadros;
     TableColumn<Cosecha, Double> columnaKgsCosechados;
+    TableColumn<Cosecha, Boolean> columnaAlta;
     Button botonAgregar, botonEliminar, botonLimpiar;
     Label etiquetaInteractiva, etiquetaInformativa;
     Separator separador1, separador2, separador3, separador4;
@@ -75,6 +76,7 @@ public class Vista_ABM_Cosecha implements Vista {
         columnaFecha = new TableColumn<>("Fecha");
         columnaCuadros = new TableColumn<>("Cuadro Cosechado");
         columnaKgsCosechados = new TableColumn<>("Kgs Cosechados");
+        columnaAlta = new TableColumn<>("Alta");
 
         VBox contenedor = new VBox();
         HBox contenedorBotones = new HBox();
@@ -111,17 +113,19 @@ public class Vista_ABM_Cosecha implements Vista {
     // propiedades de elementos
 
         //- propiedades de COLUMNAS
-        columnaId.setMinWidth(200);
-        columnaFecha.setMinWidth(150);
-        columnaEmpleado.setMinWidth(300);
-        columnaCuadros.setMinWidth(200);
-        columnaKgsCosechados.setMinWidth(200);
-
         columnaId.setCellValueFactory(new PropertyValueFactory<>("idCosecha"));
         columnaFecha.setCellValueFactory(new PropertyValueFactory<>("fecha"));
         columnaEmpleado.setCellValueFactory(new PropertyValueFactory<>("empleado"));
         columnaCuadros.setCellValueFactory(new PropertyValueFactory<>("cuadro"));
         columnaKgsCosechados.setCellValueFactory(new PropertyValueFactory<>("kgsCosechados"));
+        columnaAlta.setCellValueFactory(new PropertyValueFactory<>("alta"));
+
+        columnaId.setMinWidth(200);
+        columnaFecha.setMinWidth(150);
+        columnaEmpleado.setMinWidth(300);
+        columnaCuadros.setMinWidth(200);
+        columnaKgsCosechados.setMinWidth(200);
+        columnaAlta.setMinWidth(100);
 
         contenedor.setAlignment(Pos.CENTER);
         contenedorBotones.setAlignment(Pos.CENTER);
@@ -147,7 +151,7 @@ public class Vista_ABM_Cosecha implements Vista {
 
         tabla.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         tabla.setPrefHeight(300);
-        tabla.setPrefWidth(1050);
+        tabla.setPrefWidth(1150);
 
 
 
@@ -170,6 +174,7 @@ public class Vista_ABM_Cosecha implements Vista {
         tabla.getColumns().add(columnaEmpleado);
         tabla.getColumns().add(columnaCuadros);
         tabla.getColumns().add(columnaKgsCosechados);
+        tabla.getColumns().add(columnaAlta);
     
 
         //- agregamos contenido a los contenedores
@@ -189,7 +194,7 @@ public class Vista_ABM_Cosecha implements Vista {
 
 
 
-    private void clicAgregarCosecha() {
+    private boolean clicAgregarCosecha() {
 
         //- A partir del objetoSeleccionado en la tabla
         cosechaSeleccionada = tabla.getSelectionModel().getSelectedItem();
@@ -202,12 +207,23 @@ public class Vista_ABM_Cosecha implements Vista {
                 servicio.agregarCosecha(empleadoBox.getValue(), datepicker.getValue(),
                 cuadroBox.getValue(), Double.parseDouble(entradaKgsCosechados.getText()));
 
-        //- SINO, modificamos la cosechaSeleccionada a partir de su id
+        //- SINO, si el productorSeleccionado está de Alta, podremos modificarlo a partir de su id
             } else {
 
-                servicio.modificarCosecha(cosechaSeleccionada.getIdCosecha(), empleadoBox.getValue(),
-                 datepicker.getValue(), cuadroBox.getValue(), 
-                  Double.parseDouble(entradaKgsCosechados.getText())) ;
+                if (cosechaSeleccionada.isAlta() == true) {
+                    servicio.modificarCosecha(cosechaSeleccionada.getIdCosecha(), empleadoBox.getValue(),
+                     datepicker.getValue(), cuadroBox.getValue(), 
+                      Double.parseDouble(entradaKgsCosechados.getText())) ;
+
+                
+        //- SINO, se informa y se retorna falso                  
+                } else {
+
+                    System.out.print("La cosecha seleccionada está dada de BAJA. No se puede modificar.\n"); 
+                    limpiar();
+                    return false;
+                }
+
             }
 
             limpiar();
@@ -215,6 +231,8 @@ public class Vista_ABM_Cosecha implements Vista {
         } catch (IllegalArgumentException e) {
             mostrarAlerta(AlertType.ERROR, "Error", "Error al guardar", e.getMessage());
         }
+
+        return true;
     }
 
 
@@ -270,7 +288,7 @@ public class Vista_ABM_Cosecha implements Vista {
         //- luego de seleccionar algo en cuadroBox, a su derecha esta etiqueta informa a qué lote y qué productor pertence el cuadro
         if (cuadroBox.getValue() != null){
 
-            etiquetaInformativa.setText("Este cuadro pertenece al productor " + cuadroBox.getValue().getLote().getProductor().toString() + "y al " + cuadroBox.getValue().getLote().toString() + "\n");
+            etiquetaInformativa.setText("Este cuadro pertenece al productor " + cuadroBox.getValue().getLote().getProductor().toString() + " y al " + cuadroBox.getValue().getLote().toString() + "\n");
             
         } else {
 

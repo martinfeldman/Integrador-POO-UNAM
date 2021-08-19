@@ -2,7 +2,6 @@ package servicios;
 import repositorios.*;
 import modelo.Empleado;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -63,9 +62,9 @@ public class Servicio_Empleados {
         if (empleado != null) {
            
         //- modificaciones al objeto    
-            empleado.setApellidos(apellidos);
-            empleado.setNombres(nombres);
-            empleado.setDni(dni);
+            empleado.setNombres(nombres.trim().toUpperCase());
+            empleado.setApellidos(apellidos.trim().toUpperCase());
+            empleado.setDni(dni.trim());
 
             this.repositorio.iniciarTransaccion();
             this.repositorio.modificar(empleado);
@@ -93,25 +92,21 @@ public class Servicio_Empleados {
             return false;
 
         // SINO, comienza una transaccion con bd 
-        // se da de baja el empleado, sus cosechas y se confirma transaccion
+        // se da de baja el empleado y se confirma transaccion
         } else {
-            this.repositorio.iniciarTransaccion();
-
-            // dar de baja cosechas?
-          
+            this.repositorio.iniciarTransaccion();          
 
             empleado.setAlta(false);
 
             this.repositorio.confirmarTransaccion();
             return true;
-    
-            // this.repositorio.eliminar(productor);     
-           
+        
         }
     }
 
-   
+    
 }
+
 
 
 

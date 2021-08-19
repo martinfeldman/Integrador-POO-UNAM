@@ -50,6 +50,7 @@ public class Vista_ABM_Empleado implements Vista {
     TableColumn<Empleado, String> columnaNombres;
     TableColumn<Empleado, String> columnaApellidos;
     TableColumn<Empleado, String> columnaDni;
+    TableColumn<Empleado, Boolean> columnaAlta;
     TextField entradaNombres, entradaApellidos, entradaDni;
   
     // objetos para seguimiento de empleados
@@ -89,6 +90,7 @@ public class Vista_ABM_Empleado implements Vista {
         columnaDni = new TableColumn<>("DNI");
         columnaNombres = new TableColumn<>("Nombres");
         columnaApellidos = new TableColumn<>("Apellidos");
+        columnaAlta = new TableColumn<>("Alta");
 
         VBox contenedor = new VBox();
         HBox contenedorBotones = new HBox();
@@ -126,15 +128,17 @@ public class Vista_ABM_Empleado implements Vista {
     // propiedades de elementos
 
         //- COLUMNAS - propiedades
-        columnaId.setMinWidth(200);
-        columnaDni.setMinWidth(200);
-        columnaNombres.setMinWidth(300);
-        columnaApellidos.setMinWidth(300);
-
         columnaId.setCellValueFactory(new PropertyValueFactory<>("idEmpleado"));
         columnaDni.setCellValueFactory(new PropertyValueFactory<>("dni"));
         columnaNombres.setCellValueFactory(new PropertyValueFactory<>("nombres"));
         columnaApellidos.setCellValueFactory(new PropertyValueFactory<>("apellidos"));
+        columnaAlta.setCellValueFactory(new PropertyValueFactory<>("alta"));
+
+        columnaId.setMinWidth(200);
+        columnaDni.setMinWidth(200);
+        columnaNombres.setMinWidth(300);
+        columnaApellidos.setMinWidth(300);
+        columnaAlta.setMinWidth(100);
 
         contenedor.setAlignment(Pos.CENTER);
         contenedorBotones.setAlignment(Pos.CENTER);
@@ -207,6 +211,7 @@ public class Vista_ABM_Empleado implements Vista {
         tabla.getColumns().add(columnaDni);
         tabla.getColumns().add(columnaNombres);
         tabla.getColumns().add(columnaApellidos);
+        tabla.getColumns().add(columnaAlta);
        
         //- agregamos contenido a los contenedores  
         contenedorBotones.getChildren().addAll(botonAgregar, botonEliminar, botonLimpiar);
@@ -229,7 +234,7 @@ public class Vista_ABM_Empleado implements Vista {
 
 
 
-    private void clicAgregarEmpleado() {
+    private boolean clicAgregarEmpleado() {
         
         empleadoSeleccionado = tabla.getSelectionModel().getSelectedItem();
 
@@ -240,9 +245,21 @@ public class Vista_ABM_Empleado implements Vista {
                 servicio.agregarEmpleado(entradaNombres.getText(), entradaApellidos.getText(), entradaDni.getText());
            
 
-            //- SINO, modificamos el empleadoSeleccionado a partir de su id
+            //- SINO, si el cuadroSeleccionado está de Alta, podremos modificarlo a partir de su id
             } else {
-                servicio.modificarEmpleado(empleadoSeleccionado.getIdEmpleado(), entradaNombres.getText(), entradaApellidos.getText(), entradaDni.getText());
+
+                if (empleadoSeleccionado.isAlta() == true) {
+                    servicio.modificarEmpleado(empleadoSeleccionado.getIdEmpleado(), entradaNombres.getText(), entradaApellidos.getText(), entradaDni.getText());
+
+            //- SINO, se informa y se retorna falso 
+                } else {
+
+                    System.out.print("El empleado seleccionado está dado de BAJA. No se puede modificar.\n"); 
+                    limpiar();
+                    return false;
+
+                }
+
             }
 
             limpiar();
@@ -250,6 +267,8 @@ public class Vista_ABM_Empleado implements Vista {
         } catch (IllegalArgumentException e) {
             mostrarAlerta(AlertType.ERROR, "Error", "Error al guardar", e.getMessage());
         }
+
+        return true; 
     }
 
 
@@ -293,7 +312,11 @@ public class Vista_ABM_Empleado implements Vista {
         if (empleadoSeleccionado != null) {
 
             etiquetaSalidaSeguimiento.setText(servicio_seguimiento.obtenerKgsEmpleado_productor(empleadoSeleccionado, productorBox.getValue()));
-        }    
+
+        }  else {
+            etiquetaSalidaSeguimiento.setText("No ha seleccionado ningún empleado de la tabla");
+
+        }
     }
 
 
@@ -306,6 +329,10 @@ public class Vista_ABM_Empleado implements Vista {
         if (empleadoSeleccionado != null) {
 
             etiquetaSalidaSeguimiento.setText(servicio_seguimiento.obtenerKgsEmpleado_lote(empleadoSeleccionado, loteBox.getValue()));
+
+        } else {
+            etiquetaSalidaSeguimiento.setText("No ha seleccionado ningún empleado de la tabla");
+
         }
     }
 
@@ -319,6 +346,10 @@ public class Vista_ABM_Empleado implements Vista {
         if (empleadoSeleccionado != null) {
             
             etiquetaSalidaSeguimiento.setText(servicio_seguimiento.obtenerKgsEmpleado_cuadro(empleadoSeleccionado, cuadroBox.getValue()));
+
+        } else {
+            etiquetaSalidaSeguimiento.setText("No ha seleccionado ningún empleado de la tabla");
+
         }
     }
 

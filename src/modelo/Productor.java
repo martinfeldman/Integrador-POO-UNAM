@@ -44,7 +44,7 @@ public class Productor {
 
     @Override
     public String toString() {
-        return nombres + " " + apellidos + ", (" + dni + ")\n";
+        return nombres + " " + apellidos + ", (" + dni + ")";
     }
 
 

@@ -42,6 +42,7 @@ public class Vista_ABM_EntregaSecadero implements Vista {
     TableColumn<EntregaSecadero, Double> columnaPesoSecadero;
     TableColumn<EntregaSecadero, Double> columnaPesoCampo;
     TableColumn<EntregaSecadero, Double> columnaDiferenciaPeso;
+    TableColumn<EntregaSecadero, Boolean> columnaAlta;
     TextField entradaNombres, entradaApellidos, entradaDni, entradaPesoSecadero; 
 
 
@@ -67,6 +68,7 @@ public class Vista_ABM_EntregaSecadero implements Vista {
         columnaPesoSecadero = new TableColumn<>("Peso Secadero");
         columnaPesoCampo = new TableColumn<>("Peso Campo");
         columnaDiferenciaPeso = new TableColumn<>("Diferencia Peso (S - C)");
+        columnaAlta = new TableColumn<>("Alta");
 
         VBox contenedor = new VBox();
         HBox contenedorBotones = new HBox();
@@ -85,26 +87,27 @@ public class Vista_ABM_EntregaSecadero implements Vista {
         etiquetaPesoSecadero = new Label ("Peso (en kgs) en Secadero:   ");    
 
         tabla = new TableView<>(); 
-
               
        
 
     // propiedades de elementos
     
         //- propiedades de COLUMNAS
-        columnaId.setMinWidth(200);
-        columnaFecha.setMinWidth(150);
-        columnaCosecha.setMinWidth(200);
-        columnaPesoSecadero.setMinWidth(200);
-        columnaPesoCampo.setMinWidth(200);
-        columnaDiferenciaPeso.setMinWidth(200);
-
         columnaId.setCellValueFactory(new PropertyValueFactory<>("idEntrega"));
         columnaFecha.setCellValueFactory(new PropertyValueFactory<>("fechaEntrega"));
         columnaCosecha.setCellValueFactory(new PropertyValueFactory<>("cosecha"));
         columnaPesoSecadero.setCellValueFactory(new PropertyValueFactory<>("pesoSecadero"));
         columnaPesoCampo.setCellValueFactory(new PropertyValueFactory<>("pesoCampo"));
         columnaDiferenciaPeso.setCellValueFactory(new PropertyValueFactory<>("diferenciaPeso"));
+        columnaAlta.setCellValueFactory(new PropertyValueFactory<>("alta"));
+
+        columnaId.setMinWidth(200);
+        columnaFecha.setMinWidth(150);
+        columnaCosecha.setMinWidth(200);
+        columnaPesoSecadero.setMinWidth(200);
+        columnaPesoCampo.setMinWidth(200);
+        columnaDiferenciaPeso.setMinWidth(200);
+        columnaAlta.setMinWidth(100);
 
         contenedor.setAlignment(Pos.CENTER);
         contenedorBotones.setAlignment(Pos.CENTER);
@@ -148,6 +151,7 @@ public class Vista_ABM_EntregaSecadero implements Vista {
         tabla.getColumns().add(columnaPesoSecadero);
         tabla.getColumns().add(columnaPesoCampo);
         tabla.getColumns().add(columnaDiferenciaPeso);
+        tabla.getColumns().add(columnaAlta);
 
         //- agregamos contenido a los contenedores
         contenedorBotones.getChildren().addAll(botonAgregar, botonEliminar, botonLimpiar);
@@ -162,7 +166,7 @@ public class Vista_ABM_EntregaSecadero implements Vista {
     
     // metodos de la VISTA 
 
-    private void clicAgregarEntrega() {
+    private boolean clicAgregarEntrega() {
 
         entregaSeleccionada = tabla.getSelectionModel().getSelectedItem();
 
@@ -175,11 +179,21 @@ public class Vista_ABM_EntregaSecadero implements Vista {
                  Double.parseDouble(entradaPesoSecadero.getText()));
 
 
-            //- SINO, modificamos la entregaSeleccionada a partir de su id
+            //- SINO, si el productorSeleccionado está de Alta, podremos modificarlo a partir de su id
             } else {
 
-                servicio.modificarEntregaSecadero(entregaSeleccionada.getIdEntrega(), cosechasBox.getValue(),  
-                 Double.parseDouble(entradaPesoSecadero.getText()), datepicker.getValue());
+                if (entregaSeleccionada.isAlta() == true) {
+                    servicio.modificarEntregaSecadero(entregaSeleccionada.getIdEntrega(), cosechasBox.getValue(),  
+                     Double.parseDouble(entradaPesoSecadero.getText()), datepicker.getValue());
+
+            //- SINO, se informa y se retorna falso                  
+                } else {
+
+                    System.out.print("La cosecha seleccionada está dada de BAJA. No se puede modificar.\n"); 
+                    limpiar();
+                    return false;
+                }
+
             }
 
             limpiar();
@@ -188,6 +202,7 @@ public class Vista_ABM_EntregaSecadero implements Vista {
             mostrarAlerta(AlertType.ERROR, "Error", "Error al guardar", e.getMessage());
         }
         
+        return true; 
     }
 
 

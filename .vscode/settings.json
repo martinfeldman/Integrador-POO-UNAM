@@ -3,6 +3,7 @@
 
         "/home/mnf/Facultad/3erAnio/1erCuatr/POO I/practica/integrador/integradorPOO/proyecto/lib/**/*.jar",
     ],
+    
     "java.configuration.updateBuildConfiguration": "interactive",
     //"java.configuration.updateBuildConfiguration": "automatic"
 }

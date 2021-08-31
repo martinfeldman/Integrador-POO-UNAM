@@ -117,9 +117,7 @@ public class Servicio_Productores {
 
             this.repositorio.confirmarTransaccion();
             
-            return true;
-    
-            // this.repositorio.eliminar(productor);     
+            return true;   
            
         }
     }

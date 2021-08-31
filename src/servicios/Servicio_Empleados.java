@@ -107,16 +107,3 @@ public class Servicio_Empleados {
     
 }
 
-
-
-
-
- /*  si el departamento que se quiere cambiar al empleado es el mismo que se tiene se descarta la transaccion
-        // sino, se prosigue a modificarlo.
-            /* implementar comparable o comparator o si el id es unico pueden compararar por id
-            if (! empleado.getDepartamento().equals(departamento)) {
-                empleado.getDepartamento().getEmpleados().remove(empleado);
-                empleado.setDepartamento(departamento);
-                departamento.getEmpleados().add(empleado);
-            } */
-         

@@ -15,15 +15,7 @@ public class Servicio_Cuadros{
     }
 
 
-
-    // agregarCuadroALote(){
-        
-    // }
-
-
-
-
-
+    
     // CUADRO 
     // Listar y Buscar
 

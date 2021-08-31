@@ -129,10 +129,4 @@ public class Servicio_EntregasSecadero {
 
 }
          
-            // implementar comparable o comparator
-            // o si el id es unico pueden compararar por id
-           /* if (! entregaSecadero.getDepartamento().equals(departamento)) {
-                entregaSecadero.getDepartamento().getEmpleados().remove(empleado);
-                entregaSecadero.setDepartamento(departamento);
-                departamento.getEmpleados().add(empleado);
-            }    */
+ 
